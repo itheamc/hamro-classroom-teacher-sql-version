@@ -65,19 +65,24 @@ public class QueryHandler {
                 public void onResponse(@NonNull Call call, @NonNull Response response) {
                     try {
                         JSONObject jsonObject = new JSONObject(response.body().string());
-                        if (jsonObject.has("message")) {
-                            notifySuccess(jsonObject.getString("message"));
+                        if (response.isSuccessful()) {
+                            if (jsonObject.has("message")) {
+                                notifySuccess(jsonObject.getString("message"));
+                                return;
+                            }
+
+                            User user = JsonHandler.getUser(jsonObject);
+                            notifySuccess(user,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null);
                             return;
                         }
 
-                        User user = JsonHandler.getUser(jsonObject);
-                        notifySuccess(user,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null);
+                        notifyFailure(new Exception(jsonObject.getString("message")));
 
                     } catch (Exception e) {
                         notifyFailure(e);
@@ -104,10 +109,13 @@ public class QueryHandler {
                 public void onResponse(@NonNull Call call, @NonNull Response response) {
                     try {
                         JSONObject jsonObject = new JSONObject(response.body().string());
-                        if (jsonObject.has("message") && jsonObject.getString("message").equals("success")) {
-                            notifySuccess(jsonObject.getString("message"));
+                        if (response.isSuccessful()) {
+                            if (jsonObject.has("message")) {
+                                notifySuccess(jsonObject.getString("message"));
+                            }
                             return;
                         }
+
                         notifyFailure(new Exception(jsonObject.getString("message")));
                     } catch (Exception e) {
                         notifyFailure(e);
@@ -142,19 +150,24 @@ public class QueryHandler {
                 public void onResponse(@NonNull Call call, @NonNull Response response) {
                     try {
                         JSONObject jsonObject = new JSONObject(response.body().string());
-                        if (jsonObject.has("message")) {
-                            notifyFailure(new Exception("Subjects Not Found"));
+                        if (response.isSuccessful()) {
+                            if (jsonObject.has("message")) {
+                                notifySuccess(jsonObject.getString("message"));
+                                return;
+                            }
+
+                            List<Subject> subjects = JsonHandler.getSubjects(jsonObject);
+                            notifySuccess(null,
+                                    null,
+                                    null,
+                                    subjects,
+                                    null,
+                                    null,
+                                    null);
                             return;
                         }
 
-                        List<Subject> subjects = JsonHandler.getSubjects(jsonObject);
-                        notifySuccess(null,
-                                null,
-                                null,
-                                subjects,
-                                null,
-                                null,
-                                null);
+                        notifyFailure(new Exception(jsonObject.getString("message")));
 
                     } catch (Exception e) {
                         notifyFailure(e);
@@ -180,8 +193,10 @@ public class QueryHandler {
                 public void onResponse(@NonNull Call call, @NonNull Response response) {
                     try {
                         JSONObject jsonObject = new JSONObject(response.body().string());
-                        if (jsonObject.has("message") && jsonObject.getString("message").equals("success")) {
-                            notifySuccess(jsonObject.getString("message"));
+                        if (response.isSuccessful()) {
+                            if (jsonObject.has("message")) {
+                                notifySuccess(jsonObject.getString("message"));
+                            }
                             return;
                         }
                         notifyFailure(new Exception("Unable to store"));
@@ -209,8 +224,10 @@ public class QueryHandler {
                 public void onResponse(@NonNull Call call, @NonNull Response response) {
                     try {
                         JSONObject jsonObject = new JSONObject(response.body().string());
-                        if (jsonObject.has("message") && jsonObject.getString("message").equals("success")) {
-                            notifySuccess(jsonObject.getString("message"));
+                        if (response.isSuccessful()) {
+                            if (jsonObject.has("message")) {
+                                notifySuccess(jsonObject.getString("message"));
+                            }
                             return;
                         }
                         notifyFailure(new Exception("Unable to update"));
@@ -238,8 +255,10 @@ public class QueryHandler {
                 public void onResponse(@NonNull Call call, @NonNull Response response) {
                     try {
                         JSONObject jsonObject = new JSONObject(response.body().string());
-                        if (jsonObject.has("message") && jsonObject.getString("message").equals("success")) {
-                            notifySuccess(jsonObject.getString("message"));
+                        if (response.isSuccessful()) {
+                            if (jsonObject.has("message")) {
+                                notifySuccess(jsonObject.getString("message"));
+                            }
                             return;
                         }
                         notifyFailure(new Exception("Unable to update"));
@@ -268,19 +287,24 @@ public class QueryHandler {
                 public void onResponse(@NonNull Call call, @NonNull Response response) {
                     try {
                         JSONObject jsonObject = new JSONObject(response.body().string());
-                        if (jsonObject.has("message")) {
-                            notifyFailure(new Exception("Assignments Not Found"));
+                        if (response.isSuccessful()) {
+                            if (jsonObject.has("message")) {
+                                notifySuccess(jsonObject.getString("message"));
+                                return;
+                            }
+
+                            List<Assignment> assignments = JsonHandler.getAssignments(jsonObject);
+                            notifySuccess(null,
+                                    null,
+                                    null,
+                                    null,
+                                    assignments,
+                                    null,
+                                    null);
                             return;
                         }
 
-                        List<Assignment> assignments = JsonHandler.getAssignments(jsonObject);
-                        notifySuccess(null,
-                                null,
-                                null,
-                                null,
-                                assignments,
-                                null,
-                                null);
+                        notifyFailure(new Exception(jsonObject.getString("message")));
 
                     } catch (Exception e) {
                         notifyFailure(e);
@@ -307,14 +331,10 @@ public class QueryHandler {
                 public void onResponse(@NonNull Call call, @NonNull Response response) {
                     try {
                         JSONObject jsonObject = new JSONObject(response.body().string());
-                        if (jsonObject.has("message") && jsonObject.getString("message").equals("success")) {
-                            notifySuccess(null,
-                                    null,
-                                    null,
-                                    null,
-                                    null,
-                                    null,
-                                    null);
+                        if (response.isSuccessful()) {
+                            if (jsonObject.has("message")) {
+                                notifySuccess(jsonObject.getString("message"));
+                            }
                             return;
                         }
                         notifyFailure(new Exception("Unable to add"));
@@ -351,19 +371,24 @@ public class QueryHandler {
                 public void onResponse(@NonNull Call call, @NonNull Response response) {
                     try {
                         JSONObject jsonObject = new JSONObject(response.body().string());
-                        if (jsonObject.has("message")) {
-                            notifyFailure(new Exception("Submissions Not Found"));
+                        if (response.isSuccessful()) {
+                            if (jsonObject.has("message")) {
+                                notifySuccess(jsonObject.getString("message"));
+                                return;
+                            }
+
+                            List<Submission> submissions = JsonHandler.getSubmissions(jsonObject);
+                            notifySuccess(null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    submissions,
+                                    null);
                             return;
                         }
 
-                        List<Submission> submissions = JsonHandler.getSubmissions(jsonObject);
-                        notifySuccess(null,
-                                null,
-                                null,
-                                null,
-                                null,
-                                submissions,
-                                null);
+                        notifyFailure(new Exception(jsonObject.getString("message")));
 
                     } catch (Exception e) {
                         notifyFailure(e);
@@ -391,8 +416,10 @@ public class QueryHandler {
                 public void onResponse(@NonNull Call call, @NonNull Response response) {
                     try {
                         JSONObject jsonObject = new JSONObject(response.body().string());
-                        if (jsonObject.has("message") && jsonObject.getString("message").equals("success")) {
-                            notifySuccess(jsonObject.getString("message"));
+                        if (response.isSuccessful()) {
+                            if (jsonObject.has("message")) {
+                                notifySuccess(jsonObject.getString("message"));
+                            }
                             return;
                         }
                         notifyFailure(new Exception("Unable to update"));
@@ -429,14 +456,10 @@ public class QueryHandler {
                 public void onResponse(@NonNull Call call, @NonNull Response response) {
                     try {
                         JSONObject jsonObject = new JSONObject(response.body().string());
-                        if (jsonObject.has("message") && jsonObject.getString("message").equals("success")) {
-                            notifySuccess(null,
-                                    null,
-                                    null,
-                                    null,
-                                    null,
-                                    null,
-                                    null);
+                        if (response.isSuccessful()) {
+                            if (jsonObject.has("message")) {
+                                notifySuccess(jsonObject.getString("message"));
+                            }
                             return;
                         }
                         notifyFailure(new Exception("Unable to add"));
@@ -465,19 +488,24 @@ public class QueryHandler {
                 public void onResponse(@NonNull Call call, @NonNull Response response) {
                     try {
                         JSONObject jsonObject = new JSONObject(response.body().string());
-                        if (jsonObject.has("message")) {
-                            notifyFailure(new Exception("Notices Not Found"));
+                        if (response.isSuccessful()) {
+                            if (jsonObject.has("message")) {
+                                notifySuccess(jsonObject.getString("message"));
+                                return;
+                            }
+
+                            List<Notice> notices = JsonHandler.getNotices(jsonObject);
+                            notifySuccess(null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    notices);
                             return;
                         }
 
-                        List<Notice> notices = JsonHandler.getNotices(jsonObject);
-                        notifySuccess(null,
-                                null,
-                                null,
-                                null,
-                                null,
-                                null,
-                                notices);
+                        notifyFailure(new Exception(jsonObject.getString("message")));
 
                     } catch (Exception e) {
                         notifyFailure(e);
@@ -507,19 +535,24 @@ public class QueryHandler {
                 public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                     try {
                         JSONObject jsonObject = new JSONObject(response.body().string());
-                        if (jsonObject.has("message")) {
-                            notifyFailure(new Exception("Schools Not Found"));
+                        if (response.isSuccessful()) {
+                            if (jsonObject.has("message")) {
+                                notifySuccess(jsonObject.getString("message"));
+                                return;
+                            }
+
+                            List<School> schools = JsonHandler.getSchools(jsonObject);
+                            notifySuccess(null,
+                                    schools,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null);
                             return;
                         }
 
-                        List<School> schools = JsonHandler.getSchools(jsonObject);
-                        notifySuccess(null,
-                                schools,
-                                null,
-                                null,
-                                null,
-                                null,
-                                null);
+                        notifyFailure(new Exception(jsonObject.getString("message")));
 
                     } catch (Exception e) {
                         notifyFailure(e);
@@ -545,21 +578,26 @@ public class QueryHandler {
                 public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                     try {
                         JSONObject jsonObject = new JSONObject(response.body().string());
-                        if (jsonObject.has("message")) {
-                            notifyFailure(new Exception("Submissions Not Found"));
+                        if (response.isSuccessful()) {
+                            if (jsonObject.has("message")) {
+                                notifySuccess(jsonObject.getString("message"));
+                                return;
+                            }
+
+                            School school = JsonHandler.getSchool(jsonObject);
+                            List<School> schools = new ArrayList<>();
+                            schools.add(school);
+                            notifySuccess(null,
+                                    schools,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null);
                             return;
                         }
 
-                        School school = JsonHandler.getSchool(jsonObject);
-                        List<School> schools = new ArrayList<>();
-                        schools.add(school);
-                        notifySuccess(null,
-                                schools,
-                                null,
-                                null,
-                                null,
-                                null,
-                                null);
+                        notifyFailure(new Exception(jsonObject.getString("message")));
 
                     } catch (Exception e) {
                         notifyFailure(e);

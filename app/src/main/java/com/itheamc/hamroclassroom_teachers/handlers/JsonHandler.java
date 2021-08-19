@@ -40,6 +40,7 @@ public class JsonHandler {
         if (jsonObject.has("school")) schoolObj = jsonObject.getJSONObject("school");
         else if (jsonObject.has("_school")) schoolObj = jsonObject.getJSONObject("_school");
         else schoolObj = jsonObject;
+
         return new School(
                 schoolObj.getString("_id"),
                 schoolObj.getString("_name"),
