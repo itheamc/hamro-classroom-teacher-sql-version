@@ -288,7 +288,7 @@ public class SubjectFragment extends Fragment implements QueryCallbacks, SchoolC
                 updatedSub.get_class() != null ||
                 updatedSub.get_school_ref() != null ||
                 updatedSub.get_start_time() != null) {
-            QueryHandler.getInstance(this).updateSubject(subject);
+            QueryHandler.getInstance(this).updateSubject(updatedSub);
             return;
         }
         if (getContext() != null) NotifyUtils.showToast(getContext(), "You have not make any changes");
@@ -380,8 +380,7 @@ public class SubjectFragment extends Fragment implements QueryCallbacks, SchoolC
         ViewUtils.enableViews(subjectInputLayout, classInputLayout, schoolInputLayout, classTimeInputLayout, addEditBtn);
         if (!viewModel.isSubjectUpdating()) {
             NotifyUtils.showToast(getContext(), "Added Successfully");
-        }
-        else  {
+        } else  {
             NotifyUtils.showToast(getContext(), "Updated Successfully");
             viewModel.setSubjectUpdating(false);
             viewModel.setSubject(null);

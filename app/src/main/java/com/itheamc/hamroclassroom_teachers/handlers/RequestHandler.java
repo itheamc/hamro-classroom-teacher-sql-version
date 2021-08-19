@@ -161,14 +161,14 @@ public class RequestHandler {
     }
 
     // PATCH REQUEST
-    public static Request subjectPatchRequest(@NonNull Subject subject) {
-        RequestBody requestBody = new FormBody.Builder()
-                .add("_id", subject.get_id())
-                .add("_name", subject.get_name())
-                .add("_class", subject.get_class())
-                .add("_school", subject.get_school_ref())
-                .add("_start_time", subject.get_start_time())
-                .build();
+    public static Request subjectPatchRequest(Subject subject) {
+        FormBody.Builder builder = new FormBody.Builder();
+        if (subject.get_id() != null) builder.add("_id", subject.get_id());
+        if (subject.get_name() != null) builder.add("_name", subject.get_name());
+        if (subject.get_school_ref() != null) builder.add("_school", subject.get_school_ref());
+        if (subject.get_start_time() != null) builder.add("_start_time", subject.get_start_time());
+
+        RequestBody requestBody = builder.build();
 
         return new Request.Builder().url(PathHandler.SUBJECTS_PATH).patch(requestBody).build();
     }
