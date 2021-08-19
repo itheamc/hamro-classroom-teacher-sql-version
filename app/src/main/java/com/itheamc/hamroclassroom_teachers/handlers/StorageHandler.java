@@ -93,7 +93,7 @@ public class StorageHandler {
         ImageUtils imageUtils = ImageUtils.getInstance(activity.getContentResolver());
 
         // Handling all the image processing and uploads in background
-        Executors.newFixedThreadPool(4).execute(() -> {
+        executorService.execute(() -> {
 
             MultipartBody.Builder builder = new MultipartBody.Builder();
             builder.setType(MultipartBody.FORM);
@@ -106,7 +106,7 @@ public class StorageHandler {
                 FileOutputStream outputStream = null;
                 try {
                     outputStream = new FileOutputStream(file);
-                    byte[] bytes = imageUtils.getByteArray(uri, 40);
+                    byte[] bytes = imageUtils.getByteArray(uri, 25);
                     outputStream.write(bytes);
                     outputStream.close();
                     Uri uris = Uri.fromFile(file);
