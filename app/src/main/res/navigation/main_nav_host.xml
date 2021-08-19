@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_nav_host"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.itheamc.hamroclassroom_teachers.ui.HomeFragment"
+        android:label="Home"
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_homeFragment_to_subjectFragment"
+            app:destination="@id/subjectFragment"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out" />
+        <action
+            android:id="@+id/action_homeFragment_to_assignmentsFragment"
+            app:destination="@id/assignmentsFragment"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out" />
+    </fragment>
+    <fragment
+        android:id="@+id/subjectFragment"
+        android:name="com.itheamc.hamroclassroom_teachers.ui.SubjectFragment"
+        android:label="@string/subjects"
+        tools:layout="@layout/fragment_subject" />
+    <fragment
+        android:id="@+id/assignmentsFragment"
+        android:name="com.itheamc.hamroclassroom_teachers.ui.AssignmentsFragment"
+        android:label="@string/assignments"
+        tools:layout="@layout/fragment_assignments" >
+        <action
+            android:id="@+id/action_assignmentsFragment_to_assignmentFragment"
+            app:destination="@id/assignmentFragment"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out" />
+        <action
+            android:id="@+id/action_assignmentsFragment_to_submissionsFragment"
+            app:destination="@id/submissionsFragment"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out" />
+    </fragment>
+    <fragment
+        android:id="@+id/assignmentFragment"
+        android:name="com.itheamc.hamroclassroom_teachers.ui.AssignmentFragment"
+        android:label="Assignment"
+        tools:layout="@layout/fragment_assignment" />
+    <fragment
+        android:id="@+id/submissionsFragment"
+        android:name="com.itheamc.hamroclassroom_teachers.ui.SubmissionsFragment"
+        android:label="@string/submissions"
+        tools:layout="@layout/fragment_submissions" >
+        <action
+            android:id="@+id/action_submissionsFragment_to_submissionFragment"
+            app:destination="@id/submissionFragment"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out" />
+    </fragment>
+    <fragment
+        android:id="@+id/submissionFragment"
+        android:name="com.itheamc.hamroclassroom_teachers.ui.SubmissionFragment"
+        android:label="Submission"
+        tools:layout="@layout/fragment_submission" />
+
+
+</navigation>

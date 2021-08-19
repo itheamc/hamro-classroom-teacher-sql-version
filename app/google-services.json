@@ -1,0 +1,84 @@
+{
+  "project_info": {
+    "project_number": "813872939086",
+    "project_id": "hamro-classroom-final",
+    "storage_bucket": "hamro-classroom-final.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:813872939086:android:68f2db2abd10484144c31f",
+        "android_client_info": {
+          "package_name": "com.itheamc.hamroclassroom_student"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "813872939086-n2qf27kcsi290vifrq5vd365tm007n6k.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.itheamc.hamroclassroom_student",
+            "certificate_hash": "0c54a9dfe41914715203ba70f450c0407e0ea821"
+          }
+        },
+        {
+          "client_id": "813872939086-9gnletiojkr760sk92rlis2saht2obkf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA5HuiuqaebSVVuD-eSVUVWfm_wre3v0qs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "813872939086-9gnletiojkr760sk92rlis2saht2obkf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:813872939086:android:95f06d465af7655544c31f",
+        "android_client_info": {
+          "package_name": "com.itheamc.hamroclassroom_teachers"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "813872939086-ikgdkke67hlsrcjpkjunf5q657c24n1s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.itheamc.hamroclassroom_teachers",
+            "certificate_hash": "d98c41494b89cab070750b8f56a137bc0c74e358"
+          }
+        },
+        {
+          "client_id": "813872939086-9gnletiojkr760sk92rlis2saht2obkf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA5HuiuqaebSVVuD-eSVUVWfm_wre3v0qs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "813872939086-9gnletiojkr760sk92rlis2saht2obkf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
