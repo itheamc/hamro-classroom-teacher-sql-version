@@ -157,7 +157,7 @@ public class AssignmentsFragment extends Fragment implements AssignmentCallbacks
     private void getAssignments() {
         if (subject == null) return;
         QueryHandler.getInstance(this).getAssignments(subject.get_id());
-        ViewUtils.handleProgressBar(assignmentsBinding.progressBarContainer);
+        ViewUtils.showProgressBar(assignmentsBinding.progressBarContainer);
     }
 
 
@@ -194,7 +194,7 @@ public class AssignmentsFragment extends Fragment implements AssignmentCallbacks
         }
 
         QueryHandler.getInstance(this).updateAssignmentTitle(assignId, updatedTitle);
-        ViewUtils.handleProgressBar(bottomSheetBinding.progressBarContainer);
+        ViewUtils.showProgressBar(bottomSheetBinding.progressBarContainer);
         ViewUtils.disableViews(updatedTitleInputLayout, updateTitleButton);
 
     }
@@ -257,12 +257,22 @@ public class AssignmentsFragment extends Fragment implements AssignmentCallbacks
 
     @Override
     public void onQuerySuccess(String message) {
-        ViewUtils.hideProgressBar(bottomSheetBinding.progressBarContainer);
-        ViewUtils.enableViews(updatedTitleInputLayout, updateTitleButton);
-        if (viewModel.getAssignment() != null) viewModel.getAssignment().set_title(updateTitleEditText.getText().toString());
-        if (getContext() != null) NotifyUtils.showToast(getContext(), "Updated Successfully");
-        ViewUtils.handleBottomSheet(bottomSheetBehavior);
-        getAssignments();
+        if (assignmentsBinding == null) return;
+
+        if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+            if (viewModel.getAssignment() != null) viewModel.getAssignment().set_title(updateTitleEditText.getText().toString());
+            ViewUtils.hideProgressBar(bottomSheetBinding.progressBarContainer);
+            ViewUtils.enableViews(updatedTitleInputLayout, updateTitleButton);
+            if (getContext() != null) NotifyUtils.showToast(getContext(), "Updated Successfully");
+            ViewUtils.handleBottomSheet(bottomSheetBehavior);
+            getAssignments();
+            return;
+        }
+
+        ViewUtils.hideProgressBar(assignmentsBinding.progressBarContainer);
+        ViewUtils.handleRefreshing(assignmentsBinding.swipeRefreshLayout);
+        if (getContext() != null) NotifyUtils.showToast(getContext(), message);
+
     }
 
     @Override
@@ -270,7 +280,11 @@ public class AssignmentsFragment extends Fragment implements AssignmentCallbacks
         if (assignmentsBinding == null) return;
         ViewUtils.hideProgressBar(assignmentsBinding.progressBarContainer);
         ViewUtils.handleRefreshing(assignmentsBinding.swipeRefreshLayout);
-        ViewUtils.hideProgressBar(bottomSheetBinding.progressBarContainer);
+
+        if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+            ViewUtils.hideProgressBar(bottomSheetBinding.progressBarContainer);
+            ViewUtils.enableViews(updatedTitleInputLayout, updateTitleButton);
+        }
         if (getContext() != null)
             NotifyUtils.showToast(getContext(), getString(R.string.went_wrong_message));
         NotifyUtils.logError(TAG, "onFailure: ", e);

@@ -110,8 +110,10 @@ public class QueryHandler {
                     try {
                         JSONObject jsonObject = new JSONObject(response.body().string());
                         if (response.isSuccessful()) {
-                            if (jsonObject.has("message")) {
+                            if (jsonObject.getString("message").equals("success")) {
                                 notifySuccess(jsonObject.getString("message"));
+                            } else {
+                                notifyFailure(new Exception(jsonObject.getString("message")));
                             }
                             return;
                         }
@@ -194,8 +196,10 @@ public class QueryHandler {
                     try {
                         JSONObject jsonObject = new JSONObject(response.body().string());
                         if (response.isSuccessful()) {
-                            if (jsonObject.has("message")) {
+                            if (jsonObject.getString("message").equals("success")) {
                                 notifySuccess(jsonObject.getString("message"));
+                            } else {
+                                notifyFailure(new Exception(jsonObject.getString("message")));
                             }
                             return;
                         }
@@ -225,8 +229,10 @@ public class QueryHandler {
                     try {
                         JSONObject jsonObject = new JSONObject(response.body().string());
                         if (response.isSuccessful()) {
-                            if (jsonObject.has("message")) {
+                            if (jsonObject.getString("message").equals("success")) {
                                 notifySuccess(jsonObject.getString("message"));
+                            } else {
+                                notifyFailure(new Exception(jsonObject.getString("message")));
                             }
                             return;
                         }
@@ -256,8 +262,10 @@ public class QueryHandler {
                     try {
                         JSONObject jsonObject = new JSONObject(response.body().string());
                         if (response.isSuccessful()) {
-                            if (jsonObject.has("message")) {
+                            if (jsonObject.getString("message").equals("success")) {
                                 notifySuccess(jsonObject.getString("message"));
+                            } else {
+                                notifyFailure(new Exception(jsonObject.getString("message")));
                             }
                             return;
                         }
@@ -332,8 +340,10 @@ public class QueryHandler {
                     try {
                         JSONObject jsonObject = new JSONObject(response.body().string());
                         if (response.isSuccessful()) {
-                            if (jsonObject.has("message")) {
+                            if (jsonObject.getString("message").equals("success")) {
                                 notifySuccess(jsonObject.getString("message"));
+                            } else {
+                                notifyFailure(new Exception(jsonObject.getString("message")));
                             }
                             return;
                         }
@@ -417,8 +427,10 @@ public class QueryHandler {
                     try {
                         JSONObject jsonObject = new JSONObject(response.body().string());
                         if (response.isSuccessful()) {
-                            if (jsonObject.has("message")) {
+                            if (jsonObject.getString("message").equals("success")) {
                                 notifySuccess(jsonObject.getString("message"));
+                            } else {
+                                notifyFailure(new Exception(jsonObject.getString("message")));
                             }
                             return;
                         }
@@ -457,8 +469,10 @@ public class QueryHandler {
                     try {
                         JSONObject jsonObject = new JSONObject(response.body().string());
                         if (response.isSuccessful()) {
-                            if (jsonObject.has("message")) {
+                            if (jsonObject.getString("message").equals("success")) {
                                 notifySuccess(jsonObject.getString("message"));
+                            } else {
+                                notifyFailure(new Exception(jsonObject.getString("message")));
                             }
                             return;
                         }
