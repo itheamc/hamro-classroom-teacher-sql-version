@@ -256,8 +256,10 @@ public class HomeFragment extends Fragment implements SubjectCallbacks, QueryCal
     public void onQuerySuccess(String message) {
         if (homeBinding == null) return;
         ViewUtils.hideProgressBar(bottomSheetBinding.progressBarContainer);   // Disabling link update progress bar
-        if (getContext() != null) NotifyUtils.showToast(getContext(), "Updated Successfully");
-        linkInputLayout.getEditText().setText("");
+        ViewUtils.hideProgressBar(homeBinding.progressBarContainer);
+        ViewUtils.handleRefreshing(homeBinding.swipeRefreshLayout);
+        if (getContext() != null) NotifyUtils.showToast(getContext(), message);
+        if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) linkInputLayout.getEditText().setText("");
     }
 
     @Override

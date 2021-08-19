@@ -278,7 +278,7 @@ public class SubjectFragment extends Fragment implements QueryCallbacks, SchoolC
         String _class = classEditText.getText().toString().trim();
         String _time = timeEditText.getText().toString().trim();
 
-
+        updatedSub.set_id(subject.get_id());
         if (!TextUtils.isEmpty(_name) && !_name.equals(subject.get_name())) updatedSub.set_name(_name);
         if (!TextUtils.isEmpty(_class) && !_class.equals(subject.get_class())) updatedSub.set_class(_class);
         if (school != null) updatedSub.set_school_ref(school.get_id());
@@ -393,8 +393,9 @@ public class SubjectFragment extends Fragment implements QueryCallbacks, SchoolC
     public void onQueryFailure(Exception e) {
         if (subjectBinding == null) return;
         ViewUtils.hideProgressBar(subjectBinding.subjectProgressBarContainer);
+        ViewUtils.hideProgressBar(bottomSheetBinding.progressBarContainer);
         ViewUtils.enableViews(subjectInputLayout, classInputLayout, schoolInputLayout, classTimeInputLayout, addEditBtn);
-        NotifyUtils.showToast(getContext(), getString(R.string.went_wrong_message));
+        NotifyUtils.showToast(getContext(), e.getMessage());
         NotifyUtils.logDebug(TAG, "onUserInfoRetrievedError: - " + e.getMessage());
     }
 

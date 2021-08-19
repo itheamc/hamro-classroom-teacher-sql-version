@@ -259,7 +259,7 @@ public class AssignmentsFragment extends Fragment implements AssignmentCallbacks
     public void onQuerySuccess(String message) {
         ViewUtils.hideProgressBar(bottomSheetBinding.progressBarContainer);
         ViewUtils.enableViews(updatedTitleInputLayout, updateTitleButton);
-        viewModel.getAssignment().set_title(updateTitleEditText.getText().toString());
+        if (viewModel.getAssignment() != null) viewModel.getAssignment().set_title(updateTitleEditText.getText().toString());
         if (getContext() != null) NotifyUtils.showToast(getContext(), "Updated Successfully");
         ViewUtils.handleBottomSheet(bottomSheetBehavior);
         getAssignments();

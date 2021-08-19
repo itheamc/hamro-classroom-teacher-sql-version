@@ -66,7 +66,8 @@ public class JsonHandler {
         else userObj = jsonObject;
 
         // Getting school obj
-        School school = getSchool(userObj);
+
+//        School school = getSchool(userObj);
 
         // Creating new user and returning it
         return new User(
@@ -77,8 +78,8 @@ public class JsonHandler {
                 userObj.getString("_phone"),
                 userObj.getString("_email"),
                 userObj.getString("_address"),
-                school.get_id(),
-                school,
+                userObj.getString("_school"),
+                null,
                 userObj.getString("_joined_on")
         );
     }
