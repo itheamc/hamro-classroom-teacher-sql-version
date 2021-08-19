@@ -53,6 +53,7 @@ import com.itheamc.hamroclassroom_teachers.viewmodels.MainViewModel;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -66,14 +67,11 @@ public class AssignmentFragment extends Fragment implements StorageCallbacks, Qu
     private ImageAdapter imageAdapter;
     private MainViewModel viewModel;
 
+
     /*
-    Integer to store the uploaded image qty
-     */
-    int uploadCount = 0;
-    /*
-   List to store the uploaded image url
+   Array to store the uploaded image url
     */
-    private List<String> imagesList;
+    private String[] images;
 
     /*
     TextInputLayout
@@ -90,7 +88,6 @@ public class AssignmentFragment extends Fragment implements StorageCallbacks, Qu
     /*
     Strings
      */
-    private String _assignment_id;
     private String _title = "";
     private String _desc = "";
 
@@ -138,10 +135,6 @@ public class AssignmentFragment extends Fragment implements StorageCallbacks, Qu
 
         titleEdittext = titleInputLayout.getEditText();
         descEditText = descInputLayout.getEditText();
-
-        // Initializing imageList
-        imagesList = new ArrayList<>();
-
 
         // Activity Result launcher to listen the result of the multi image picker
         imagePickerResultLauncher = registerForActivityResult(
@@ -191,9 +184,6 @@ public class AssignmentFragment extends Fragment implements StorageCallbacks, Qu
             ViewUtils.showProgressBar(assignmentBinding.progressBarContainer);
             ViewUtils.disableViews(assignmentBinding.addAssignmentButton, titleInputLayout, descInputLayout);
 
-            // Setting assignment Id
-            _assignment_id = IdGenerator.generateRandomId();
-
             if (imagesUri == null || imagesUri.size() < 1) {
                 storeOnDatabase();
                 return;
@@ -226,7 +216,7 @@ public class AssignmentFragment extends Fragment implements StorageCallbacks, Qu
     Function to submit data to image adapter
      */
     private void submitImagesToImageAdapter() {
-        if (imagesUri != null) imageAdapter.submitList(imagesUri);
+        if (imagesUri != null && imagesUri.size() > 0) imageAdapter.submitList(imagesUri);
     }
 
 
@@ -236,17 +226,14 @@ public class AssignmentFragment extends Fragment implements StorageCallbacks, Qu
      * It will be triggered continuously until all the images will be uploaded
      */
     private void handleImageUpload() {
-        if (getActivity() == null) return;
-        Subject subject = viewModel.getSubject();
-//        Bitmap bitmap = ImageUtils.getInstance(getActivity().getContentResolver()).getBitmap();
-//        if (bitmap != null) {
-            if (!is_uploading) is_uploading = true;
-//            StorageHandler.getInstance(this).
-//                    .uploadImage(bitmap,
-//                            new Date().getTime() + (uploadCount + 1) + ".jpg",
-//                            subject.get_id(),
-//                            _assignment_id);
-//        }
+        if (getActivity() == null || imagesUri == null || imagesUri.size() == 0) {
+            ViewUtils.hideProgressBar(assignmentBinding.progressBarContainer);
+            ViewUtils.enableViews(assignmentBinding.addAssignmentButton, titleInputLayout, descInputLayout);
+            is_uploading = false;
+            return;
+        }
+        StorageHandler.getInstance(this, getActivity()).uploadImage(imagesUri);
+        HandlerCompat.createAsync(Looper.getMainLooper()).post(() -> assignmentBinding.uploadedProgress.setText(R.string.uploading_images));
     }
 
     /**
@@ -256,16 +243,16 @@ public class AssignmentFragment extends Fragment implements StorageCallbacks, Qu
      */
     private void storeOnDatabase() {
         if (getActivity() == null) return;
-        assignmentBinding.uploadedProgress.setText(R.string.finalizing_uploads);
         Subject subject = viewModel.getSubject();
         String userId = LocalStorage.getInstance(getActivity()).getUserId();
+        HandlerCompat.createAsync(Looper.getMainLooper()).post(() -> assignmentBinding.uploadedProgress.setText(R.string.finalizing_uploads));
 
         // Creating new assignment object
         Assignment assignment = new Assignment(
-                _assignment_id,
+                IdGenerator.generateRandomId(),
                 _title,
                 _desc,
-                new String[]{},
+                images,
                 new String[]{},
                 subject.get_class(),
                 userId,
@@ -280,22 +267,6 @@ public class AssignmentFragment extends Fragment implements StorageCallbacks, Qu
 
         QueryHandler.getInstance(this)
                 .addAssignment(assignment);
-    }
-
-
-    /**
-     * ----------------------------------------------------------------------------
-     * Function to display the progress update in textview while loading
-     */
-    private void updateUploadProgress(double progress) {
-        if (assignmentBinding == null) return;
-
-        String message = String.format(Locale.ENGLISH, "Uploading (%d/%d) Images", uploadCount + 1, imagesUri.size());
-        HandlerCompat.createAsync(Looper.getMainLooper())
-                .post(() -> {
-                    assignmentBinding.uploadedProgress
-                            .setText(message);
-                });
     }
 
 
@@ -332,16 +303,11 @@ public class AssignmentFragment extends Fragment implements StorageCallbacks, Qu
      * These are the methods implemented from the StorageCallbacks
      * -------------------------------------------------------------------------
      */
-
     @Override
-    public void onSuccess(String imageUrl) {
-        if (imagesList != null) imagesList.add(imageUrl);
-        uploadCount += 1;
-        if (uploadCount < imagesUri.size()) {
-            handleImageUpload();
-            return;
-        }
-
+    public void onSuccess(String[] urls) {
+        if (assignmentBinding == null) return;
+        images = urls;
+        NotifyUtils.logDebug(TAG, Arrays.toString(urls));
         // Storing to cloud Firestore
         storeOnDatabase();
     }
@@ -349,25 +315,11 @@ public class AssignmentFragment extends Fragment implements StorageCallbacks, Qu
     @Override
     public void onFailure(Exception e) {
         if (assignmentBinding == null) return;
-
         if (getContext() != null) NotifyUtils.showToast(getContext(), "Upload Failed");
+        NotifyUtils.logError(TAG, "onFailure()", e);
         is_uploading = false;
         ViewUtils.hideProgressBar(assignmentBinding.progressBarContainer);
         ViewUtils.enableViews(assignmentBinding.addAssignmentButton, titleInputLayout, descInputLayout);
-
-    }
-
-    @Override
-    public void onCanceled() {
-        if (assignmentBinding == null) return;
-
-        if (getContext() != null) NotifyUtils.showToast(getContext(), "You canceled the upload!");
-        is_uploading = false;
-        ViewUtils.hideProgressBar(assignmentBinding.progressBarContainer);
-    }
-
-    @Override
-    public void onProgress() {
 
     }
 
@@ -397,19 +349,17 @@ public class AssignmentFragment extends Fragment implements StorageCallbacks, Qu
 
     @Override
     public void onQuerySuccess(User user, List<School> schools, List<Student> students, List<Subject> subjects, List<Assignment> assignments, List<Submission> submissions, List<Notice> notices) {
-        if (assignmentBinding == null) return;
 
-        ViewUtils.hideProgressBar(assignmentBinding.progressBarContainer);
-        ViewUtils.enableViews(assignmentBinding.addAssignmentButton, titleInputLayout, descInputLayout);
-        if (getContext() != null) NotifyUtils.showToast(getContext(), "Added Successfully");
-        uploadCount = 0;
-        is_uploading = false;
-        clearEdittext();
     }
 
     @Override
     public void onQuerySuccess(String message) {
-
+        if (assignmentBinding == null) return;
+        ViewUtils.hideProgressBar(assignmentBinding.progressBarContainer);
+        ViewUtils.enableViews(assignmentBinding.addAssignmentButton, titleInputLayout, descInputLayout);
+        if (getContext() != null) NotifyUtils.showToast(getContext(), "Added Successfully");
+        is_uploading = false;
+        clearEdittext();
     }
 
     @Override

@@ -60,4 +60,5 @@
     <string name="update_your_assignment_title">Update your assignment title</string>
     <string name="finalizing_uploads">Finalizing Uploads</string>
     <string name="checked">Checked</string>
+    <string name="uploading_images">Uploading Images</string>
 </resources>

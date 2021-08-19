@@ -19,8 +19,11 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.itheamc.hamroclassroom_teachers.callbacks.StorageCallbacks;
 import com.itheamc.hamroclassroom_teachers.utils.ImageUtils;
+import com.itheamc.hamroclassroom_teachers.utils.NotifyUtils;
 
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -124,7 +127,7 @@ public class StorageHandler {
 
             // Outside for loop
             Request request = new Request.Builder()
-                    .url("___Your___URL___")
+                    .url(PathHandler.IMAGES_UPLOAD_PATH)
                     .header("Content-Type", "application/x-www-form-urlencoded")
                     .post(requestBody)
                     .build();
@@ -138,7 +141,19 @@ public class StorageHandler {
 
                 @Override
                 public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                    try {
+                        JSONObject jsonObject = new JSONObject(response.body().string());
+                        if (jsonObject.has("urls")) {
+                            String[] urls = JsonHandler.getImages(jsonObject);
+                            notifySuccess(urls);
+                            return;
+                        }
 
+                        notifyFailure(new Exception("Unable to upload"));
+                    } catch (JSONException e) {
+                        notifyFailure(e);
+                        e.printStackTrace();
+                    }
                 }
             });
         });
@@ -153,27 +168,15 @@ public class StorageHandler {
      * - canceled
      * - progress changed
      */
-    private void notifySuccess(String imageUrl) {
+    private void notifySuccess(String[] urls) {
         handler.post(() -> {
-            storageCallback.onSuccess(imageUrl);
+            storageCallback.onSuccess(urls);
         });
     }
 
     private void notifyFailure(Exception e) {
         handler.post(() -> {
             storageCallback.onFailure(e);
-        });
-    }
-
-    private void notifyCancel() {
-        handler.post(() -> {
-            storageCallback.onCanceled();
-        });
-    }
-
-    private void notifyProgress() {
-        handler.post(() -> {
-            storageCallback.onProgress();
         });
     }
 }

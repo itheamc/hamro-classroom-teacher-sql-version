@@ -323,4 +323,16 @@ public class JsonHandler {
         return notices;
     }
 
+    // Images Urls
+    public static String[] getImages(@NonNull JSONObject jsonObject) throws JSONException {
+        JSONArray jsonArray = jsonObject.getJSONArray("urls");
+        String[] urls = new String[jsonArray.length()];
+
+        for (int i = 0; i < jsonObject.length(); i++) {
+            urls[i] = jsonArray.get(i).toString();
+        }
+
+        return urls;
+    }
+
 }
