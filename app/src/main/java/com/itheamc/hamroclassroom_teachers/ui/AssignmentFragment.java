@@ -69,6 +69,7 @@ public class AssignmentFragment extends Fragment implements StorageCallbacks, Qu
     private List<Uri> imagesUri;
     private ImageAdapter imageAdapter;
     private MainViewModel viewModel;
+    private Assignment assignment;
 
 
     /*
@@ -193,6 +194,7 @@ public class AssignmentFragment extends Fragment implements StorageCallbacks, Qu
             }
 
             handleImageUpload();
+            is_uploading = true;
         });
 
 
@@ -251,7 +253,7 @@ public class AssignmentFragment extends Fragment implements StorageCallbacks, Qu
         HandlerCompat.createAsync(Looper.getMainLooper()).post(() -> assignmentBinding.uploadedProgress.setText(R.string.finalizing_uploads));
 
         // Creating new assignment object
-        Assignment assignment = new Assignment(
+        this.assignment = new Assignment(
                 IdGenerator.generateRandomId(),
                 _title,
                 _desc,
@@ -361,6 +363,7 @@ public class AssignmentFragment extends Fragment implements StorageCallbacks, Qu
         ViewUtils.hideProgressBar(assignmentBinding.progressBarContainer);
         ViewUtils.enableViews(assignmentBinding.addAssignmentButton, titleInputLayout, descInputLayout);
         if (getContext() != null) NotifyUtils.showToast(getContext(), "Added Successfully");
+        viewModel.updateAssignments(assignment);
         is_uploading = false;
         clearEdittext();
     }
