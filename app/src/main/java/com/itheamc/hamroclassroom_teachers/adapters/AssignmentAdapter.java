@@ -12,6 +12,7 @@ import com.itheamc.hamroclassroom_teachers.callbacks.AssignmentCallbacks;
 import com.itheamc.hamroclassroom_teachers.databinding.AssignmentViewBinding;
 import com.itheamc.hamroclassroom_teachers.models.Assignment;
 import com.itheamc.hamroclassroom_teachers.utils.NotifyUtils;
+import com.itheamc.hamroclassroom_teachers.utils.TimeUtils;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -42,7 +43,7 @@ public class AssignmentAdapter extends ListAdapter<Assignment, AssignmentAdapter
         Assignment assignment = getItem(position);
         holder.viewBinding.setAssignment(assignment);
         holder.viewBinding.setNumber(String.valueOf(position + 1));
-        String formattedDate = DateFormat.getDateInstance().format(assignment.get_assigned_date());
+        String formattedDate = DateFormat.getDateInstance().format(TimeUtils.toDate(assignment.get_assigned_date()));
         holder.viewBinding.setDate(formattedDate);
     }
 

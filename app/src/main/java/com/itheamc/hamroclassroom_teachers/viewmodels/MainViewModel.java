@@ -1,5 +1,7 @@
 package com.itheamc.hamroclassroom_teachers.viewmodels;
 
+import android.os.Build;
+
 import androidx.lifecycle.ViewModel;
 
 import com.itheamc.hamroclassroom_teachers.models.Assignment;
@@ -162,10 +164,6 @@ public class MainViewModel extends ViewModel {
 
     public void setSubmissionsHashMap(List<Submission> _submissions) {
         if (this.submissionsHashMap == null) submissionsHashMap = new HashMap<>();
-        if (this.submissionsHashMap.get(_submissions.get(0).get_assignment_ref()) != null) {
-            this.submissionsHashMap.replace(_submissions.get(0).get_assignment_ref(), _submissions);
-            return;
-        }
         this.submissionsHashMap.put(_submissions.get(0).get_assignment_ref(), _submissions);
     }
 
@@ -176,10 +174,6 @@ public class MainViewModel extends ViewModel {
 
     public void setAssignmentsHashMap(List<Assignment> _assignments) {
         if (this.assignmentsHashMap == null) assignmentsHashMap = new HashMap<>();
-        if (this.assignmentsHashMap.get(_assignments.get(0).get_subject_ref()) != null) {
-            this.assignmentsHashMap.replace(_assignments.get(0).get_desc(), _assignments);
-            return;
-        }
         this.assignmentsHashMap.put(_assignments.get(0).get_subject_ref(), _assignments);
     }
 
@@ -225,7 +219,7 @@ public class MainViewModel extends ViewModel {
             updatedSubmissions.add(sub);
         }
 
-        submissionsHashMap.replace(assignment_ref, updatedSubmissions);
+        submissionsHashMap.put(assignment_ref, updatedSubmissions);
         return updatedSubmissions;
     }
 

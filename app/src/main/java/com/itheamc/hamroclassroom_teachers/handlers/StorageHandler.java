@@ -59,17 +59,17 @@ public class StorageHandler {
      */
 
     // Constructor
-    private StorageHandler(@NonNull StorageCallbacks storageCallback, @NonNull FragmentActivity activity) {
+    private StorageHandler(@NonNull FragmentActivity activity, @NonNull StorageCallbacks storageCallback) {
         this.storageCallback = storageCallback;
         this.activity = activity;
-        this.executorService = Executors.newFixedThreadPool(4);
+        this.executorService = Executors.newFixedThreadPool(4);;
         this.handler = HandlerCompat.createAsync(Looper.getMainLooper());
     }
 
     // Instance for Cloud Storage
-    public static StorageHandler getInstance(@NonNull StorageCallbacks storageCallback, @NonNull FragmentActivity activity) {
+    public static StorageHandler getInstance(@NonNull FragmentActivity activity, @NonNull StorageCallbacks storageCallback) {
         if (instance == null) {
-            instance = new StorageHandler(storageCallback, activity);
+            instance = new StorageHandler(activity, storageCallback);
         }
         return instance;
     }

@@ -16,12 +16,8 @@ public class TimeUtils {
 
     // Converting current time in string and returning it
     public static String now() {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            return String.valueOf(Timestamp.from(Instant.now()));
-        } else {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.ENGLISH);
-            return dateFormat.format(new Date());
-        }
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.ENGLISH);
+        return dateFormat.format(new Date());
     }
 
     // Converting current time in string and returning it

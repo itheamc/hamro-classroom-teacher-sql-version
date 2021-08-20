@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -57,6 +58,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class AssignmentFragment extends Fragment implements StorageCallbacks, QueryCallbacks, ImageCallbacks {
     private static final String TAG = "AssignmentFragment";
@@ -232,7 +235,7 @@ public class AssignmentFragment extends Fragment implements StorageCallbacks, Qu
             is_uploading = false;
             return;
         }
-        StorageHandler.getInstance(this, getActivity()).uploadImage(imagesUri);
+        StorageHandler.getInstance(getActivity(), this).uploadImage(imagesUri);
         HandlerCompat.createAsync(Looper.getMainLooper()).post(() -> assignmentBinding.uploadedProgress.setText(R.string.uploading_images));
     }
 

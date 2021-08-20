@@ -165,8 +165,8 @@ public class JsonHandler {
                 assignmentObj.getString("_id"),
                 assignmentObj.getString("_title"),
                 assignmentObj.getString("_desc"),
-                ArrayUtils.toArray(assignmentObj.getString("_images"), ", "),
-                ArrayUtils.toArray(assignmentObj.getString("_docs"), ", "),
+                ArrayUtils.toArray(assignmentObj.getString("_images"), ","),
+                ArrayUtils.toArray(assignmentObj.getString("_docs"), ","),
                 String.valueOf(assignmentObj.getInt("_class")),
                 subject.get_teacher_ref(),
                 subject.get_teacher(),
@@ -328,7 +328,7 @@ public class JsonHandler {
         JSONArray jsonArray = jsonObject.getJSONArray("urls");
         String[] urls = new String[jsonArray.length()];
 
-        for (int i = 0; i < jsonObject.length(); i++) {
+        for (int i = 0; i < jsonArray.length(); i++) {
             urls[i] = jsonArray.get(i).toString();
         }
 
