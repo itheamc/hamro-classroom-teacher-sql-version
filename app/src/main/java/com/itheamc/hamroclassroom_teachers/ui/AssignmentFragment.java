@@ -61,7 +61,7 @@ import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class AssignmentFragment extends Fragment implements StorageCallbacks, QueryCallbacks, ImageCallbacks {
+public class AssignmentFragment extends Fragment implements StorageCallbacks, ImageCallbacks {
     private static final String TAG = "AssignmentFragment";
     private FragmentAssignmentBinding assignmentBinding;
     private NavController navController;
@@ -69,7 +69,6 @@ public class AssignmentFragment extends Fragment implements StorageCallbacks, Qu
     private List<Uri> imagesUri;
     private ImageAdapter imageAdapter;
     private MainViewModel viewModel;
-    private Assignment assignment;
 
 
     /*
@@ -187,13 +186,7 @@ public class AssignmentFragment extends Fragment implements StorageCallbacks, Qu
 
             ViewUtils.showProgressBar(assignmentBinding.progressBarContainer);
             ViewUtils.disableViews(assignmentBinding.addAssignmentButton, titleInputLayout, descInputLayout);
-
-            if (imagesUri == null || imagesUri.size() < 1) {
-                storeOnDatabase();
-                return;
-            }
-
-            handleImageUpload();
+            storeOnDatabase();
             is_uploading = true;
         });
 
@@ -230,16 +223,16 @@ public class AssignmentFragment extends Fragment implements StorageCallbacks, Qu
      * Function to handle image upload to cloud storage
      * It will be triggered continuously until all the images will be uploaded
      */
-    private void handleImageUpload() {
-        if (getActivity() == null || imagesUri == null || imagesUri.size() == 0) {
-            ViewUtils.hideProgressBar(assignmentBinding.progressBarContainer);
-            ViewUtils.enableViews(assignmentBinding.addAssignmentButton, titleInputLayout, descInputLayout);
-            is_uploading = false;
-            return;
-        }
-        StorageHandler.getInstance(getActivity(), this).uploadImage(imagesUri);
-        HandlerCompat.createAsync(Looper.getMainLooper()).post(() -> assignmentBinding.uploadedProgress.setText(R.string.uploading_images));
-    }
+//    private void handleImageUpload() {
+//        if (getActivity() == null || imagesUri == null || imagesUri.size() == 0) {
+//            ViewUtils.hideProgressBar(assignmentBinding.progressBarContainer);
+//            ViewUtils.enableViews(assignmentBinding.addAssignmentButton, titleInputLayout, descInputLayout);
+//            is_uploading = false;
+//            return;
+//        }
+//        StorageHandler.getInstance(getActivity(), this).uploadImage(imagesUri);
+//        HandlerCompat.createAsync(Looper.getMainLooper()).post(() -> assignmentBinding.uploadedProgress.setText(R.string.uploading_images));
+//    }
 
     /**
      * --------------------------------------------------------------------------
@@ -250,15 +243,15 @@ public class AssignmentFragment extends Fragment implements StorageCallbacks, Qu
         if (getActivity() == null) return;
         Subject subject = viewModel.getSubject();
         String userId = LocalStorage.getInstance(getActivity()).getUserId();
-        HandlerCompat.createAsync(Looper.getMainLooper()).post(() -> assignmentBinding.uploadedProgress.setText(R.string.finalizing_uploads));
+        HandlerCompat.createAsync(Looper.getMainLooper()).post(() -> assignmentBinding.uploadedProgress.setText("Please Wait.."));
 
         // Creating new assignment object
-        this.assignment = new Assignment(
+        Assignment assignment = new Assignment(
                 IdGenerator.generateRandomId(),
                 _title,
                 _desc,
-                images,
-                new String[]{},
+                null,
+                null,
                 subject.get_class(),
                 userId,
                 null,
@@ -270,8 +263,8 @@ public class AssignmentFragment extends Fragment implements StorageCallbacks, Qu
                 TimeUtils.later(2)
         );
 
-        QueryHandler.getInstance(this)
-                .addAssignment(assignment);
+        if (getActivity() != null) StorageHandler.getInstance(getActivity(), this)
+                .uploadImage(imagesUri, assignment);
     }
 
 
@@ -304,17 +297,19 @@ public class AssignmentFragment extends Fragment implements StorageCallbacks, Qu
 
 
     /**
-     * -------------------------------------------------------------------------
-     * These are the methods implemented from the StorageCallbacks
-     * -------------------------------------------------------------------------
+     * ----------------------------------------------------------------------------------------
+     * These are the methods implemented from the StorageCalbacks
+     * @param message - success response message
      */
+
     @Override
-    public void onSuccess(String[] urls) {
+    public void onSuccess(String message) {
         if (assignmentBinding == null) return;
-        images = urls;
-        NotifyUtils.logDebug(TAG, Arrays.toString(urls));
-        // Storing to cloud Firestore
-        storeOnDatabase();
+        ViewUtils.hideProgressBar(assignmentBinding.progressBarContainer);
+        ViewUtils.enableViews(assignmentBinding.addAssignmentButton, titleInputLayout, descInputLayout);
+        if (getContext() != null) NotifyUtils.showToast(getContext(), "Added Successfully");
+        is_uploading = false;
+        clearEdittext();
     }
 
     @Override
@@ -343,38 +338,6 @@ public class AssignmentFragment extends Fragment implements StorageCallbacks, Qu
         if (imagesUri.size() == 0) ViewUtils.visibleViews(assignmentBinding.imagePickerButton);
     }
 
-    /**
-     * ------------------------------------------------------------------------------------------
-     * This method is implemented from the QueryCallbacks
-     * -  Due to the same name and same arguments onFailure(Exception e) there is a only one
-     * on failure method for StorageCallbacks and FirestoreCallbacks
-     * - If something went wrong above OnFailure(Exception e) will be triggered
-     * ------------------------------------------------------------------------------------------
-     */
-
-    @Override
-    public void onQuerySuccess(User user, List<School> schools, List<Student> students, List<Subject> subjects, List<Assignment> assignments, List<Submission> submissions, List<Notice> notices) {
-
-    }
-
-    @Override
-    public void onQuerySuccess(String message) {
-        if (assignmentBinding == null) return;
-        ViewUtils.hideProgressBar(assignmentBinding.progressBarContainer);
-        ViewUtils.enableViews(assignmentBinding.addAssignmentButton, titleInputLayout, descInputLayout);
-        if (getContext() != null) NotifyUtils.showToast(getContext(), "Added Successfully");
-        viewModel.updateAssignments(assignment);
-        is_uploading = false;
-        clearEdittext();
-    }
-
-    @Override
-    public void onQueryFailure(Exception e) {
-        if (assignmentBinding == null) return;
-        is_uploading = false;
-        ViewUtils.hideProgressBar(assignmentBinding.progressBarContainer);
-        ViewUtils.enableViews(assignmentBinding.addAssignmentButton, titleInputLayout, descInputLayout);
-    }
 
     /*
     Overrided function to view destroy

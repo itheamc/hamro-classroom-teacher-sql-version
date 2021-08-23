@@ -1,43 +1,36 @@
 package com.itheamc.hamroclassroom_teachers.handlers;
 
-import android.app.Activity;
-import android.content.ContentResolver;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.webkit.MimeTypeMap;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
 import androidx.core.os.HandlerCompat;
 import androidx.fragment.app.FragmentActivity;
 
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 import com.itheamc.hamroclassroom_teachers.callbacks.StorageCallbacks;
+import com.itheamc.hamroclassroom_teachers.models.Assignment;
 import com.itheamc.hamroclassroom_teachers.utils.ImageUtils;
-import com.itheamc.hamroclassroom_teachers.utils.NotifyUtils;
 
-import org.jetbrains.annotations.NotNull;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.time.Duration;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.Interceptor;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
+import okhttp3.OkHttp;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -49,7 +42,7 @@ public class StorageHandler {
     private final StorageCallbacks storageCallback;
     private final FragmentActivity activity;
     private final ExecutorService executorService;
-    private Handler handler;
+    private final Handler handler;
 
     /**
      * ----------------------------------------------------------------------
@@ -87,53 +80,93 @@ public class StorageHandler {
      * ---------------------------------------------
      * Function to upload image on the cloud storage
      */
-    public void uploadImage(@NonNull @NotNull List<Uri> imagesUri) {
-
-        // Creating the instance of ImageUtils
-        ImageUtils imageUtils = ImageUtils.getInstance(activity.getContentResolver());
+    public void uploadImage(List<Uri> imagesUri, @NonNull Assignment assignment) {
 
         // Handling all the image processing and uploads in background
         executorService.execute(() -> {
 
-            MultipartBody.Builder builder = new MultipartBody.Builder();
-            builder.setType(MultipartBody.FORM);
+            Request.Builder requestBuilder = new Request.Builder()
+                    .url(PathHandler.ASSIGNMENTS_PATH);
 
-            for (Uri uri : imagesUri) {
-                if (uri == null) continue;
+            // If images are selected for upload
+            if (imagesUri != null && imagesUri.size() > 0) {
+                // Creating the instance of ImageUtils
+                ImageUtils imageUtils = ImageUtils.getInstance(activity.getContentResolver());
 
-                String s = imageUtils.getFilePath(uri);
-                File file = new File(activity.getCacheDir(), s);
-                FileOutputStream outputStream = null;
-                try {
-                    outputStream = new FileOutputStream(file);
-                    byte[] bytes = imageUtils.getByteArray(uri, 25);
-                    outputStream.write(bytes);
-                    outputStream.close();
-                    Uri uris = Uri.fromFile(file);
-                    String fileExtension = MimeTypeMap.getFileExtensionFromUrl(uris.toString());
-                    String mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension.toLowerCase());
-                    String imageName = file.getName();
+                MultipartBody.Builder builder = new MultipartBody.Builder();
+                builder.setType(MultipartBody.FORM);
 
-                    builder.addFormDataPart("file", imageName, RequestBody.create(file, MediaType.parse(mime)));
+                for (Uri uri : imagesUri) {
+                    if (uri == null) continue;
 
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    String s = imageUtils.getFilePath(uri);
+                    File file = new File(activity.getCacheDir(), s);
+                    FileOutputStream outputStream = null;
+                    try {
+                        outputStream = new FileOutputStream(file);
+                        byte[] bytes = imageUtils.getByteArray(uri, 15);
+                        outputStream.write(bytes);
+                        outputStream.close();
+                        Uri uris = Uri.fromFile(file);
+                        String fileExtension = MimeTypeMap.getFileExtensionFromUrl(uris.toString());
+                        String mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension.toLowerCase());
+                        String imageName = file.getName();
+
+                        builder.addFormDataPart("file", imageName, RequestBody.create(file, MediaType.parse(mime)));
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
                 }
 
+                // Outside for loop
+                RequestBody requestBody = builder
+                        .addFormDataPart("_id", assignment.get_id())
+                        .addFormDataPart("_title", assignment.get_title())
+                        .addFormDataPart("_desc", assignment.get_desc())
+                        .addFormDataPart("_images", "")
+                        .addFormDataPart("_docs", "")
+                        .addFormDataPart("_class", assignment.get_class())
+                        .addFormDataPart("_teacher", assignment.get_teacher_ref())
+                        .addFormDataPart("_subject", assignment.get_subject_ref())
+                        .addFormDataPart("_school", assignment.get_school_ref())
+                        .addFormDataPart("_assigned_date", assignment.get_assigned_date())
+                        .addFormDataPart("_due_date", assignment.get_due_date())
+                        .build();
+
+                requestBuilder
+                        .header("Content-Type", "application/x-www-form-urlencoded")
+                        .post(requestBody)
+                        .build();
+            } else {
+                // If images are not selected for upload
+                RequestBody rb = new FormBody.Builder()
+                        .add("_id", assignment.get_id())
+                        .add("_title", assignment.get_title())
+                        .add("_desc", assignment.get_desc())
+                        .add("_images", "")
+                        .add("_docs", "")
+                        .add("_class", assignment.get_class())
+                        .add("_teacher", assignment.get_teacher_ref())
+                        .add("_subject", assignment.get_subject_ref())
+                        .add("_school", assignment.get_school_ref())
+                        .add("_assigned_date", assignment.get_assigned_date())
+                        .add("_due_date", assignment.get_due_date())
+                        .build();
+
+                requestBuilder
+                        .post(rb)
+                        .build();
             }
 
-            RequestBody requestBody = builder.build();
-            Log.d(TAG, "uploadImage: " + requestBody.toString());
-
-            // Outside for loop
-            Request request = new Request.Builder()
-                    .url(PathHandler.IMAGES_UPLOAD_PATH)
-                    .header("Content-Type", "application/x-www-form-urlencoded")
-                    .post(requestBody)
+            OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                    .callTimeout(300, TimeUnit.SECONDS)
+                    .connectTimeout(60, TimeUnit.SECONDS)
                     .build();
 
 
-            new OkHttpClient().newCall(request).enqueue(new Callback() {
+            okHttpClient.newCall(requestBuilder.build()).enqueue(new Callback() {
                 @Override
                 public void onFailure(@NonNull Call call, @NonNull IOException e) {
                     notifyFailure(e);
@@ -143,16 +176,17 @@ public class StorageHandler {
                 public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                     try {
                         JSONObject jsonObject = new JSONObject(response.body().string());
-                        if (jsonObject.has("urls")) {
-                            String[] urls = JsonHandler.getImages(jsonObject);
-                            notifySuccess(urls);
+                        if (response.isSuccessful()) {
+                            if (jsonObject.getString("message").equals("success")) {
+                                notifySuccess(jsonObject.getString("message"));
+                            } else {
+                                notifyFailure(new Exception(jsonObject.getString("message")));
+                            }
                             return;
                         }
-
-                        notifyFailure(new Exception("Unable to upload"));
-                    } catch (JSONException e) {
+                        notifyFailure(new Exception("Unable to add"));
+                    } catch (Exception e) {
                         notifyFailure(e);
-                        e.printStackTrace();
                     }
                 }
             });
@@ -165,10 +199,8 @@ public class StorageHandler {
      * Function to notify the image upload status
      * - success
      * - failure
-     * - canceled
-     * - progress changed
      */
-    private void notifySuccess(String[] urls) {
+    private void notifySuccess(String urls) {
         handler.post(() -> {
             storageCallback.onSuccess(urls);
         });

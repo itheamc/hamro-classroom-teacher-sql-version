@@ -14,11 +14,9 @@ import androidx.navigation.Navigation;
 
 import com.itheamc.hamroclassroom_teachers.R;
 import com.itheamc.hamroclassroom_teachers.adapters.SubmissionAdapter;
-import com.itheamc.hamroclassroom_teachers.callbacks.FirestoreCallbacks;
 import com.itheamc.hamroclassroom_teachers.callbacks.QueryCallbacks;
 import com.itheamc.hamroclassroom_teachers.callbacks.SubmissionCallbacks;
 import com.itheamc.hamroclassroom_teachers.databinding.FragmentSubmissionsBinding;
-import com.itheamc.hamroclassroom_teachers.handlers.FirestoreHandler;
 import com.itheamc.hamroclassroom_teachers.handlers.QueryHandler;
 import com.itheamc.hamroclassroom_teachers.models.Assignment;
 import com.itheamc.hamroclassroom_teachers.models.Notice;
@@ -150,7 +148,11 @@ public class SubmissionsFragment extends Fragment implements QueryCallbacks, Sub
 
     @Override
     public void onQuerySuccess(String message) {
-
+        if (submissionsBinding == null) return;
+        ViewUtils.hideProgressBar(submissionsBinding.progressBarContainer);
+        ViewUtils.handleRefreshing(submissionsBinding.swipeRefreshLayout);
+        NotifyUtils.logDebug(TAG, message);
+        if (getContext() != null) NotifyUtils.showToast(getContext(), message);
     }
 
     @Override

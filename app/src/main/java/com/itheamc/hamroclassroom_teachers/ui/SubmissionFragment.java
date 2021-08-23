@@ -29,6 +29,7 @@ import com.itheamc.hamroclassroom_teachers.models.Student;
 import com.itheamc.hamroclassroom_teachers.models.Subject;
 import com.itheamc.hamroclassroom_teachers.models.Submission;
 import com.itheamc.hamroclassroom_teachers.models.User;
+import com.itheamc.hamroclassroom_teachers.utils.ArrayUtils;
 import com.itheamc.hamroclassroom_teachers.utils.NotifyUtils;
 import com.itheamc.hamroclassroom_teachers.utils.ViewUtils;
 import com.itheamc.hamroclassroom_teachers.viewmodels.MainViewModel;
@@ -98,7 +99,7 @@ public class SubmissionFragment extends Fragment implements QueryCallbacks {
 
         Submission submission = viewModel.getSubmission();
         if (submission != null) {
-            if (submission.get_images() != null && submission.get_images().length > 0) sliderAdapter.submitList(Arrays.asList(submission.get_images()));
+            if (submission.get_images() != null && submission.get_images().length > 0) sliderAdapter.submitList(ArrayUtils.asList(submission.get_images()));
             submissionBinding.setSubmission(submission);
         }
 
