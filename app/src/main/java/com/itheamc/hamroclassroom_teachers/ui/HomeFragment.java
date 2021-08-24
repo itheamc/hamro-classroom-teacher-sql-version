@@ -253,7 +253,7 @@ public class HomeFragment extends Fragment implements SubjectCallbacks, QueryCal
             subject = viewModel.getSubjects().get(_position);
         if (subject != null) {
             isDeleting = true;
-            this.position = _position;
+            position = _position;
             QueryHandler.getInstance(this).deleteSubject(subject.get_id());
             showProgress();
         }
@@ -291,7 +291,6 @@ public class HomeFragment extends Fragment implements SubjectCallbacks, QueryCal
 
         if (isDeleting) {
             isDeleting = false;
-            position = 0;
             viewModel.removeSubject(position);
             subjectAdapter.notifyItemRemoved(position);
         }

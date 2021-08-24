@@ -39,7 +39,7 @@ public class MainViewModel extends ViewModel {
     /*
    Boolean
     */
-    private boolean isSubjectUpdating;
+    private boolean isSubjectUpdating = false;
 
     /*
     Map

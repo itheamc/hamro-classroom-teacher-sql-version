@@ -243,7 +243,7 @@ public class AssignmentsFragment extends Fragment implements AssignmentCallbacks
             assignment = viewModel.getAssignments().get(_position);
         if (assignment != null) {
             isDeleting = true;
-            this.position = _position;
+            position = _position;
             QueryHandler.getInstance(this).deleteAssignment(assignment.get_id());
             showProgress();
         }
@@ -295,7 +295,6 @@ public class AssignmentsFragment extends Fragment implements AssignmentCallbacks
 
         if (isDeleting) {
             isDeleting = false;
-            position = 0;
             viewModel.removeAssignment(position);
             assignmentAdapter.notifyItemRemoved(position);
         }

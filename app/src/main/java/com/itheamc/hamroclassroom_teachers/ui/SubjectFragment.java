@@ -220,27 +220,33 @@ public class SubjectFragment extends Fragment implements QueryCallbacks, SchoolC
     Function to handle the subject creation
      */
     private void handleAddNow() {
-        if (!isInputsValid()) {
+        boolean isValidated = isInputsValid();
+        Log.d(TAG, "handleAddNow: " + String.valueOf(isValidated));
+        if (!isValidated) {
             if (getContext() != null)
                 NotifyUtils.showToast(getContext(), "Please fill all the details!!");
             return;
         }
-
-        ViewUtils.showProgressBar(subjectBinding.subjectProgressBarContainer);
-        ViewUtils.disableViews(subjectInputLayout, classInputLayout, schoolInputLayout, classTimeInputLayout, addEditBtn);
 
         if (!viewModel.isSubjectUpdating()) {
             user = viewModel.getUser();
 
             if (user == null) {
                 Log.d(TAG, "handleAddNow: User is null");
-                if (getActivity() != null) QueryHandler.getInstance(this).getUser(LocalStorage.getInstance(getActivity()).getUserId());
+                if (getActivity() != null) {
+                    QueryHandler.getInstance(this).getUser(LocalStorage.getInstance(getActivity()).getUserId());
+                    ViewUtils.showProgressBar(subjectBinding.subjectProgressBarContainer);
+                    ViewUtils.disableViews(subjectInputLayout, classInputLayout, schoolInputLayout, classTimeInputLayout, addEditBtn);
+                }
+                return;
             }
+
+            addSubject();
             return;
         }
 
-        Log.d(TAG, "handleAddNow: User is not null");
-        addSubject();
+        updateSubject();
+
     }
 
     /*
@@ -248,30 +254,34 @@ public class SubjectFragment extends Fragment implements QueryCallbacks, SchoolC
     Finally adding subject to cloud firestore
      */
     private void addSubject() {
-        Subject subject = null;
-        if (!viewModel.isSubjectUpdating()) {
-            subject = new Subject(
-                    IdGenerator.generateRandomId(),
-                    _subject,
-                    _class,
-                    user.get_id(),
-                    null,
-                    school.get_id(),
-                    null,
-                    "",
-                    _time,
-                    TimeUtils.now(),
-                    false,
-                    false
-            );
+        Subject subject = new Subject(
+                IdGenerator.generateRandomId(),
+                _subject,
+                _class,
+                user.get_id(),
+                null,
+                school.get_id(),
+                null,
+                "",
+                _time,
+                TimeUtils.now(),
+                false,
+                false
+        );
 
-            NotifyUtils.logDebug(TAG, subject.toString());
-            QueryHandler.getInstance(this).addSubject(subject);
-            return;
-        }
+        NotifyUtils.logDebug(TAG, subject.toString());
+        ViewUtils.showProgressBar(subjectBinding.subjectProgressBarContainer);
+        ViewUtils.disableViews(subjectInputLayout, classInputLayout, schoolInputLayout, classTimeInputLayout, addEditBtn);
+        QueryHandler.getInstance(this).addSubject(subject);
+    }
 
-        // If updating
-        subject = viewModel.getSubject();
+
+    /*
+    --------------------------------------
+    Finally updating subject to cloud firestore
+     */
+    private void updateSubject() {
+        Subject subject = viewModel.getSubject();
 
         Subject updatedSub = new Subject();
 
@@ -292,23 +302,22 @@ public class SubjectFragment extends Fragment implements QueryCallbacks, SchoolC
                 updatedSub.get_class() != null ||
                 updatedSub.get_school_ref() != null ||
                 updatedSub.get_start_time() != null) {
+
+            ViewUtils.hideProgressBar(subjectBinding.subjectProgressBarContainer);
+            ViewUtils.enableViews(subjectInputLayout, classInputLayout, schoolInputLayout, classTimeInputLayout, addEditBtn);
             QueryHandler.getInstance(this).updateSubject(updatedSub);
             return;
         }
         if (getContext() != null)
             NotifyUtils.showToast(getContext(), "You have not make any changes");
-        ViewUtils.hideProgressBar(subjectBinding.subjectProgressBarContainer);
-        ViewUtils.enableViews(subjectInputLayout, classInputLayout, schoolInputLayout, classTimeInputLayout, addEditBtn);
 
     }
-
 
     /*
     --------------------------------------
     Function to verify inputs
      */
     private boolean isInputsValid() {
-        Log.d(TAG, "isInputsValid: Called");
         // Setting the value to the string variables
         if (subEditText != null) _subject = subEditText.getText().toString().trim();
         if (classEditText != null) _class = classEditText.getText().toString().trim();
