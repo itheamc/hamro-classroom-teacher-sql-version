@@ -36,6 +36,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
+
+                <ImageButton
+                    android:id="@+id/menuBtn"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="?selectableItemBackgroundBorderless"
+                    app:cornerRadius="9dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_menu_icon"
+                    tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck"
+                    android:contentDescription="TODO" />
+
+
                 <TextView
                     android:id="@+id/subjectName"
                     android:layout_width="wrap_content"

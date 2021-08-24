@@ -28,7 +28,6 @@
     <string name="welcome_to">Welcome\nto</string>
     <string name="went_wrong_message">Something went wrong!!</string>
     <string name="assignments">Assignments</string>
-    <string name="edit">Edit</string>
     <string name="details">Details</string>
     <string name="add_subject">Add Subject</string>
     <string name="_class">Class</string>
@@ -61,4 +60,7 @@
     <string name="finalizing_uploads">Finalizing Uploads</string>
     <string name="checked">Checked</string>
     <string name="uploading_images">Uploading Images</string>
+    <string name="delete">Delete</string>
+    <string name="hide">Hide</string>
+    <string name="edit">Edit</string>
 </resources>

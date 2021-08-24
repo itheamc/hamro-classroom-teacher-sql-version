@@ -122,12 +122,22 @@ public class MainViewModel extends ViewModel {
         this.subjects = subjects;
     }
 
+    public void removeSubject(int position) {
+        this.subjects.remove(position);
+    }
+
     public List<Assignment> getAssignments() {
         return assignments;
     }
 
     public void setAssignments(List<Assignment> assignments) {
         this.assignments = assignments;
+    }
+
+    public void removeAssignment(int position) {
+        String id = assignments.get(position).get_subject_ref();
+        this.assignments.remove(position);
+        setAssignmentsHashMap(assignments);
     }
 
     public List<Submission> getSubmissions() {
@@ -144,6 +154,11 @@ public class MainViewModel extends ViewModel {
 
     public void setNotices(List<Notice> notices) {
         this.notices = notices;
+    }
+
+
+    public void removeNotice(int position) {
+        this.notices.remove(position);
     }
 
     public boolean isSubjectUpdating() {

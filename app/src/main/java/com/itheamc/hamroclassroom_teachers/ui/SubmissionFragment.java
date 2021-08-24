@@ -17,10 +17,8 @@ import androidx.navigation.Navigation;
 import com.google.android.material.textfield.TextInputLayout;
 import com.itheamc.hamroclassroom_teachers.R;
 import com.itheamc.hamroclassroom_teachers.adapters.SliderAdapter;
-import com.itheamc.hamroclassroom_teachers.callbacks.FirestoreCallbacks;
 import com.itheamc.hamroclassroom_teachers.callbacks.QueryCallbacks;
 import com.itheamc.hamroclassroom_teachers.databinding.FragmentSubmissionBinding;
-import com.itheamc.hamroclassroom_teachers.handlers.FirestoreHandler;
 import com.itheamc.hamroclassroom_teachers.handlers.QueryHandler;
 import com.itheamc.hamroclassroom_teachers.models.Assignment;
 import com.itheamc.hamroclassroom_teachers.models.Notice;
@@ -36,11 +34,7 @@ import com.itheamc.hamroclassroom_teachers.viewmodels.MainViewModel;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class SubmissionFragment extends Fragment implements QueryCallbacks {
     private static final String TAG = "SubmissionFragment";

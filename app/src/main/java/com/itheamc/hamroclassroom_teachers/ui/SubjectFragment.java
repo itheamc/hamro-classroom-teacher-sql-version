@@ -2,6 +2,7 @@ package com.itheamc.hamroclassroom_teachers.ui;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,15 +20,12 @@ import androidx.navigation.Navigation;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.firebase.auth.FirebaseAuth;
 import com.itheamc.hamroclassroom_teachers.R;
 import com.itheamc.hamroclassroom_teachers.adapters.SchoolAdapter;
-import com.itheamc.hamroclassroom_teachers.callbacks.FirestoreCallbacks;
 import com.itheamc.hamroclassroom_teachers.callbacks.QueryCallbacks;
 import com.itheamc.hamroclassroom_teachers.callbacks.SchoolCallbacks;
 import com.itheamc.hamroclassroom_teachers.databinding.FragmentSubjectBinding;
 import com.itheamc.hamroclassroom_teachers.databinding.SchoolBottomSheetBinding;
-import com.itheamc.hamroclassroom_teachers.handlers.FirestoreHandler;
 import com.itheamc.hamroclassroom_teachers.handlers.QueryHandler;
 import com.itheamc.hamroclassroom_teachers.models.Assignment;
 import com.itheamc.hamroclassroom_teachers.models.Notice;
@@ -46,11 +44,7 @@ import com.itheamc.hamroclassroom_teachers.viewmodels.MainViewModel;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 public class SubjectFragment extends Fragment implements QueryCallbacks, SchoolCallbacks, View.OnClickListener {
@@ -183,17 +177,20 @@ public class SubjectFragment extends Fragment implements QueryCallbacks, SchoolC
     /**
      * --------------------------------------------------------------------------
      * Method implemented from View.OnClickListener
+     *
      * @param v - it represents the view that is being clicked
      */
     @Override
     public void onClick(View v) {
         int _id = v.getId();
-        if (_id == schoolInputLayout.getId() || v == schoolInputLayout.getEditText()) handleBottomSheet();
+        if (_id == schoolInputLayout.getId() || v == schoolInputLayout.getEditText())
+            handleBottomSheet();
         else if (_id == addEditBtn.getId()) {
             handleAddNow();
         } else if (_id == classTimeInputLayout.getId() || v == classTimeInputLayout.getEditText()) {
             DialogFragment newFragment = new TimePickers(subjectBinding);
-            if (getActivity() != null) newFragment.show(getActivity().getSupportFragmentManager(), "timePicker");
+            if (getActivity() != null)
+                newFragment.show(getActivity().getSupportFragmentManager(), "timePicker");
         } else {
             NotifyUtils.logDebug(TAG, "Unspecified view is clicked!!");
         }
@@ -224,7 +221,8 @@ public class SubjectFragment extends Fragment implements QueryCallbacks, SchoolC
      */
     private void handleAddNow() {
         if (!isInputsValid()) {
-            if (getContext() != null) NotifyUtils.showToast(getContext(), "Please fill all the details!!");
+            if (getContext() != null)
+                NotifyUtils.showToast(getContext(), "Please fill all the details!!");
             return;
         }
 
@@ -235,11 +233,13 @@ public class SubjectFragment extends Fragment implements QueryCallbacks, SchoolC
             user = viewModel.getUser();
 
             if (user == null) {
+                Log.d(TAG, "handleAddNow: User is null");
                 if (getActivity() != null) QueryHandler.getInstance(this).getUser(LocalStorage.getInstance(getActivity()).getUserId());
-                return;
             }
+            return;
         }
 
+        Log.d(TAG, "handleAddNow: User is not null");
         addSubject();
     }
 
@@ -265,6 +265,7 @@ public class SubjectFragment extends Fragment implements QueryCallbacks, SchoolC
                     false
             );
 
+            NotifyUtils.logDebug(TAG, subject.toString());
             QueryHandler.getInstance(this).addSubject(subject);
             return;
         }
@@ -279,10 +280,13 @@ public class SubjectFragment extends Fragment implements QueryCallbacks, SchoolC
         String _time = timeEditText.getText().toString().trim();
 
         updatedSub.set_id(subject.get_id());
-        if (!TextUtils.isEmpty(_name) && !_name.equals(subject.get_name())) updatedSub.set_name(_name);
-        if (!TextUtils.isEmpty(_class) && !_class.equals(subject.get_class())) updatedSub.set_class(_class);
+        if (!TextUtils.isEmpty(_name) && !_name.equals(subject.get_name()))
+            updatedSub.set_name(_name);
+        if (!TextUtils.isEmpty(_class) && !_class.equals(subject.get_class()))
+            updatedSub.set_class(_class);
         if (school != null) updatedSub.set_school_ref(school.get_id());
-        if (!TextUtils.isEmpty(_time) && !_time.equals(subject.get_start_time())) updatedSub.set_start_time(_time);
+        if (!TextUtils.isEmpty(_time) && !_time.equals(subject.get_start_time()))
+            updatedSub.set_start_time(_time);
 
         if (updatedSub.get_name() != null ||
                 updatedSub.get_class() != null ||
@@ -291,7 +295,8 @@ public class SubjectFragment extends Fragment implements QueryCallbacks, SchoolC
             QueryHandler.getInstance(this).updateSubject(updatedSub);
             return;
         }
-        if (getContext() != null) NotifyUtils.showToast(getContext(), "You have not make any changes");
+        if (getContext() != null)
+            NotifyUtils.showToast(getContext(), "You have not make any changes");
         ViewUtils.hideProgressBar(subjectBinding.subjectProgressBarContainer);
         ViewUtils.enableViews(subjectInputLayout, classInputLayout, schoolInputLayout, classTimeInputLayout, addEditBtn);
 
@@ -303,6 +308,7 @@ public class SubjectFragment extends Fragment implements QueryCallbacks, SchoolC
     Function to verify inputs
      */
     private boolean isInputsValid() {
+        Log.d(TAG, "isInputsValid: Called");
         // Setting the value to the string variables
         if (subEditText != null) _subject = subEditText.getText().toString().trim();
         if (classEditText != null) _class = classEditText.getText().toString().trim();
@@ -327,7 +333,8 @@ public class SubjectFragment extends Fragment implements QueryCallbacks, SchoolC
                 schoolAdapter.submitList(viewModel.getSchools());
                 return;
             }
-            if (bottomSheetBinding.progressBarContainer.getVisibility() == View.GONE) bottomSheetBinding.progressBarContainer.setVisibility(View.VISIBLE);
+            if (bottomSheetBinding.progressBarContainer.getVisibility() == View.GONE)
+                bottomSheetBinding.progressBarContainer.setVisibility(View.VISIBLE);
             QueryHandler.getInstance(this).getSchools();
         } else {
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
@@ -338,6 +345,7 @@ public class SubjectFragment extends Fragment implements QueryCallbacks, SchoolC
     /**
      * --------------------------------------------------------------------------
      * Method implemented from SchoolViewCallbacks
+     *
      * @param _position - clicked item position in a list
      */
     @Override
@@ -367,6 +375,7 @@ public class SubjectFragment extends Fragment implements QueryCallbacks, SchoolC
         if (user != null) {
             this.user = user;
             viewModel.setUser(user);
+            Log.d(TAG, "onQuerySuccess: " + user.toString());
             addSubject();
         }
 
@@ -378,9 +387,10 @@ public class SubjectFragment extends Fragment implements QueryCallbacks, SchoolC
         ViewUtils.hideProgressBar(subjectBinding.subjectProgressBarContainer);
         ViewUtils.clearEditTexts(subEditText, classEditText, schoolEditText, timeEditText);   // Calling function to clear the EditTexts after adding
         ViewUtils.enableViews(subjectInputLayout, classInputLayout, schoolInputLayout, classTimeInputLayout, addEditBtn);
+        Log.d(TAG, "onQuerySuccess: " + message);
         if (!viewModel.isSubjectUpdating()) {
             NotifyUtils.showToast(getContext(), "Added Successfully");
-        } else  {
+        } else {
             NotifyUtils.showToast(getContext(), "Updated Successfully");
             viewModel.setSubjectUpdating(false);
             viewModel.setSubject(null);

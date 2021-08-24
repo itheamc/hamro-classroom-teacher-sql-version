@@ -62,7 +62,7 @@ public class RequestHandler {
 
     // GET REQUEST
     public static Request teacherGetRequestById(@NonNull String _id) {
-        return new Request.Builder().url(PathHandler.TEACHERS_PATH + _id).get().build();
+        return new Request.Builder().url(PathHandler.TEACHERS_PATH + _id).addHeader("by", "id").get().build();
     }
 
     // POST REQUEST
@@ -183,6 +183,12 @@ public class RequestHandler {
         return new Request.Builder().url(PathHandler.SUBJECTS_PATH).patch(requestBody).build();
     }
 
+
+    // DELETE REQUEST
+    public static Request subjectDeleteRequest(String _id) {
+        return new Request.Builder().url(PathHandler.SUBJECTS_PATH + _id).delete().build();
+    }
+
     /*
     ------------------------------------------------------------------------------------------------
     ------------------------------------------------------------------------------------------------
@@ -207,10 +213,6 @@ public class RequestHandler {
         return new Request.Builder().url(PathHandler.ASSIGNMENTS_PATH + _subjectId).addHeader("by", "subject").get().build();
     }
 
-    // GET REQUEST
-    public static Request assignmentGetRequestBySchoolIdAndClass(@NonNull String _schoolId, String _class) {
-        return new Request.Builder().url(PathHandler.ASSIGNMENTS_PATH + _schoolId + "___" + _class).addHeader("by", "school").get().build();
-    }
 
     // POST REQUEST
     public static Request assignmentPostRequest(@NonNull Assignment assignment) {
@@ -229,6 +231,11 @@ public class RequestHandler {
                 .build();
 
         return new Request.Builder().url(PathHandler.ASSIGNMENTS_PATH).post(requestBody).build();
+    }
+
+    // DELETE REQUEST
+    public static Request assignmentDeleteRequest(String _id) {
+        return new Request.Builder().url(PathHandler.ASSIGNMENTS_PATH + _id).delete().build();
     }
 
 
@@ -287,6 +294,12 @@ public class RequestHandler {
     }
 
 
+    // DELETE REQUEST
+    public static Request submissionDeleteRequest(String _id) {
+        return new Request.Builder().url(PathHandler.SUBMISSIONS_PATH + _id).delete().build();
+    }
+
+
     /*
    ------------------------------------------------------------------------------------------------
    ------------------------------------------------------------------------------------------------
@@ -314,6 +327,12 @@ public class RequestHandler {
                 .build();
 
         return new Request.Builder().url(PathHandler.STUDENTS_PATH).post(requestBody).build();
+    }
+
+
+    // DELETE REQUEST
+    public static Request noticeDeleteRequest(String _id) {
+        return new Request.Builder().url(PathHandler.NOTICES_PATH + _id).delete().build();
     }
 
 

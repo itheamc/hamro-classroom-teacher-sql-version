@@ -14,6 +14,7 @@ import com.itheamc.hamroclassroom_teachers.models.Student;
 import com.itheamc.hamroclassroom_teachers.models.Subject;
 import com.itheamc.hamroclassroom_teachers.models.Submission;
 import com.itheamc.hamroclassroom_teachers.models.User;
+import com.itheamc.hamroclassroom_teachers.utils.NotifyUtils;
 
 import org.json.JSONObject;
 
@@ -280,6 +281,40 @@ public class QueryHandler {
 
 
     /**
+     * Function to delete subject
+     * --------------------------------------------------------------------------------------
+     */
+    public void deleteSubject(String _id) {
+        executorService.execute(() -> {
+            client.newCall(RequestHandler.subjectDeleteRequest(_id)).enqueue(new Callback() {
+                @Override
+                public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                    notifyFailure(e);
+                }
+
+                @Override
+                public void onResponse(@NonNull Call call, @NonNull Response response) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(response.body().string());
+                        if (response.isSuccessful()) {
+                            if (jsonObject.getString("message").equals("success")) {
+                                notifySuccess(jsonObject.getString("message"));
+                            } else {
+                                notifyFailure(new Exception(jsonObject.getString("message")));
+                            }
+                            return;
+                        }
+                        notifyFailure(new Exception("Unable to update"));
+                    } catch (Exception e) {
+                        notifyFailure(e);
+                    }
+                }
+            });
+        });
+    }
+
+
+    /**
      * Function to get assignments list from the cloud database
      * --------------------------------------------------------------------------------------
      */
@@ -295,6 +330,7 @@ public class QueryHandler {
                 public void onResponse(@NonNull Call call, @NonNull Response response) {
                     try {
                         JSONObject jsonObject = new JSONObject(response.body().string());
+                        NotifyUtils.logDebug(TAG, jsonObject.toString());
                         if (response.isSuccessful()) {
                             if (jsonObject.has("message")) {
                                 notifySuccess(jsonObject.getString("message"));
@@ -363,6 +399,41 @@ public class QueryHandler {
      */
     public void updateAssignmentTitle(String assignmentId, String updatedTitle) {
     }
+
+
+    /**
+     * Function to delete assignment
+     * --------------------------------------------------------------------------------------
+     */
+    public void deleteAssignment(String _id) {
+        executorService.execute(() -> {
+            client.newCall(RequestHandler.assignmentDeleteRequest(_id)).enqueue(new Callback() {
+                @Override
+                public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                    notifyFailure(e);
+                }
+
+                @Override
+                public void onResponse(@NonNull Call call, @NonNull Response response) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(response.body().string());
+                        if (response.isSuccessful()) {
+                            if (jsonObject.getString("message").equals("success")) {
+                                notifySuccess(jsonObject.getString("message"));
+                            } else {
+                                notifyFailure(new Exception(jsonObject.getString("message")));
+                            }
+                            return;
+                        }
+                        notifyFailure(new Exception("Unable to update"));
+                    } catch (Exception e) {
+                        notifyFailure(e);
+                    }
+                }
+            });
+        });
+    }
+
 
 
     /**
@@ -442,8 +513,6 @@ public class QueryHandler {
             });
         });
     }
-
-
 
     /**
      * Function to get Student from the database
@@ -530,6 +599,39 @@ public class QueryHandler {
     }
 
 
+
+    /**
+     * Function to delete subject
+     * --------------------------------------------------------------------------------------
+     */
+    public void deleteNotice(String _id) {
+        executorService.execute(() -> {
+            client.newCall(RequestHandler.noticeDeleteRequest(_id)).enqueue(new Callback() {
+                @Override
+                public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                    notifyFailure(e);
+                }
+
+                @Override
+                public void onResponse(@NonNull Call call, @NonNull Response response) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(response.body().string());
+                        if (response.isSuccessful()) {
+                            if (jsonObject.getString("message").equals("success")) {
+                                notifySuccess(jsonObject.getString("message"));
+                            } else {
+                                notifyFailure(new Exception(jsonObject.getString("message")));
+                            }
+                            return;
+                        }
+                        notifyFailure(new Exception("Unable to update"));
+                    } catch (Exception e) {
+                        notifyFailure(e);
+                    }
+                }
+            });
+        });
+    }
 
 
 

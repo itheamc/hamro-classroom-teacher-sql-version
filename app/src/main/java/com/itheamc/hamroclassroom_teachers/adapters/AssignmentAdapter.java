@@ -1,13 +1,18 @@
 package com.itheamc.hamroclassroom_teachers.adapters;
 
+import android.os.Build;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.PopupMenu;
 
 import androidx.annotation.NonNull;
+
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.itheamc.hamroclassroom_teachers.R;
 import com.itheamc.hamroclassroom_teachers.callbacks.AssignmentCallbacks;
 import com.itheamc.hamroclassroom_teachers.databinding.AssignmentViewBinding;
 import com.itheamc.hamroclassroom_teachers.models.Assignment;
@@ -47,7 +52,7 @@ public class AssignmentAdapter extends ListAdapter<Assignment, AssignmentAdapter
         holder.viewBinding.setDate(formattedDate);
     }
 
-    protected static class AssignmentViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
+    protected static class AssignmentViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, PopupMenu.OnMenuItemClickListener {
         private final AssignmentViewBinding viewBinding;
         private final AssignmentCallbacks callbacks;
 
@@ -56,21 +61,39 @@ public class AssignmentAdapter extends ListAdapter<Assignment, AssignmentAdapter
             this.callbacks = callbacks;
             this.viewBinding = assignmentViewBinding;
             this.viewBinding.assignmentCardView.setOnClickListener(this);
-            this.viewBinding.assignmentCardView.setOnLongClickListener(this);
-
+            this.viewBinding.menuBtn.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
             int _id = v.getId();
-            if (_id == viewBinding.assignmentCardView.getId()) callbacks.onClick(getAdapterPosition());
-            else NotifyUtils.logDebug(TAG, "Unspecified view is clicked!!");
+            if (_id == viewBinding.assignmentCardView.getId())
+                callbacks.onClick(getAdapterPosition());
+            else if (_id == viewBinding.menuBtn.getId()) {
+                PopupMenu popupMenu = new PopupMenu(v.getContext(), v);
+                popupMenu.setOnMenuItemClickListener(this);
+                popupMenu.inflate(R.menu.assignment_menu);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    popupMenu.setForceShowIcon(true);
+                }
+                popupMenu.show();
+            } else NotifyUtils.logDebug(TAG, "Unspecified view is clicked!!");
+            
         }
 
+
         @Override
-        public boolean onLongClick(View v) {
-            if (v.getId() == viewBinding.assignmentCardView.getId()) callbacks.onLongClick(getAdapterPosition());
-            return true;
+        public boolean onMenuItemClick(MenuItem item) {
+            int id = item.getItemId();
+            if (id == R.id.assignment_menu_edit) {
+                callbacks.onEditClick(getAdapterPosition());
+                return true;
+            } else if (id == R.id.assignment_menu_delete) {
+                callbacks.onDeleteClick(getAdapterPosition());
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 }

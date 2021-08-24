@@ -19,11 +19,8 @@ import androidx.navigation.Navigation;
 import com.google.firebase.auth.FirebaseUser;
 import com.itheamc.hamroclassroom_teachers.R;
 import com.itheamc.hamroclassroom_teachers.adapters.SpinnerAdapter;
-import com.itheamc.hamroclassroom_teachers.callbacks.FirestoreCallbacks;
 import com.itheamc.hamroclassroom_teachers.callbacks.QueryCallbacks;
-import com.itheamc.hamroclassroom_teachers.callbacks.SchoolCallbacks;
 import com.itheamc.hamroclassroom_teachers.databinding.FragmentRegisterBinding;
-import com.itheamc.hamroclassroom_teachers.handlers.FirestoreHandler;
 import com.itheamc.hamroclassroom_teachers.handlers.QueryHandler;
 import com.itheamc.hamroclassroom_teachers.models.Assignment;
 import com.itheamc.hamroclassroom_teachers.models.Notice;
@@ -40,8 +37,6 @@ import com.itheamc.hamroclassroom_teachers.viewmodels.LoginViewModel;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 

@@ -18,19 +18,15 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.textfield.TextInputLayout;
 import com.itheamc.hamroclassroom_teachers.R;
 import com.itheamc.hamroclassroom_teachers.adapters.AssignmentAdapter;
 import com.itheamc.hamroclassroom_teachers.callbacks.AssignmentCallbacks;
-import com.itheamc.hamroclassroom_teachers.callbacks.FirestoreCallbacks;
 import com.itheamc.hamroclassroom_teachers.callbacks.QueryCallbacks;
-import com.itheamc.hamroclassroom_teachers.databinding.AddLinkBottomSheetBinding;
 import com.itheamc.hamroclassroom_teachers.databinding.FragmentAssignmentsBinding;
 import com.itheamc.hamroclassroom_teachers.databinding.UpdateTitleBinding;
-import com.itheamc.hamroclassroom_teachers.handlers.FirestoreHandler;
 import com.itheamc.hamroclassroom_teachers.handlers.QueryHandler;
 import com.itheamc.hamroclassroom_teachers.models.Assignment;
 import com.itheamc.hamroclassroom_teachers.models.Notice;
@@ -64,6 +60,12 @@ public class AssignmentsFragment extends Fragment implements AssignmentCallbacks
     private TextInputLayout updatedTitleInputLayout;
     private EditText updateTitleEditText;
     private Button updateTitleButton;
+
+    /*
+    For Deleting
+     */
+    private boolean isDeleting = false;
+    private int position = 0;
 
 
     public AssignmentsFragment() {
@@ -157,7 +159,7 @@ public class AssignmentsFragment extends Fragment implements AssignmentCallbacks
     private void getAssignments() {
         if (subject == null) return;
         QueryHandler.getInstance(this).getAssignments(subject.get_id());
-        ViewUtils.showProgressBar(assignmentsBinding.progressBarContainer);
+        showProgress();
     }
 
 
@@ -199,6 +201,21 @@ public class AssignmentsFragment extends Fragment implements AssignmentCallbacks
 
     }
 
+    /*
+    Function to show progress
+     */
+    private void showProgress() {
+        ViewUtils.showProgressBar(assignmentsBinding.progressBarContainer);
+    }
+
+    /*
+    Function to hide progress
+     */
+    private void hideProgress() {
+        ViewUtils.hideProgressBar(assignmentsBinding.progressBarContainer);
+        ViewUtils.handleRefreshing(assignmentsBinding.swipeRefreshLayout);
+    }
+
 
     /**
      * -------------------------------------------------------------------
@@ -206,23 +223,30 @@ public class AssignmentsFragment extends Fragment implements AssignmentCallbacks
      * -------------------------------------------------------------------
      */
     @Override
-    public void onSubmissionsClick(int _position) {
-        setAssignment(_position);
-        navController.navigate(R.id.action_assignmentsFragment_to_submissionsFragment);
-    }
-
-    @Override
     public void onClick(int _position) {
         setAssignment(_position);
         navController.navigate(R.id.action_assignmentsFragment_to_submissionsFragment);
     }
 
     @Override
-    public void onLongClick(int _position) {
+    public void onEditClick(int _position) {
         setAssignment(_position);
         ViewUtils.handleBottomSheet(bottomSheetBehavior);
         if (updateTitleEditText != null && viewModel.getAssignment() != null)
             updateTitleEditText.setText(viewModel.getAssignment().get_title());
+    }
+
+    @Override
+    public void onDeleteClick(int _position) {
+        Assignment assignment = null;
+        if (viewModel.getAssignments() != null)
+            assignment = viewModel.getAssignments().get(_position);
+        if (assignment != null) {
+            isDeleting = true;
+            this.position = _position;
+            QueryHandler.getInstance(this).deleteAssignment(assignment.get_id());
+            showProgress();
+        }
     }
 
     // Custom function to set assignment in ViewModel
@@ -251,8 +275,7 @@ public class AssignmentsFragment extends Fragment implements AssignmentCallbacks
             checkAssignments();
         }
 
-        ViewUtils.hideProgressBar(assignmentsBinding.progressBarContainer);
-        ViewUtils.handleRefreshing(assignmentsBinding.swipeRefreshLayout);
+        hideProgress();
     }
 
     @Override
@@ -260,7 +283,8 @@ public class AssignmentsFragment extends Fragment implements AssignmentCallbacks
         if (assignmentsBinding == null) return;
 
         if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
-            if (viewModel.getAssignment() != null) viewModel.getAssignment().set_title(updateTitleEditText.getText().toString());
+            if (viewModel.getAssignment() != null)
+                viewModel.getAssignment().set_title(updateTitleEditText.getText().toString());
             ViewUtils.hideProgressBar(bottomSheetBinding.progressBarContainer);
             ViewUtils.enableViews(updatedTitleInputLayout, updateTitleButton);
             if (getContext() != null) NotifyUtils.showToast(getContext(), "Updated Successfully");
@@ -269,8 +293,14 @@ public class AssignmentsFragment extends Fragment implements AssignmentCallbacks
             return;
         }
 
-        ViewUtils.hideProgressBar(assignmentsBinding.progressBarContainer);
-        ViewUtils.handleRefreshing(assignmentsBinding.swipeRefreshLayout);
+        if (isDeleting) {
+            isDeleting = false;
+            position = 0;
+            viewModel.removeAssignment(position);
+            assignmentAdapter.notifyItemRemoved(position);
+        }
+
+        hideProgress();
         if (getContext() != null) NotifyUtils.showToast(getContext(), message);
 
     }
@@ -278,8 +308,7 @@ public class AssignmentsFragment extends Fragment implements AssignmentCallbacks
     @Override
     public void onQueryFailure(Exception e) {
         if (assignmentsBinding == null) return;
-        ViewUtils.hideProgressBar(assignmentsBinding.progressBarContainer);
-        ViewUtils.handleRefreshing(assignmentsBinding.swipeRefreshLayout);
+        hideProgress();
 
         if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
             ViewUtils.hideProgressBar(bottomSheetBinding.progressBarContainer);

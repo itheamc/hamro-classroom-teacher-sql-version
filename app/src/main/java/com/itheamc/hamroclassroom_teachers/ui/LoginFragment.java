@@ -23,15 +23,12 @@ import androidx.navigation.Navigation;
 
 import com.facebook.CallbackManager;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.itheamc.hamroclassroom_teachers.R;
-import com.itheamc.hamroclassroom_teachers.callbacks.FirestoreCallbacks;
 import com.itheamc.hamroclassroom_teachers.callbacks.LoginCallbacks;
 import com.itheamc.hamroclassroom_teachers.callbacks.QueryCallbacks;
 import com.itheamc.hamroclassroom_teachers.databinding.FragmentLoginBinding;
-import com.itheamc.hamroclassroom_teachers.handlers.FirestoreHandler;
 import com.itheamc.hamroclassroom_teachers.handlers.LoginHandler;
 import com.itheamc.hamroclassroom_teachers.handlers.QueryHandler;
 import com.itheamc.hamroclassroom_teachers.models.Assignment;
@@ -49,8 +46,6 @@ import com.itheamc.hamroclassroom_teachers.viewmodels.LoginViewModel;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
 
 public class LoginFragment extends Fragment implements LoginCallbacks, QueryCallbacks, View.OnClickListener {
     private static final String TAG = "LoginFragment";

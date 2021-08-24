@@ -21,12 +21,10 @@ import com.google.android.material.floatingactionbutton.ExtendedFloatingActionBu
 import com.google.android.material.textfield.TextInputLayout;
 import com.itheamc.hamroclassroom_teachers.R;
 import com.itheamc.hamroclassroom_teachers.adapters.SubjectAdapter;
-import com.itheamc.hamroclassroom_teachers.callbacks.FirestoreCallbacks;
 import com.itheamc.hamroclassroom_teachers.callbacks.QueryCallbacks;
 import com.itheamc.hamroclassroom_teachers.callbacks.SubjectCallbacks;
 import com.itheamc.hamroclassroom_teachers.databinding.AddLinkBottomSheetBinding;
 import com.itheamc.hamroclassroom_teachers.databinding.FragmentHomeBinding;
-import com.itheamc.hamroclassroom_teachers.handlers.FirestoreHandler;
 import com.itheamc.hamroclassroom_teachers.handlers.QueryHandler;
 import com.itheamc.hamroclassroom_teachers.models.Assignment;
 import com.itheamc.hamroclassroom_teachers.models.Notice;
@@ -43,7 +41,6 @@ import com.itheamc.hamroclassroom_teachers.viewmodels.MainViewModel;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-
 
 
 public class HomeFragment extends Fragment implements SubjectCallbacks, QueryCallbacks, View.OnClickListener {
@@ -71,12 +68,21 @@ public class HomeFragment extends Fragment implements SubjectCallbacks, QueryCal
      */
     private String _link = null;
 
+    /*
+    boolean
+     */
+    private boolean isDeleting = false;
+
+    /*
+    Integer
+     */
+    private int position = 0;
+
 
     // Constructor
     public HomeFragment() {
         // Required empty public constructor
     }
-
 
 
     @Override
@@ -156,6 +162,7 @@ public class HomeFragment extends Fragment implements SubjectCallbacks, QueryCal
     /**
      * ------------------------------------------------------------------------------
      * onClick() method overrided from the View.OnclickListener
+     *
      * @param v - view clicked
      */
 
@@ -191,10 +198,26 @@ public class HomeFragment extends Fragment implements SubjectCallbacks, QueryCal
 
     }
 
+    /*
+    Function to show progress
+     */
+    private void showProgress() {
+        ViewUtils.showProgressBar(homeBinding.progressBarContainer);
+    }
+
+    /*
+    Function to hide progress
+     */
+    private void hideProgress() {
+        ViewUtils.hideProgressBar(homeBinding.progressBarContainer);
+        ViewUtils.handleRefreshing(homeBinding.swipeRefreshLayout);
+    }
+
 
     /**
      * ---------------------------------------------------------------------
      * These are the methods implemented from the SubjectViewCallbacks
+     *
      * @param _position - position of the item where clicked happen
      */
     @Override
@@ -216,30 +239,37 @@ public class HomeFragment extends Fragment implements SubjectCallbacks, QueryCal
     }
 
     @Override
-    public void onLongClick(int _position) {
+    public void onEditClick(int _position) {
         viewModel.setSubjectUpdating(true);
         subject = viewModel.getSubjects().get(_position);
         viewModel.setSubject(subject);
         navController.navigate(R.id.action_homeFragment_to_subjectFragment);
     }
 
+    @Override
+    public void onDeleteClick(int _position) {
+        Subject subject = null;
+        if (viewModel.getSubjects() != null)
+            subject = viewModel.getSubjects().get(_position);
+        if (subject != null) {
+            isDeleting = true;
+            this.position = _position;
+            QueryHandler.getInstance(this).deleteSubject(subject.get_id());
+            showProgress();
+        }
+    }
+
+
     /**
      * -------------------------------------------------------------------
      * These are the methods implemented from the QueryCallbacks
-     * @param user - null
-     * @param schools - null
-     * @param subjects - Only subjects will be nonnull and used here
-     * @param students - null
-     * @param assignments - null
-     * @param submissions - null
      */
 
     @Override
     public void onQuerySuccess(User user, List<School> schools, List<Student> students, List<Subject> subjects, List<Assignment> assignments, List<Submission> submissions, List<Notice> notices) {
         if (homeBinding == null) return;
 
-        ViewUtils.hideProgressBar(homeBinding.progressBarContainer);
-        ViewUtils.handleRefreshing(homeBinding.swipeRefreshLayout);
+        hideProgress();
 
         if (subjects != null) {
             if (subjects.size() == 0) {
@@ -256,18 +286,24 @@ public class HomeFragment extends Fragment implements SubjectCallbacks, QueryCal
     public void onQuerySuccess(String message) {
         if (homeBinding == null) return;
         ViewUtils.hideProgressBar(bottomSheetBinding.progressBarContainer);   // Disabling link update progress bar
-        ViewUtils.hideProgressBar(homeBinding.progressBarContainer);
-        ViewUtils.handleRefreshing(homeBinding.swipeRefreshLayout);
+        hideProgress();
         if (getContext() != null) NotifyUtils.showToast(getContext(), message);
-        if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) linkInputLayout.getEditText().setText("");
+
+        if (isDeleting) {
+            isDeleting = false;
+            position = 0;
+            viewModel.removeSubject(position);
+            subjectAdapter.notifyItemRemoved(position);
+        }
+        if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED)
+            linkInputLayout.getEditText().setText("");
     }
 
     @Override
     public void onQueryFailure(Exception e) {
         if (homeBinding == null) return;
 
-        ViewUtils.hideProgressBar(homeBinding.progressBarContainer);
-        ViewUtils.handleRefreshing(homeBinding.swipeRefreshLayout);
+        hideProgress();
         if (getContext() != null) NotifyUtils.showToast(getContext(), e.getMessage());
         NotifyUtils.logError(TAG, "onFailure: ", e);
     }
