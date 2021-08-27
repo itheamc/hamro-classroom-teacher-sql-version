@@ -44,7 +44,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Map;
 
-public class AssignmentsFragment extends Fragment implements AssignmentCallbacks, QueryCallbacks {
+public class AssignmentsFragment extends Fragment implements AssignmentCallbacks, QueryCallbacks, View.OnClickListener {
     private static final String TAG = "AssignmentsFragment";
     private FragmentAssignmentsBinding assignmentsBinding;
     private NavController navController;
@@ -117,6 +117,12 @@ public class AssignmentsFragment extends Fragment implements AssignmentCallbacks
         subject = viewModel.getSubject();
 
         /*
+        Adding Onclick listener on views
+         */
+        assignmentsBinding.backButton.setOnClickListener(this);
+        assignmentsBinding.addAssignmentButton.setOnClickListener(this);
+
+        /*
         Setting OnRefreshListener on the swipe-refresh layout
          */
         assignmentsBinding.swipeRefreshLayout.setProgressBackgroundColorSchemeResource(R.color.overlay);
@@ -129,6 +135,21 @@ public class AssignmentsFragment extends Fragment implements AssignmentCallbacks
         Getting assignments from cloud
          */
         checkAssignments();
+    }
+
+    /*
+    handling OnClickEvent
+     */
+    @Override
+    public void onClick(View view) {
+        int _id = view.getId();
+        if (_id == assignmentsBinding.backButton.getId()) {
+            navController.popBackStack();
+        } else if (_id == assignmentsBinding.addAssignmentButton.getId()) {
+            navController.navigate(R.id.action_assignmentsFragment_to_assignmentFragment);
+        } else {
+            NotifyUtils.logDebug(TAG, "Unspecified view is clicked");
+        }
     }
 
 
@@ -159,7 +180,7 @@ public class AssignmentsFragment extends Fragment implements AssignmentCallbacks
     private void getAssignments() {
         if (subject == null) return;
         QueryHandler.getInstance(this).getAssignments(subject.get_id());
-        showProgress();
+        if (!assignmentsBinding.swipeRefreshLayout.isRefreshing()) showProgress();
     }
 
 
@@ -324,29 +345,6 @@ public class AssignmentsFragment extends Fragment implements AssignmentCallbacks
     }
 
 
-    /**
-     * FUnction overrided to handle the action menu
-     *
-     * @param menu     --
-     * @param inflater --
-     */
-
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.add_assignment_menu, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.add_menu) {
-            navController.navigate(R.id.action_assignmentsFragment_to_assignmentFragment);
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-
     /*
     Overrided method to handle view destroy
      */
@@ -355,6 +353,7 @@ public class AssignmentsFragment extends Fragment implements AssignmentCallbacks
         super.onDestroyView();
         assignmentsBinding = null;
     }
+
 
 
 }

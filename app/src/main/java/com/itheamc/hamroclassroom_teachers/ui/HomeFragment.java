@@ -25,6 +25,7 @@ import com.itheamc.hamroclassroom_teachers.models.Submission;
 import com.itheamc.hamroclassroom_teachers.models.User;
 import com.itheamc.hamroclassroom_teachers.utils.LocalStorage;
 import com.itheamc.hamroclassroom_teachers.utils.NotifyUtils;
+import com.itheamc.hamroclassroom_teachers.utils.OtherUtils;
 import com.itheamc.hamroclassroom_teachers.utils.ViewUtils;
 import com.itheamc.hamroclassroom_teachers.viewmodels.MainViewModel;
 import com.squareup.picasso.Picasso;
@@ -70,7 +71,7 @@ public class HomeFragment extends Fragment implements QueryCallbacks, View.OnCli
         viewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
 
         // Setting greeting label text
-//        homeBinding.greetingLabel.setText(OtherUtils.showGreeting());
+        homeBinding.greetingLabel.setText(OtherUtils.showGreeting());
 
 
         // Setting OnClickListener on Views

@@ -305,8 +305,8 @@ public class SubjectFragment extends Fragment implements QueryCallbacks, SchoolC
                 updatedSub.get_school_ref() != null ||
                 updatedSub.get_start_time() != null) {
 
-            ViewUtils.hideProgressBar(subjectBinding.subjectProgressBarContainer);
-            ViewUtils.enableViews(subjectInputLayout, classInputLayout, schoolInputLayout, classTimeInputLayout, addEditBtn);
+            ViewUtils.showProgressBar(subjectBinding.subjectProgressBarContainer);
+            ViewUtils.disableViews(subjectInputLayout, classInputLayout, schoolInputLayout, classTimeInputLayout, addEditBtn);
             QueryHandler.getInstance(this).updateSubject(updatedSub);
             return;
         }

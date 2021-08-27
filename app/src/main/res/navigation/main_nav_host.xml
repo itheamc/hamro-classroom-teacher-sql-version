@@ -85,6 +85,9 @@
         <action
             android:id="@+id/action_classesFragment_to_subjectFragment"
             app:destination="@id/subjectFragment" />
+        <action
+            android:id="@+id/action_classesFragment_to_assignmentsFragment"
+            app:destination="@id/assignmentsFragment" />
     </fragment>
     <fragment
         android:id="@+id/profileFragment"
