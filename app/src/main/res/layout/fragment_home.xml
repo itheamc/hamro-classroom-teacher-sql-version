@@ -3,110 +3,220 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/homeFragmentLayout"
+    android:background="?backgroundColor"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.HomeFragment">
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipeRefreshLayout"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@drawable/dashboard_drawable"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/homeRecyclerView"
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefreshLayout"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:paddingTop="8dp"
-            android:paddingBottom="16dp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:listitem="@layout/subject_view" />
+            app:layout_constraintTop_toTopOf="parent">
 
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/dashboard_drawable"
+                android:elevation="24dp"
+                android:gravity="bottom"
+                android:orientation="vertical"
+                android:padding="12dp">
 
-    <LinearLayout
-        android:id="@+id/noItemFoundLayout"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-condensed-light"
-            android:text="@string/you_haven_t_added_any_subject_yet"
-            android:textAlignment="center"
-            android:textSize="20sp" />
-    </LinearLayout>
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/userIconCardView"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:clickable="true"
+                        android:foreground="?attr/selectableItemBackground"
+                        app:cardCornerRadius="18dp"
+                        app:cardElevation="4dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck"
+                        android:focusable="true">
 
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/addSubjectFloatingButton"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:clickable="true"
-        android:drawableLeft="@drawable/ic_subject"
-        android:elevation="4dp"
-        android:focusable="true"
-        android:fontFamily="sans-serif-condensed"
-        android:src="@drawable/ic_add_task"
-        android:text="@string/add_subject"
-        android:textColor="#FFFFFF"
-        android:textSize="12sp"
-        app:backgroundTint="#00ACC1"
-        app:fabSize="mini"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:rippleColor="#810863"
-        tools:ignore="TouchTargetSizeCheck" />
+                        <ImageView
+                            android:id="@+id/userIcon"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerCrop"/>
+                    </androidx.cardview.widget.CardView>
 
-    <LinearLayout
-        android:id="@+id/progressBarContainer"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@drawable/overlay_layout_background"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:visibility="gone"
-        android:elevation="6dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+                    <TextView
+                        android:id="@+id/hiLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginTop="32dp"
+                        android:fontFamily="sans-serif-smallcaps"
+                        android:text="Hi"
+                        android:textSize="20sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/userIconCardView" />
 
-        <ProgressBar
-            style="?android:attr/progressBarStyle"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:indeterminateTint="#FDD835" />
-    </LinearLayout>
+                    <TextView
+                        android:id="@+id/userName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-smallcaps"
+                        android:text=""
+                        android:textSize="28sp"
+                        app:layout_constraintStart_toStartOf="@+id/hiLabel"
+                        app:layout_constraintTop_toBottomOf="@+id/hiLabel" />
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
-        android:id="@+id/linkBottomSheetCoordinatorLayout"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:elevation="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+                    <TextView
+                        android:id="@+id/greetingLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-thin"
+                        android:text="Good Morning"
+                        android:textSize="34sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/userName" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <include layout="@layout/add_link_bottom_sheet" />
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/classesCardView"
+                    android:layout_width="match_parent"
+                    android:layout_height="90dp"
+                    android:layout_margin="4dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    app:cardCornerRadius="12dp">
 
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+                    <ImageView
+                        android:id="@+id/classesImageView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:foreground="@drawable/image_foreground"
+                        android:scaleType="centerCrop"
+                        tools:targetApi="m" />
+
+                    <TextView
+                        android:id="@+id/classesLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:fontFamily="sans-serif-condensed-medium"
+                        android:text="CLASSES"
+                        android:textAlignment="center"
+                        android:textColor="#FFFFFF"
+                        android:textSize="20sp" />
+                </androidx.cardview.widget.CardView>
+
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/assignmentCardView"
+                    android:layout_width="match_parent"
+                    android:layout_height="90dp"
+                    android:layout_margin="4dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    app:cardCornerRadius="12dp">
+
+                    <ImageView
+                        android:id="@+id/assignmentImageView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:foreground="@drawable/image_foreground"
+                        android:scaleType="centerCrop" />
+
+                    <TextView
+                        android:id="@+id/assignmentLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:fontFamily="sans-serif-condensed-medium"
+                        android:text="ASSIGNMENTS"
+                        android:textAlignment="center"
+                        android:textColor="@color/primary_text_color_dark"
+                        android:textSize="20sp" />
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/extraMaterialsCardView"
+                    android:layout_width="match_parent"
+                    android:layout_height="90dp"
+                    android:layout_margin="4dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    app:cardCornerRadius="12dp">
+
+                    <ImageView
+                        android:id="@+id/extraMaterialsImageView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:foreground="@drawable/image_foreground"
+                        android:scaleType="centerCrop" />
+
+                    <TextView
+                        android:id="@+id/extraMaterialsLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:fontFamily="sans-serif-condensed-medium"
+                        android:text="Extra Materials"
+                        android:textAlignment="center"
+                        android:textColor="@color/primary_text_color_dark"
+                        android:textSize="20sp" />
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/noticesCardView"
+                    android:layout_width="match_parent"
+                    android:layout_height="90dp"
+                    android:layout_margin="4dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    app:cardCornerRadius="12dp">
+
+                    <ImageView
+                        android:id="@+id/noticesImageView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:foreground="@drawable/image_foreground"
+                        android:scaleType="centerCrop" />
+
+                    <TextView
+                        android:id="@+id/noticesLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:fontFamily="sans-serif-condensed-medium"
+                        android:text="NOTICES"
+                        android:textAlignment="center"
+                        android:textColor="@color/primary_text_color_dark"
+                        android:textSize="20sp" />
+                </androidx.cardview.widget.CardView>
+            </LinearLayout>
+
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
