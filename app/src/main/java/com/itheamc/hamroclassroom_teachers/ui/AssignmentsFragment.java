@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -35,6 +36,7 @@ import com.itheamc.hamroclassroom_teachers.models.Student;
 import com.itheamc.hamroclassroom_teachers.models.Submission;
 import com.itheamc.hamroclassroom_teachers.models.Subject;
 import com.itheamc.hamroclassroom_teachers.models.User;
+import com.itheamc.hamroclassroom_teachers.utils.LocalStorage;
 import com.itheamc.hamroclassroom_teachers.utils.NotifyUtils;
 import com.itheamc.hamroclassroom_teachers.utils.ViewUtils;
 import com.itheamc.hamroclassroom_teachers.viewmodels.MainViewModel;
@@ -123,6 +125,23 @@ public class AssignmentsFragment extends Fragment implements AssignmentCallbacks
         assignmentsBinding.addAssignmentButton.setOnClickListener(this);
 
         /*
+        Controlling the visibility of the add assignment button
+         */
+        assignmentsBinding.addAssignmentButton.setVisibility(viewModel.isFromSubject() ? View.VISIBLE : View.GONE);
+
+        /*
+        OnBackPressedCallbacks
+         */
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                viewModel.setFromSubject(false);
+                navController.popBackStack();
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
+
+        /*
         Setting OnRefreshListener on the swipe-refresh layout
          */
         assignmentsBinding.swipeRefreshLayout.setProgressBackgroundColorSchemeResource(R.color.overlay);
@@ -144,6 +163,7 @@ public class AssignmentsFragment extends Fragment implements AssignmentCallbacks
     public void onClick(View view) {
         int _id = view.getId();
         if (_id == assignmentsBinding.backButton.getId()) {
+            viewModel.setFromSubject(false);
             navController.popBackStack();
         } else if (_id == assignmentsBinding.addAssignmentButton.getId()) {
             navController.navigate(R.id.action_assignmentsFragment_to_assignmentFragment);
@@ -157,20 +177,30 @@ public class AssignmentsFragment extends Fragment implements AssignmentCallbacks
     Function to check submissions in the ViewModel
      */
     private void checkAssignments() {
-        Map<String, List<Assignment>> hashMap = viewModel.getAssignmentsHashMap();
-        if (hashMap == null) {
-            getAssignments();
-            return;
-        }
+        if (viewModel.isFromSubject()) {
+            Map<String, List<Assignment>> hashMap = viewModel.getAssignmentsHashMap();
+            if (hashMap == null) {
+                getAssignments();
+                return;
+            }
 
-        if (subject == null) return;
-        List<Assignment> assignments = hashMap.get(subject.get_id());
-        if (assignments != null) {
-            submitListToAdapter(assignments);
-            return;
+            if (subject == null) return;
+            List<Assignment> assignments = hashMap.get(subject.get_id());
+            if (assignments != null) {
+                submitListToAdapter(assignments);
+                return;
+            }
+
+        } else {
+            List<Assignment> listOfAssignments = viewModel.getListOfAllAssignments();
+            if (listOfAssignments != null) {
+                submitListToAdapter(listOfAssignments);
+                return;
+            }
         }
 
         getAssignments();
+
     }
 
 
@@ -178,8 +208,15 @@ public class AssignmentsFragment extends Fragment implements AssignmentCallbacks
     Function to get subjects
      */
     private void getAssignments() {
-        if (subject == null) return;
-        QueryHandler.getInstance(this).getAssignments(subject.get_id());
+        if (getActivity() == null) return;
+        if (viewModel.isFromSubject()) {
+            if (subject == null) return;
+            QueryHandler.getInstance(this).getAssignments(subject.get_id(), true);
+            if (!assignmentsBinding.swipeRefreshLayout.isRefreshing()) showProgress();
+            return;
+        }
+
+        QueryHandler.getInstance(this).getAssignments(LocalStorage.getInstance(getActivity()).getUserId(), false);
         if (!assignmentsBinding.swipeRefreshLayout.isRefreshing()) showProgress();
     }
 
@@ -192,7 +229,8 @@ public class AssignmentsFragment extends Fragment implements AssignmentCallbacks
             ViewUtils.visibleViews(assignmentsBinding.noItemFoundLayout);
             return;
         }
-        viewModel.setAssignments(assignments);
+        if (viewModel.isFromSubject()) viewModel.setAssignments(assignments);
+        else viewModel.setListOfAllAssignments(assignments);
         assignmentAdapter.submitList(assignments);
     }
 
@@ -260,8 +298,14 @@ public class AssignmentsFragment extends Fragment implements AssignmentCallbacks
     @Override
     public void onDeleteClick(int _position) {
         Assignment assignment = null;
-        if (viewModel.getAssignments() != null)
-            assignment = viewModel.getAssignments().get(_position);
+        if (viewModel.isFromSubject()) {
+            if (viewModel.getAssignments() != null)
+                assignment = viewModel.getAssignments().get(_position);
+        } else {
+            if (viewModel.getListOfAllAssignments() != null)
+                assignment = viewModel.getListOfAllAssignments().get(_position);
+        }
+
         if (assignment != null) {
             isDeleting = true;
             position = _position;
@@ -273,8 +317,15 @@ public class AssignmentsFragment extends Fragment implements AssignmentCallbacks
     // Custom function to set assignment in ViewModel
     private void setAssignment(int _position) {
         Assignment assignment = null;
-        if (viewModel.getAssignments() != null)
-            assignment = viewModel.getAssignments().get(_position);
+
+        if (viewModel.isFromSubject()) {
+            if (viewModel.getAssignments() != null && !viewModel.getAssignments().isEmpty())
+                assignment = viewModel.getAssignments().get(_position);
+        } else {
+            if (viewModel.getListOfAllAssignments() != null && !viewModel.getListOfAllAssignments().isEmpty())
+                assignment = viewModel.getListOfAllAssignments().get(_position);
+        }
+
         if (assignment != null) viewModel.setAssignment(assignment);
     }
 
@@ -292,7 +343,8 @@ public class AssignmentsFragment extends Fragment implements AssignmentCallbacks
                 ViewUtils.visibleViews(assignmentsBinding.noItemFoundLayout);
                 return;
             }
-            viewModel.setAssignmentsHashMap(assignments);
+            if (viewModel.isFromSubject()) viewModel.setAssignmentsHashMap(assignments);
+            else viewModel.setListOfAllAssignments(assignments);
             checkAssignments();
         }
 
@@ -351,9 +403,8 @@ public class AssignmentsFragment extends Fragment implements AssignmentCallbacks
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+//        viewModel.setFromSubject(false);
         assignmentsBinding = null;
     }
-
-
 
 }

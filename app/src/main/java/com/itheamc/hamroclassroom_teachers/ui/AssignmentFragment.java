@@ -151,7 +151,7 @@ public class AssignmentFragment extends Fragment implements StorageCallbacks, Im
                         submitImagesToImageAdapter();   // Submitting image to adapter
 
                     } else {
-                        NotifyUtils.showToast(getContext(), "Unable to pick images");
+                        NotifyUtils.logDebug(TAG, "Image Picker Closed!!");
                     }
                 });
 

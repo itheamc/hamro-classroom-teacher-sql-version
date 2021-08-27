@@ -204,13 +204,8 @@ public class RequestHandler {
     }
 
     // GET REQUEST
-    public static Request assignmentGetRequestByTeacherId(@NonNull String _teacherId) {
-        return new Request.Builder().url(PathHandler.ASSIGNMENTS_PATH + _teacherId).addHeader("by", "teacher").get().build();
-    }
-
-    // GET REQUEST
-    public static Request assignmentGetRequestBySubjectId(@NonNull String _subjectId) {
-        return new Request.Builder().url(PathHandler.ASSIGNMENTS_PATH + _subjectId).addHeader("by", "subject").get().build();
+    public static Request assignmentGetRequestBySubjectId(@NonNull String _ref, @NonNull boolean isBySubjectId) {
+        return new Request.Builder().url(PathHandler.ASSIGNMENTS_PATH + _ref).addHeader("by", isBySubjectId ? "subject" : "teacher").get().build();
     }
 
 

@@ -318,9 +318,9 @@ public class QueryHandler {
      * Function to get assignments list from the cloud database
      * --------------------------------------------------------------------------------------
      */
-    public void getAssignments(String subject_ref) {
+    public void getAssignments(String ref, boolean isBySubjectId) {
         executorService.execute(() -> {
-            client.newCall(RequestHandler.assignmentGetRequestBySubjectId(subject_ref)).enqueue(new Callback() {
+            client.newCall(RequestHandler.assignmentGetRequestBySubjectId(ref, isBySubjectId)).enqueue(new Callback() {
                 @Override
                 public void onFailure(@NonNull Call call, @NonNull IOException e) {
                     notifyFailure(e);
@@ -330,7 +330,6 @@ public class QueryHandler {
                 public void onResponse(@NonNull Call call, @NonNull Response response) {
                     try {
                         JSONObject jsonObject = new JSONObject(response.body().string());
-                        NotifyUtils.logDebug(TAG, jsonObject.toString());
                         if (response.isSuccessful()) {
                             if (jsonObject.has("message")) {
                                 notifySuccess(jsonObject.getString("message"));
@@ -350,40 +349,6 @@ public class QueryHandler {
 
                         notifyFailure(new Exception(jsonObject.getString("message")));
 
-                    } catch (Exception e) {
-                        notifyFailure(e);
-                    }
-                }
-            });
-        });
-    }
-
-
-    /**
-     * Function to add assignment in the database
-     * --------------------------------------------------------------------------------------
-     */
-    public void addAssignment(Assignment assignment) {
-        executorService.execute(() -> {
-            client.newCall(RequestHandler.assignmentPostRequest(assignment)).enqueue(new Callback() {
-                @Override
-                public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                    notifyFailure(e);
-                }
-
-                @Override
-                public void onResponse(@NonNull Call call, @NonNull Response response) {
-                    try {
-                        JSONObject jsonObject = new JSONObject(response.body().string());
-                        if (response.isSuccessful()) {
-                            if (jsonObject.getString("message").equals("success")) {
-                                notifySuccess(jsonObject.getString("message"));
-                            } else {
-                                notifyFailure(new Exception(jsonObject.getString("message")));
-                            }
-                            return;
-                        }
-                        notifyFailure(new Exception("Unable to add"));
                     } catch (Exception e) {
                         notifyFailure(e);
                     }

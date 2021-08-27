@@ -55,16 +55,13 @@ public class StorageHandler {
     private StorageHandler(@NonNull FragmentActivity activity, @NonNull StorageCallbacks storageCallback) {
         this.storageCallback = storageCallback;
         this.activity = activity;
-        this.executorService = Executors.newFixedThreadPool(4);;
+        this.executorService = Executors.newFixedThreadPool(4);
         this.handler = HandlerCompat.createAsync(Looper.getMainLooper());
     }
 
     // Instance for Cloud Storage
     public static StorageHandler getInstance(@NonNull FragmentActivity activity, @NonNull StorageCallbacks storageCallback) {
-        if (instance == null) {
-            instance = new StorageHandler(activity, storageCallback);
-        }
-        return instance;
+        return new StorageHandler(activity, storageCallback);
     }
 
 
@@ -201,12 +198,14 @@ public class StorageHandler {
      * - failure
      */
     private void notifySuccess(String urls) {
+        executorService.shutdown();
         handler.post(() -> {
             storageCallback.onSuccess(urls);
         });
     }
 
     private void notifyFailure(Exception e) {
+        executorService.shutdown();
         handler.post(() -> {
             storageCallback.onFailure(e);
         });

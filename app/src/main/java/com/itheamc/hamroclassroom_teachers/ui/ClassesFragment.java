@@ -241,6 +241,7 @@ public class ClassesFragment extends Fragment implements SubjectCallbacks, Query
     public void onAssignmentsClick(int _position) {
         subject = viewModel.getSubjects().get(_position);
         viewModel.setSubject(subject);
+        viewModel.setFromSubject(true);
         navController.navigate(R.id.action_classesFragment_to_assignmentsFragment);
     }
 

@@ -33,6 +33,7 @@ public class MainViewModel extends ViewModel {
     private List<Student> students;
     private List<Subject> subjects;
     private List<Assignment> assignments;
+    private List<Assignment> listOfAllAssignments;
     private List<Submission> submissions;
     private List<Notice> notices;
 
@@ -40,6 +41,7 @@ public class MainViewModel extends ViewModel {
    Boolean
     */
     private boolean isSubjectUpdating = false;
+    private boolean isFromSubject = false;
 
     /*
     Map
@@ -80,6 +82,14 @@ public class MainViewModel extends ViewModel {
 
     public void setAssignment(Assignment assignment) {
         this.assignment = assignment;
+    }
+
+    public List<Assignment> getListOfAllAssignments() {
+        return listOfAllAssignments;
+    }
+
+    public void setListOfAllAssignments(List<Assignment> listOfAllAssignments) {
+        this.listOfAllAssignments = listOfAllAssignments;
     }
 
     public Submission getSubmission() {
@@ -135,9 +145,17 @@ public class MainViewModel extends ViewModel {
     }
 
     public void removeAssignment(int position) {
-        String id = assignments.get(position).get_subject_ref();
-        this.assignments.remove(position);
-        setAssignmentsHashMap(assignments);
+        if (isFromSubject) {
+            String subjectRef = this.assignments.get(position).get_subject_ref();
+            this.assignments.remove(position);
+            if (!this.assignments.isEmpty()) setAssignmentsHashMap(this.assignments);
+            else  {
+                if (this.assignmentsHashMap == null) assignmentsHashMap = new HashMap<>();
+                this.assignmentsHashMap.put(subjectRef, null);
+            }
+        } else {
+            this.listOfAllAssignments.remove(position);
+        }
     }
 
     public List<Submission> getSubmissions() {
@@ -169,6 +187,14 @@ public class MainViewModel extends ViewModel {
         isSubjectUpdating = subjectUpdating;
     }
 
+    public boolean isFromSubject() {
+        return isFromSubject;
+    }
+
+    public void setFromSubject(boolean fromSubject) {
+        isFromSubject = fromSubject;
+    }
+
     public Map<String, List<Submission>> getSubmissionsHashMap() {
         return submissionsHashMap;
     }
@@ -186,7 +212,7 @@ public class MainViewModel extends ViewModel {
 
     public void setAssignmentsHashMap(List<Assignment> _assignments) {
         if (this.assignmentsHashMap == null) assignmentsHashMap = new HashMap<>();
-        this.assignmentsHashMap.put(_assignments.get(0).get_subject_ref(), _assignments);
+        if (!_assignments.isEmpty()) this.assignmentsHashMap.put(_assignments.get(0).get_subject_ref(), _assignments);
     }
 
     public void updateAssignments(Assignment assignment) {
