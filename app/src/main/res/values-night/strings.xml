@@ -14,7 +14,7 @@
     <string name="web_client_id">813872939086-9gnletiojkr760sk92rlis2saht2obkf.apps.googleusercontent.com</string>
     <string name="unable_to_login_message">Something went wrong!!</string>
     <string name="continue_button">Continue</string>
-    <string name="warning_message_regarding_terms">Continuing automatically force you to accept our</string>
+    <string name="warning_message_regarding_terms">By Using our app you will automatically accept our</string>
     <string name="terms_of_services">Terms of Services</string>
     <string name="privacy_policy">Privacy Policy</string>
     <string name="title_activity_login">LoginActivity</string>
@@ -63,4 +63,5 @@
     <string name="delete">Delete</string>
     <string name="hide">Hide</string>
     <string name="edit">Edit</string>
+    <string name="for_teacher">For Teacher</string>
 </resources>

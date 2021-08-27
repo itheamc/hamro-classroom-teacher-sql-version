@@ -135,7 +135,7 @@ public class SubmissionsFragment extends Fragment implements QueryCallbacks, Sub
      * -------------------------------------------------------------------------
      */
     @Override
-    public void onQuerySuccess(User user, List<School> schools, List<Student> students, List<Subject> subjects, List<Assignment> assignments, List<Submission> submissions, List<Notice> notices) {
+    public void onQuerySuccess(List<User> user, List<School> schools, List<Student> students, List<Subject> subjects, List<Assignment> assignments, List<Submission> submissions, List<Notice> notices) {
         if (submissionsBinding == null) return;
         if (submissions != null) {
             submitListToAdapter(submissions);
@@ -143,6 +143,10 @@ public class SubmissionsFragment extends Fragment implements QueryCallbacks, Sub
 
         ViewUtils.hideProgressBar(submissionsBinding.progressBarContainer);
         ViewUtils.handleRefreshing(submissionsBinding.swipeRefreshLayout);
+    }
+
+    @Override
+    public void onQuerySuccess(User user, School school, Student student, Subject subject, Assignment assignment, Submission submission, Notice notice) {
 
     }
 

@@ -728,7 +728,7 @@ public class QueryHandler {
      * Function to notify whether getUser() is success or failure
      * --------------------------------------------------------------------------------------
      */
-    private void notifySuccess(User user,
+    private void notifySuccess(List<User> users,
                                  List<School> schools,
                                  List<Student> students,
                                  List<Subject> subjects,
@@ -736,7 +736,19 @@ public class QueryHandler {
                                  List<Submission> submissions,
                                  List<Notice> notices) {
         handler.post(() -> {
-            callbacks.onQuerySuccess(user, schools, students, subjects, assignments, submissions, notices);
+            callbacks.onQuerySuccess(users, schools, students, subjects, assignments, submissions, notices);
+        });
+    }
+
+    private void notifySuccess(User user,
+                               School school,
+                               Student student,
+                               Subject subject,
+                               Assignment assignment,
+                               Submission submission,
+                               Notice notice) {
+        handler.post(() -> {
+            callbacks.onQuerySuccess(user, school, student, subject, assignment, submission, notice);
         });
     }
 

@@ -44,20 +44,22 @@
                         android:id="@+id/userIconCardView"
                         android:layout_width="36dp"
                         android:layout_height="36dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
                         android:clickable="true"
+                        android:focusable="true"
                         android:foreground="?attr/selectableItemBackground"
                         app:cardCornerRadius="18dp"
                         app:cardElevation="4dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck"
-                        android:focusable="true">
+                        tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck">
 
                         <ImageView
                             android:id="@+id/userIcon"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:scaleType="centerCrop"/>
+                            android:scaleType="centerCrop" />
                     </androidx.cardview.widget.CardView>
 
                     <TextView
@@ -178,7 +180,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:fontFamily="sans-serif-condensed-medium"
-                        android:text="Extra Materials"
+                        android:text="EXTRA MATERIALS"
                         android:textAlignment="center"
                         android:textColor="@color/primary_text_color_dark"
                         android:textSize="20sp" />

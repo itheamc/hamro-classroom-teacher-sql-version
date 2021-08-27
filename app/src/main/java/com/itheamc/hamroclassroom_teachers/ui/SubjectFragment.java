@@ -164,7 +164,7 @@ public class SubjectFragment extends Fragment implements QueryCallbacks, SchoolC
         Setting onClickListener and OnFocusChangeListener on views
          */
         addEditBtn.setOnClickListener(this);
-
+        subjectBinding.backButton.setOnClickListener(this);
         schoolInputLayout.setOnClickListener(this);
         classTimeInputLayout.setOnClickListener(this);
         schoolEditText.setOnClickListener(this);
@@ -191,6 +191,8 @@ public class SubjectFragment extends Fragment implements QueryCallbacks, SchoolC
             DialogFragment newFragment = new TimePickers(subjectBinding);
             if (getActivity() != null)
                 newFragment.show(getActivity().getSupportFragmentManager(), "timePicker");
+        } else if (_id == subjectBinding.backButton.getId()) {
+            navController.popBackStack();
         } else {
             NotifyUtils.logDebug(TAG, "Unspecified view is clicked!!");
         }
@@ -206,7 +208,7 @@ public class SubjectFragment extends Fragment implements QueryCallbacks, SchoolC
 
         Subject subject = viewModel.getSubject();
         if (subject == null) return;
-
+        if (subjectBinding.screenLabel != null) subjectBinding.screenLabel.setText("Update Subject");
         if (subEditText != null) subEditText.setText(subject.get_name());
         if (classEditText != null) classEditText.setText(subject.get_class());
         if (schoolEditText != null) schoolEditText.setText(subject.get_school().get_name());
@@ -368,26 +370,29 @@ public class SubjectFragment extends Fragment implements QueryCallbacks, SchoolC
 
     /**
      * -------------------------------------------------------------------
-     * These are the methods implemented from the FirestoreCallbacks
+     * These are the methods implemented from the QueryCallbacks
      * -------------------------------------------------------------------
      */
     @Override
-    public void onQuerySuccess(User user, List<School> schools, List<Student> students, List<Subject> subjects, List<Assignment> assignments, List<Submission> submissions, List<Notice> notices) {
+    public void onQuerySuccess(List<User> user, List<School> schools, List<Student> students, List<Subject> subjects, List<Assignment> assignments, List<Submission> submissions, List<Notice> notices) {
         if (subjectBinding == null) return;
 
         if (schools != null) {
             schoolAdapter.submitList(schools);
             viewModel.setSchools(schools);
             ViewUtils.hideProgressBar(bottomSheetBinding.progressBarContainer);
-            return;
         }
+    }
+
+    @Override
+    public void onQuerySuccess(User user, School school, Student student, Subject subject, Assignment assignment, Submission submission, Notice notice) {
+        if (subjectBinding == null) return;
         if (user != null) {
             this.user = user;
             viewModel.setUser(user);
             Log.d(TAG, "onQuerySuccess: " + user.toString());
             addSubject();
         }
-
     }
 
     @Override

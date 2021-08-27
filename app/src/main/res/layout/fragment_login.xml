@@ -12,6 +12,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginTop="24dp"
         android:background="@drawable/login_drawable"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -118,39 +119,14 @@
                 android:text="@string/warning_message_regarding_terms"
                 android:textSize="10sp" />
 
-            <LinearLayout
-                android:id="@+id/termsAndPrivacyLayout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/termsOfServices"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
-                    android:text="@string/terms_of_services"
-                    android:textColor="@color/purple_200"
-                    android:textSize="10sp" />
-
-                <TextView
-                    android:id="@+id/textView6"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
-                    android:text="@string/and"
-                    android:textSize="10sp" />
-
-                <TextView
-                    android:id="@+id/privacyPolicy"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
-                    android:text="@string/privacy_policy"
-                    android:textColor="@color/purple_200"
-                    android:textSize="10sp" />
-            </LinearLayout>
+            <TextView
+                android:id="@+id/privacyPolicy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="@string/privacy_policy"
+                android:textColor="@color/purple_200"
+                android:textSize="10sp" />
 
         </LinearLayout>
 

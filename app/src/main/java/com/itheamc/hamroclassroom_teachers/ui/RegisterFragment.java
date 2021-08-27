@@ -202,11 +202,16 @@ public class RegisterFragment extends Fragment implements QueryCallbacks, Adapte
 
     /**
      * -------------------------------------------------------------------
-     * These are the methods implemented from the FirestoreCallbacks
+     * These are the methods implemented from the QueryCallbacks
      * -------------------------------------------------------------------
      */
     @Override
-    public void onQuerySuccess(User user, List<School> schools, List<Student> students, List<Subject> subjects, List<Assignment> assignments, List<Submission> submissions, List<Notice> notices) {
+    public void onQuerySuccess(List<User> user, List<School> schools, List<Student> students, List<Subject> subjects, List<Assignment> assignments, List<Submission> submissions, List<Notice> notices) {
+
+    }
+
+    @Override
+    public void onQuerySuccess(User user, School school, Student student, Subject subject, Assignment assignment, Submission submission, Notice notice) {
 
     }
 

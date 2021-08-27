@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
@@ -60,9 +61,10 @@ public class ClassesFragment extends Fragment implements SubjectCallbacks, Query
     private Button updateLinkButton;
 
     /*
-    Floating Action Button
+    Image Buttons
      */
-    private ExtendedFloatingActionButton addSubject;
+    private ImageButton addSubject;
+    private ImageButton backButton;
 
     /*
     boolean
@@ -115,13 +117,15 @@ public class ClassesFragment extends Fragment implements SubjectCallbacks, Query
         subjectAdapter = new SubjectAdapter(this);
         classesBinding.homeRecyclerView.setAdapter(subjectAdapter);
 
-        addSubject = classesBinding.addSubjectFloatingButton;
+        addSubject = classesBinding.addSubjectButton;
+        backButton = classesBinding.backButton;
 
         /*
         Setting OnClickListener on views
          */
         updateLinkButton.setOnClickListener(this);
         addSubject.setOnClickListener(this);
+        backButton.setOnClickListener(this);
 
 
         classesBinding.swipeRefreshLayout.setProgressBackgroundColorSchemeResource(R.color.overlay);
@@ -151,7 +155,7 @@ public class ClassesFragment extends Fragment implements SubjectCallbacks, Query
         }
         if (getActivity() == null) return;
         QueryHandler.getInstance(this).getSubjects(LocalStorage.getInstance(getActivity()).getUserId());
-        ViewUtils.showProgressBar(classesBinding.progressBarContainer);
+        if (!classesBinding.swipeRefreshLayout.isRefreshing()) showProgress();
     }
 
     /**
@@ -169,7 +173,11 @@ public class ClassesFragment extends Fragment implements SubjectCallbacks, Query
         } else if (_id == addSubject.getId()) {
             viewModel.setSubjectUpdating(false);
             viewModel.setSubject(null);
-            navController.navigate(R.id.action_homeFragment_to_subjectFragment);
+            navController.navigate(R.id.action_classesFragment_to_subjectFragment);
+        } else if (_id == backButton.getId()) {
+            navController.popBackStack();
+        } else {
+            NotifyUtils.logDebug(TAG, "Unspecified view is clicked");
         }
     }
 
@@ -241,7 +249,7 @@ public class ClassesFragment extends Fragment implements SubjectCallbacks, Query
         viewModel.setSubjectUpdating(true);
         subject = viewModel.getSubjects().get(_position);
         viewModel.setSubject(subject);
-        navController.navigate(R.id.action_homeFragment_to_subjectFragment);
+        navController.navigate(R.id.action_classesFragment_to_subjectFragment);
     }
 
     @Override
@@ -262,9 +270,8 @@ public class ClassesFragment extends Fragment implements SubjectCallbacks, Query
      * -------------------------------------------------------------------
      * These are the methods implemented from the QueryCallbacks
      */
-
     @Override
-    public void onQuerySuccess(User user, List<School> schools, List<Student> students, List<Subject> subjects, List<Assignment> assignments, List<Submission> submissions, List<Notice> notices) {
+    public void onQuerySuccess(List<User> user, List<School> schools, List<Student> students, List<Subject> subjects, List<Assignment> assignments, List<Submission> submissions, List<Notice> notices) {
         if (classesBinding == null) return;
 
         hideProgress();
@@ -278,6 +285,11 @@ public class ClassesFragment extends Fragment implements SubjectCallbacks, Query
             viewModel.setSubjects(subjects);
             handleSubjects();
         }
+    }
+
+    @Override
+    public void onQuerySuccess(User user, School school, Student student, Subject subject, Assignment assignment, Submission submission, Notice notice) {
+
     }
 
     @Override

@@ -263,7 +263,7 @@ public class AssignmentsFragment extends Fragment implements AssignmentCallbacks
      * -------------------------------------------------------------------
      */
     @Override
-    public void onQuerySuccess(User user, List<School> schools, List<Student> students, List<Subject> subjects, List<Assignment> assignments, List<Submission> submissions, List<Notice> notices) {
+    public void onQuerySuccess(List<User> user, List<School> schools, List<Student> students, List<Subject> subjects, List<Assignment> assignments, List<Submission> submissions, List<Notice> notices) {
         if (assignmentsBinding == null) return;
 
         if (assignments != null) {
@@ -276,6 +276,11 @@ public class AssignmentsFragment extends Fragment implements AssignmentCallbacks
         }
 
         hideProgress();
+    }
+
+    @Override
+    public void onQuerySuccess(User user, School school, Student student, Subject subject, Assignment assignment, Submission submission, Notice notice) {
+
     }
 
     @Override
