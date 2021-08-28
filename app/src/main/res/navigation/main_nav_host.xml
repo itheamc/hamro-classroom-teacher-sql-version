@@ -54,6 +54,9 @@
             app:exitAnim="@anim/fade_out"
             app:popEnterAnim="@anim/fade_in"
             app:popExitAnim="@anim/slide_out" />
+        <action
+            android:id="@+id/action_assignmentsFragment_to_addAssignmentFragment"
+            app:destination="@id/addAssignmentFragment" />
     </fragment>
     <fragment
         android:id="@+id/assignmentFragment"
@@ -101,6 +104,9 @@
         <action
             android:id="@+id/action_materialsFragment_to_materialFragment"
             app:destination="@id/materialFragment" />
+        <action
+            android:id="@+id/action_materialsFragment_to_addMaterialFragment"
+            app:destination="@id/addMaterialFragment" />
     </fragment>
     <fragment
         android:id="@+id/materialFragment"
@@ -115,12 +121,30 @@
         <action
             android:id="@+id/action_noticesFragment_to_noticeFragment"
             app:destination="@id/noticeFragment" />
+        <action
+            android:id="@+id/action_noticesFragment_to_addNoticeFragment"
+            app:destination="@id/addNoticeFragment" />
     </fragment>
     <fragment
         android:id="@+id/noticeFragment"
         android:name="com.itheamc.hamroclassroom_teachers.ui.NoticeFragment"
         android:label="fragment_notice"
         tools:layout="@layout/fragment_notice" />
+    <fragment
+        android:id="@+id/addNoticeFragment"
+        android:name="com.itheamc.hamroclassroom_teachers.ui.AddNoticeFragment"
+        android:label="fragment_add_notice"
+        tools:layout="@layout/fragment_add_notice" />
+    <fragment
+        android:id="@+id/addAssignmentFragment"
+        android:name="com.itheamc.hamroclassroom_teachers.ui.AddAssignmentFragment"
+        android:label="fragment_add_assignment"
+        tools:layout="@layout/fragment_add_assignment" />
+    <fragment
+        android:id="@+id/addMaterialFragment"
+        android:name="com.itheamc.hamroclassroom_teachers.ui.AddMaterialFragment"
+        android:label="fragment_add_material"
+        tools:layout="@layout/fragment_add_material" />
 
 
 </navigation>

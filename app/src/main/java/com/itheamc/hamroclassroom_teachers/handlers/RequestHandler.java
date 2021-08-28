@@ -3,6 +3,7 @@ package com.itheamc.hamroclassroom_teachers.handlers;
 import androidx.annotation.NonNull;
 
 import com.itheamc.hamroclassroom_teachers.models.Assignment;
+import com.itheamc.hamroclassroom_teachers.models.Material;
 import com.itheamc.hamroclassroom_teachers.models.Notice;
 import com.itheamc.hamroclassroom_teachers.models.School;
 import com.itheamc.hamroclassroom_teachers.models.Student;
@@ -209,26 +210,6 @@ public class RequestHandler {
         return new Request.Builder().url(PathHandler.ASSIGNMENTS_PATH + _ref).addHeader("by", isBySubjectId ? "subject" : "teacher").get().build();
     }
 
-
-    // POST REQUEST
-    public static Request assignmentPostRequest(@NonNull Assignment assignment) {
-        RequestBody requestBody = new FormBody.Builder()
-                .add("_id", assignment.get_id())
-                .add("_title", assignment.get_title())
-                .add("_desc", assignment.get_desc())
-                .add("_images", ArrayUtils.toString(assignment.get_images()))
-                .add("_docs", ArrayUtils.toString(assignment.get_docs()))
-                .add("_class", assignment.get_class())
-                .add("_teacher", assignment.get_teacher_ref())
-                .add("_subject", assignment.get_subject_ref())
-                .add("_school", assignment.get_school_ref())
-                .add("_assigned_date", assignment.get_assigned_date())
-                .add("_due_date", assignment.get_due_date())
-                .build();
-
-        return new Request.Builder().url(PathHandler.ASSIGNMENTS_PATH).post(requestBody).build();
-    }
-
     // DELETE REQUEST
     public static Request assignmentDeleteRequest(String _id) {
         return new Request.Builder().url(PathHandler.ASSIGNMENTS_PATH + _id).delete().build();
@@ -254,29 +235,6 @@ public class RequestHandler {
         return new Request.Builder().url(PathHandler.SUBMISSIONS_PATH + _assignmentId).addHeader("by", "assignment").get().build();
     }
 
-    // GET REQUEST
-    public static Request submissionGetRequestByStudentId(@NonNull String _studentId) {
-        return new Request.Builder().url(PathHandler.SUBMISSIONS_PATH + _studentId).addHeader("by", "student").get().build();
-    }
-
-
-    // POST REQUEST
-    public static Request submissionPostRequest(@NonNull Submission submission) {
-        RequestBody requestBody = new FormBody.Builder()
-                .add("_id", submission.get_id())
-                .add("_texts", submission.get_texts())
-                .add("_images", ArrayUtils.toString(submission.get_images()))
-                .add("_docs", ArrayUtils.toString(submission.get_docs()))
-                .add("_assignment", submission.get_assignment_ref())
-                .add("_student", submission.get_student_ref())
-                .add("_submitted_date", submission.get_submitted_date())
-                .add("_checked_date", submission.get_checked_date())
-                .add("_checked", String.valueOf(submission.is_checked()))
-                .add("_comment", submission.get_comment())
-                .build();
-
-        return new Request.Builder().url(PathHandler.SUBMISSIONS_PATH).post(requestBody).build();
-    }
 
     // PATCH REQUEST
     public static Request submissionStatusUpdateRequest(String _id, String _comment) {
@@ -288,13 +246,6 @@ public class RequestHandler {
 
         return new Request.Builder().url(PathHandler.SUBMISSIONS_PATH).patch(requestBody).build();
     }
-
-
-    // DELETE REQUEST
-    public static Request submissionDeleteRequest(String _id) {
-        return new Request.Builder().url(PathHandler.SUBMISSIONS_PATH + _id).delete().build();
-    }
-
 
     /*
    ------------------------------------------------------------------------------------------------
@@ -329,6 +280,32 @@ public class RequestHandler {
     // DELETE REQUEST
     public static Request noticeDeleteRequest(String _id) {
         return new Request.Builder().url(PathHandler.NOTICES_PATH + _id).delete().build();
+    }
+
+
+
+     /*
+    ------------------------------------------------------------------------------------------------
+    ------------------------------------------------------------------------------------------------
+    Requests for Materials
+     */
+
+    // GET REQUEST
+    public static final Request  GET_REQUEST_MATERIALS= new Request.Builder().url(PathHandler.MATERIALS_PATH).get().build();
+
+    // GET REQUEST
+    public static Request materialsGetRequestById(@NonNull String _id) {
+        return new Request.Builder().url(PathHandler.MATERIALS_PATH + _id).addHeader("by", "id").get().build();
+    }
+
+    // GET REQUEST
+    public static Request materialsGetRequestByRef(@NonNull String _ref, @NonNull boolean isBySubjectId) {
+        return new Request.Builder().url(PathHandler.MATERIALS_PATH + _ref).addHeader("by", isBySubjectId ? "subject" : "teacher").get().build();
+    }
+
+    // DELETE REQUEST
+    public static Request materialDeleteRequest(String _id) {
+        return new Request.Builder().url(PathHandler.MATERIALS_PATH + _id).delete().build();
     }
 
 

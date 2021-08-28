@@ -46,4 +46,9 @@ public class PathHandler {
     Paths for Notice
      */
     public static final String NOTICES_PATH = BASE_PATH + "notices/";
+
+    /*
+    Paths for Material
+     */
+    public static final String MATERIALS_PATH = BASE_PATH + "materials/";
 }

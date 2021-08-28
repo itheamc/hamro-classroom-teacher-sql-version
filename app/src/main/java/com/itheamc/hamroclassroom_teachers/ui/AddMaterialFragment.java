@@ -26,9 +26,9 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.itheamc.hamroclassroom_teachers.adapters.ImageAdapter;
 import com.itheamc.hamroclassroom_teachers.callbacks.ImageCallbacks;
 import com.itheamc.hamroclassroom_teachers.callbacks.StorageCallbacks;
-import com.itheamc.hamroclassroom_teachers.databinding.FragmentAddAssignmentBinding;
+import com.itheamc.hamroclassroom_teachers.databinding.FragmentAddMaterialBinding;
 import com.itheamc.hamroclassroom_teachers.handlers.StorageHandler;
-import com.itheamc.hamroclassroom_teachers.models.Assignment;
+import com.itheamc.hamroclassroom_teachers.models.Material;
 import com.itheamc.hamroclassroom_teachers.models.Subject;
 import com.itheamc.hamroclassroom_teachers.utils.IdGenerator;
 import com.itheamc.hamroclassroom_teachers.utils.LocalStorage;
@@ -41,9 +41,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class AddAssignmentFragment extends Fragment implements StorageCallbacks, ImageCallbacks {
-    private static final String TAG = "AddAssignmentFragment";
-    private FragmentAddAssignmentBinding addAssignmentBinding;
+public class AddMaterialFragment extends Fragment implements StorageCallbacks, ImageCallbacks {
+    private static final String TAG = "AddMaterialFragment";
+    private FragmentAddMaterialBinding addMaterialBinding;
     private NavController navController;
     private ActivityResultLauncher<Intent> imagePickerResultLauncher;
     private List<Uri> imagesUri;
@@ -59,27 +59,24 @@ public class AddAssignmentFragment extends Fragment implements StorageCallbacks,
     TextInputLayout
      */
     private TextInputLayout titleInputLayout;
-    private TextInputLayout descInputLayout;
 
     /*
     EditTexts
      */
     private EditText titleEdittext;
-    private EditText descEditText;
 
     /*
     Strings
      */
     private String _title = "";
-    private String _desc = "";
 
     /*
     Boolean
      */
     private boolean is_uploading = false;   //To handle the image remove
-    
 
-    public AddAssignmentFragment() {
+
+    public AddMaterialFragment() {
         // Required empty public constructor
     }
 
@@ -94,8 +91,8 @@ public class AddAssignmentFragment extends Fragment implements StorageCallbacks,
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        addAssignmentBinding = FragmentAddAssignmentBinding.inflate(inflater, container, false);
-        return addAssignmentBinding.getRoot();
+        addMaterialBinding = FragmentAddMaterialBinding.inflate(inflater, container, false);
+        return addMaterialBinding.getRoot();
     }
 
     @Override
@@ -108,25 +105,23 @@ public class AddAssignmentFragment extends Fragment implements StorageCallbacks,
 
         // Initializing Image adapter and setting to the recycler view
         imageAdapter = new ImageAdapter(this);
-        addAssignmentBinding.assignmentRecyclerView.setAdapter(imageAdapter);
+        addMaterialBinding.materialRecyclerView.setAdapter(imageAdapter);
 
         // Initializing InputLayout and Edittext
-        titleInputLayout = addAssignmentBinding.titleInputLayout;
-        descInputLayout = addAssignmentBinding.descInputLayout;
-
+        titleInputLayout = addMaterialBinding.titleInputLayout;
         titleEdittext = titleInputLayout.getEditText();
-        descEditText = descInputLayout.getEditText();
+
 
         // Activity Result launcher to listen the result of the multi image picker
         imagePickerResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(), result -> {
-                    if (addAssignmentBinding == null) return;
+                    if (addMaterialBinding == null) return;
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         // There are no request codes
                         Intent data = result.getData();
                         if (data == null) return;
 
-                        ViewUtils.hideViews(addAssignmentBinding.imagePickerButton);     // To hide the image picker
+                        ViewUtils.hideViews(addMaterialBinding.imagePickerButton);     // To hide the image picker
                         imagesUri = new ArrayList<>();
 
                         // Get the Images from data
@@ -155,15 +150,15 @@ public class AddAssignmentFragment extends Fragment implements StorageCallbacks,
         /*
         Setting OnClickListener
          */
-        addAssignmentBinding.imagePickerButton.setOnClickListener(v -> showImagePicker());
-        addAssignmentBinding.addAssignmentButton.setOnClickListener(v -> {
+        addMaterialBinding.imagePickerButton.setOnClickListener(v -> showImagePicker());
+        addMaterialBinding.addMaterialButton.setOnClickListener(v -> {
             if (!isInputsValid()) {
                 if (getContext() != null) NotifyUtils.showToast(getContext(), "Please enter title");
                 return;
             }
 
-            ViewUtils.showProgressBar(addAssignmentBinding.progressBarContainer);
-            ViewUtils.disableViews(addAssignmentBinding.addAssignmentButton, titleInputLayout, descInputLayout);
+            ViewUtils.showProgressBar(addMaterialBinding.progressBarContainer);
+            ViewUtils.disableViews(addMaterialBinding.addMaterialButton, titleInputLayout);
             storeOnDatabase();
             is_uploading = true;
         });
@@ -221,13 +216,12 @@ public class AddAssignmentFragment extends Fragment implements StorageCallbacks,
         if (getActivity() == null) return;
         Subject subject = viewModel.getSubject();
         String userId = LocalStorage.getInstance(getActivity()).getUserId();
-        HandlerCompat.createAsync(Looper.getMainLooper()).post(() -> addAssignmentBinding.uploadedProgress.setText("Please Wait.."));
+        HandlerCompat.createAsync(Looper.getMainLooper()).post(() -> addMaterialBinding.progressLabel.setText("Please Wait.."));
 
         // Creating new assignment object
-        Assignment assignment = new Assignment(
+        Material material = new Material(
                 IdGenerator.generateRandomId(),
                 _title,
-                _desc,
                 null,
                 null,
                 subject.get_class(),
@@ -237,12 +231,11 @@ public class AddAssignmentFragment extends Fragment implements StorageCallbacks,
                 null,
                 subject.get_school_ref(),
                 null,
-                TimeUtils.now(),
-                TimeUtils.later(2)
+                TimeUtils.now()
         );
 
         if (getActivity() != null) StorageHandler.getInstance(getActivity(), this)
-                .addAssignment(imagesUri, assignment);
+                .addMaterial(imagesUri, material);
     }
 
 
@@ -253,8 +246,6 @@ public class AddAssignmentFragment extends Fragment implements StorageCallbacks,
      */
     private boolean isInputsValid() {
         if (titleEdittext != null) _title = titleEdittext.getText().toString().trim();
-        if (descEditText != null) _desc = descEditText.getText().toString().trim();
-
         return !TextUtils.isEmpty(_title);
     }
 
@@ -263,14 +254,14 @@ public class AddAssignmentFragment extends Fragment implements StorageCallbacks,
      * Function to make edittext clear
      */
     private void clearEdittext() {
-        if (addAssignmentBinding == null) return;
+        if (addMaterialBinding == null) return;
 
-        ViewUtils.clearEditTexts(titleEdittext, descEditText);
+        ViewUtils.clearEditTexts(titleEdittext);
         if (imagesUri != null) {
             imagesUri.clear();
             imageAdapter.submitList(new ArrayList<>());
         }
-        ViewUtils.visibleViews(addAssignmentBinding.imagePickerButton);    // To Show the image picker button
+        ViewUtils.visibleViews(addMaterialBinding.imagePickerButton);    // To Show the image picker button
     }
 
 
@@ -282,9 +273,9 @@ public class AddAssignmentFragment extends Fragment implements StorageCallbacks,
 
     @Override
     public void onSuccess(String message) {
-        if (addAssignmentBinding == null) return;
-        ViewUtils.hideProgressBar(addAssignmentBinding.progressBarContainer);
-        ViewUtils.enableViews(addAssignmentBinding.addAssignmentButton, titleInputLayout, descInputLayout);
+        if (addMaterialBinding == null) return;
+        ViewUtils.hideProgressBar(addMaterialBinding.progressBarContainer);
+        ViewUtils.enableViews(addMaterialBinding.addMaterialButton, titleInputLayout);
         if (getContext() != null) NotifyUtils.showToast(getContext(), "Added Successfully");
         is_uploading = false;
         clearEdittext();
@@ -292,12 +283,12 @@ public class AddAssignmentFragment extends Fragment implements StorageCallbacks,
 
     @Override
     public void onFailure(Exception e) {
-        if (addAssignmentBinding == null) return;
+        if (addMaterialBinding == null) return;
         if (getContext() != null) NotifyUtils.showToast(getContext(), "Upload Failed");
         NotifyUtils.logError(TAG, "onFailure()", e);
         is_uploading = false;
-        ViewUtils.hideProgressBar(addAssignmentBinding.progressBarContainer);
-        ViewUtils.enableViews(addAssignmentBinding.addAssignmentButton, titleInputLayout, descInputLayout);
+        ViewUtils.hideProgressBar(addMaterialBinding.progressBarContainer);
+        ViewUtils.enableViews(addMaterialBinding.addMaterialButton, titleInputLayout);
 
     }
 
@@ -313,7 +304,7 @@ public class AddAssignmentFragment extends Fragment implements StorageCallbacks,
         imagesUri.remove(_position);
         imageAdapter.notifyItemRemoved(_position);
         NotifyUtils.logDebug(TAG, imagesUri.toString());
-        if (imagesUri.size() == 0) ViewUtils.visibleViews(addAssignmentBinding.imagePickerButton);
+        if (imagesUri.size() == 0) ViewUtils.visibleViews(addMaterialBinding.imagePickerButton);
     }
 
 
@@ -323,6 +314,6 @@ public class AddAssignmentFragment extends Fragment implements StorageCallbacks,
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        addAssignmentBinding = null;
+        addMaterialBinding = null;
     }
 }

@@ -6,6 +6,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.itheamc.hamroclassroom_teachers.models.Assignment;
+import com.itheamc.hamroclassroom_teachers.models.Material;
 import com.itheamc.hamroclassroom_teachers.models.Notice;
 import com.itheamc.hamroclassroom_teachers.models.School;
 import com.itheamc.hamroclassroom_teachers.models.Student;
@@ -181,6 +182,37 @@ public class JsonHandler {
     }
 
 
+    // Material Response Handler
+    public static Material getMaterial(@NonNull JSONObject jsonObject) throws JSONException {
+        JSONObject materialOnj;
+
+        if (jsonObject.has("material")) materialOnj = jsonObject.getJSONObject("material");
+        else if (jsonObject.has("_material")) materialOnj = jsonObject.getJSONObject("_material");
+        else materialOnj = jsonObject;
+
+
+        // Getting subject
+        Subject subject = getSubject(materialOnj);
+
+        // Getting Material and returning it
+        return new Material(
+                materialOnj.getString("_id"),
+                materialOnj.getString("_title"),
+                ArrayUtils.toArray(materialOnj.getString("_images"), ","),
+                ArrayUtils.toArray(materialOnj.getString("_docs"), ","),
+                String.valueOf(materialOnj.getInt("_class")),
+                subject.get_teacher_ref(),
+                subject.get_teacher(),
+                subject.get_id(),
+                subject,
+                subject.get_school_ref(),
+                subject.get_school(),
+                materialOnj.getString("_added_date")
+        );
+
+    }
+
+
     // Submissions Response Handler
     public static Submission getSubmission(@NonNull JSONObject jsonObject) throws JSONException {
         JSONObject submissionObj;
@@ -291,6 +323,23 @@ public class JsonHandler {
 
         return assignments;
     }
+
+
+    // Materials Response Handler
+    public static List<Material> getMaterials(@NonNull JSONObject jsonObject) throws JSONException {
+        List<Material> materials = new ArrayList<>();
+        JSONArray jsonArray = jsonObject.getJSONArray("materials");
+
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject jo = jsonArray.getJSONObject(i);
+
+            // Adding Assignment
+            materials.add(getMaterial(jo));
+        }
+
+        return materials;
+    }
+
 
     // Submissions Response Handler
     public static List<Submission> getSubmissions(@NonNull JSONObject jsonObject) throws JSONException {

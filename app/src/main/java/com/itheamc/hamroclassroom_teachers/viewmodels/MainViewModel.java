@@ -3,6 +3,7 @@ package com.itheamc.hamroclassroom_teachers.viewmodels;
 import androidx.lifecycle.ViewModel;
 
 import com.itheamc.hamroclassroom_teachers.models.Assignment;
+import com.itheamc.hamroclassroom_teachers.models.Material;
 import com.itheamc.hamroclassroom_teachers.models.Notice;
 import com.itheamc.hamroclassroom_teachers.models.School;
 import com.itheamc.hamroclassroom_teachers.models.Student;
@@ -26,6 +27,7 @@ public class MainViewModel extends ViewModel {
     private Submission submission;
     private School school;
     private Notice notice;
+    private Material material;
 
     /*
     Lists
@@ -37,6 +39,7 @@ public class MainViewModel extends ViewModel {
     private List<Assignment> listOfAllAssignments;
     private List<Submission> submissions;
     private List<Notice> notices;
+    private List<Material> materials;
 
     /*
    Boolean
@@ -117,6 +120,14 @@ public class MainViewModel extends ViewModel {
         this.notice = notice;
     }
 
+    public Material getMaterial() {
+        return material;
+    }
+
+    public void setMaterial(Material material) {
+        this.material = material;
+    }
+
     public List<School> getSchools() {
         return schools;
     }
@@ -186,6 +197,14 @@ public class MainViewModel extends ViewModel {
 
     public void removeNotice(int position) {
         this.notices.remove(position);
+    }
+
+    public List<Material> getMaterials() {
+        return materials;
+    }
+
+    public void setMaterials(List<Material> materials) {
+        this.materials = materials;
     }
 
     public boolean isSubjectUpdating() {

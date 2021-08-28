@@ -2,65 +2,282 @@ package com.itheamc.hamroclassroom_teachers.ui;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.itheamc.hamroclassroom_teachers.R;
+import com.itheamc.hamroclassroom_teachers.adapters.MaterialAdapter;
+import com.itheamc.hamroclassroom_teachers.callbacks.MaterialCallbacks;
+import com.itheamc.hamroclassroom_teachers.callbacks.QueryCallbacks;
+import com.itheamc.hamroclassroom_teachers.databinding.FragmentMaterialsBinding;
+import com.itheamc.hamroclassroom_teachers.handlers.QueryHandler;
+import com.itheamc.hamroclassroom_teachers.models.Assignment;
+import com.itheamc.hamroclassroom_teachers.models.Material;
+import com.itheamc.hamroclassroom_teachers.models.Notice;
+import com.itheamc.hamroclassroom_teachers.models.School;
+import com.itheamc.hamroclassroom_teachers.models.Student;
+import com.itheamc.hamroclassroom_teachers.models.Subject;
+import com.itheamc.hamroclassroom_teachers.models.Submission;
+import com.itheamc.hamroclassroom_teachers.models.User;
+import com.itheamc.hamroclassroom_teachers.utils.LocalStorage;
+import com.itheamc.hamroclassroom_teachers.utils.NotifyUtils;
+import com.itheamc.hamroclassroom_teachers.utils.ViewUtils;
+import com.itheamc.hamroclassroom_teachers.viewmodels.MainViewModel;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link MaterialsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class MaterialsFragment extends Fragment {
+import java.util.List;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+public class MaterialsFragment extends Fragment implements MaterialCallbacks, QueryCallbacks, View.OnClickListener {
+    private static final String TAG = "MaterialsFragment";
+    private FragmentMaterialsBinding materialsBinding;
+    private NavController navController;
+    private MaterialAdapter materialAdapter;
+    private MainViewModel viewModel;
+    private Subject subject;
+
+    /*
+    For Deleting
+     */
+    private boolean isDeleting = false;
+    private int position = 0;
+
 
     public MaterialsFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment MaterialsFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static MaterialsFragment newInstance(String param1, String param2) {
-        MaterialsFragment fragment = new MaterialsFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_materials, container, false);
+        materialsBinding = FragmentMaterialsBinding.inflate(inflater, container, false);
+        return materialsBinding.getRoot();
     }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        /*
+        Initializing NavController and MainViewModel
+         */
+        navController = Navigation.findNavController(view);
+        viewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
+
+
+        materialAdapter = new MaterialAdapter(this);
+        materialsBinding.materialsRecyclerView.setAdapter(materialAdapter);
+
+        // Setting subject value from the ViewModel
+        subject = viewModel.getSubject();
+
+        /*
+        Adding Onclick listener on views
+         */
+        materialsBinding.backButton.setOnClickListener(this);
+        materialsBinding.addMaterialButton.setOnClickListener(this);
+
+        /*
+        Setting OnRefreshListener on the swipe-refresh layout
+         */
+        materialsBinding.swipeRefreshLayout.setProgressBackgroundColorSchemeResource(R.color.overlay);
+        materialsBinding.swipeRefreshLayout.setOnRefreshListener(() -> {
+            ViewUtils.hideViews(materialsBinding.noItemFoundLayout);
+            getMaterials();
+        });
+
+        /*
+        Getting assignments from cloud
+         */
+        checkMaterials();
+    }
+
+    /*
+    handling OnClickEvent
+     */
+    @Override
+    public void onClick(View view) {
+        int _id = view.getId();
+        if (_id == materialsBinding.backButton.getId()) {
+            viewModel.setFromSubject(false);
+            navController.popBackStack();
+        } else if (_id == materialsBinding.addMaterialButton.getId()) {
+            navController.navigate(R.id.action_materialsFragment_to_addMaterialFragment);
+        } else {
+            NotifyUtils.logDebug(TAG, "Unspecified view is clicked");
+        }
+    }
+
+
+    /*
+    Function to check submissions in the ViewModel
+     */
+    private void checkMaterials() {
+        List<Material> materials = viewModel.getMaterials();
+        if (materials != null) {
+            submitListToAdapter(materials);
+            return;
+        }
+
+        getMaterials();
+    }
+
+
+    /*
+    Function to get subjects
+     */
+    private void getMaterials() {
+        if (getActivity() == null) return;
+        QueryHandler.getInstance(this).getMaterials(LocalStorage.getInstance(getActivity()).getUserId(), false);
+        if (!materialsBinding.swipeRefreshLayout.isRefreshing()) showProgress();
+    }
+
+
+    /*
+    Function to submit List<Submission> to the SubmissionAdapter
+     */
+    private void submitListToAdapter(List<Material> materials) {
+        if (materials.size() == 0) {
+            ViewUtils.visibleViews(materialsBinding.noItemFoundLayout);
+            return;
+        }
+        viewModel.setMaterials(materials);
+        materialAdapter.submitList(materials);
+    }
+
+    /*
+    Function to show progress
+     */
+    private void showProgress() {
+        ViewUtils.showProgressBar(materialsBinding.progressBarContainer);
+    }
+
+    /*
+    Function to hide progress
+     */
+    private void hideProgress() {
+        ViewUtils.hideProgressBar(materialsBinding.progressBarContainer);
+        ViewUtils.handleRefreshing(materialsBinding.swipeRefreshLayout);
+    }
+
+
+    /**
+     * -------------------------------------------------------------------
+     * These are the methods implemented from the AssignmentViewCallbacks
+     * -------------------------------------------------------------------
+     */
+    @Override
+    public void onClick(int _position) {
+        setMaterial(_position);
+        navController.navigate(R.id.action_materialsFragment_to_materialFragment);
+    }
+
+    @Override
+    public void onEditClick(int _position) {
+        setMaterial(_position);
+        if (getContext() != null) NotifyUtils.showToast(getContext(), "Will be added in coming update!!");
+    }
+
+    @Override
+    public void onDeleteClick(int _position) {
+        Material material = null;
+        if (viewModel.getAssignments() != null)
+            material = viewModel.getMaterials().get(_position);
+
+        if (material != null) {
+            isDeleting = true;
+            position = _position;
+            QueryHandler.getInstance(this).deleteAssignment(material.get_id());
+            showProgress();
+        }
+    }
+
+    // Custom function to set assignment in ViewModel
+    private void setMaterial(int _position) {
+        Material material = null;
+        if (viewModel.getAssignments() != null && !viewModel.getAssignments().isEmpty())
+            material = viewModel.getMaterials().get(_position);
+
+        if (material != null) viewModel.setMaterial(material);
+    }
+
+    /**
+     * -------------------------------------------------------------------
+     * These are the methods implemented from the FirestoreCallbacks
+     * -------------------------------------------------------------------
+     */
+    @Override
+    public void onQuerySuccess(List<User> user, List<School> schools, List<Student> students, List<Subject> subjects, List<Assignment> assignments, List<Material> materials, List<Submission> submissions, List<Notice> notices) {
+        if (materialsBinding == null) return;
+
+        if (materials != null) {
+            if (materials.size() == 0) {
+                ViewUtils.visibleViews(materialsBinding.noItemFoundLayout);
+                return;
+            }
+
+            viewModel.setMaterials(materials);
+            checkMaterials();
+        }
+
+        hideProgress();
+    }
+
+    @Override
+    public void onQuerySuccess(User user, School school, Student student, Subject subject, Assignment assignment, Material material, Submission submission, Notice notice) {
+
+    }
+
+    @Override
+    public void onQuerySuccess(String message) {
+        if (materialsBinding == null) return;
+
+        if (isDeleting) {
+            isDeleting = false;
+            viewModel.removeAssignment(position);
+            materialAdapter.notifyItemRemoved(position);
+        }
+
+        hideProgress();
+        if (message.equals("Not found")) ViewUtils.visibleViews(materialsBinding.noItemFoundLayout);
+        if (getContext() != null && !message.equals("Not found")) NotifyUtils.showToast(getContext(), message);
+
+    }
+
+    @Override
+    public void onQueryFailure(Exception e) {
+        if (materialsBinding == null) return;
+        hideProgress();
+        if (getContext() != null)
+            NotifyUtils.showToast(getContext(), getString(R.string.went_wrong_message));
+        NotifyUtils.logError(TAG, "onFailure: ", e);
+    }
+
+
+    /*
+    Overrided method to handle view destroy
+     */
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+//        viewModel.setFromSubject(false);
+        materialsBinding = null;
+    }
+
 }

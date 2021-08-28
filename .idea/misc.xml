@@ -58,11 +58,15 @@
         <entry key="..\:/Users/User/AndroidStudioProjects/hamro-classroom-teacher-sql-version/app/src/main/res/drawable/login_drawable.xml" value="0.37447916666666664" />
         <entry key="..\:/Users/User/AndroidStudioProjects/hamro-classroom-teacher-sql-version/app/src/main/res/layout/activity_splash.xml" value="0.2907608695652174" />
         <entry key="..\:/Users/User/AndroidStudioProjects/hamro-classroom-teacher-sql-version/app/src/main/res/layout/assignment_view.xml" value="0.3625" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/hamro-classroom-teacher-sql-version/app/src/main/res/layout/fragment_add_assignment.xml" value="0.3625" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/hamro-classroom-teacher-sql-version/app/src/main/res/layout/fragment_add_material.xml" value="0.3625" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/hamro-classroom-teacher-sql-version/app/src/main/res/layout/fragment_add_notice.xml" value="0.3625" />
         <entry key="..\:/Users/User/AndroidStudioProjects/hamro-classroom-teacher-sql-version/app/src/main/res/layout/fragment_assignment.xml" value="0.3625" />
         <entry key="..\:/Users/User/AndroidStudioProjects/hamro-classroom-teacher-sql-version/app/src/main/res/layout/fragment_assignments.xml" value="0.27219202898550726" />
         <entry key="..\:/Users/User/AndroidStudioProjects/hamro-classroom-teacher-sql-version/app/src/main/res/layout/fragment_classes.xml" value="0.32222222222222224" />
         <entry key="..\:/Users/User/AndroidStudioProjects/hamro-classroom-teacher-sql-version/app/src/main/res/layout/fragment_home.xml" value="0.32222222222222224" />
         <entry key="..\:/Users/User/AndroidStudioProjects/hamro-classroom-teacher-sql-version/app/src/main/res/layout/fragment_login.xml" value="0.2907608695652174" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/hamro-classroom-teacher-sql-version/app/src/main/res/layout/fragment_material.xml" value="0.3625" />
         <entry key="..\:/Users/User/AndroidStudioProjects/hamro-classroom-teacher-sql-version/app/src/main/res/layout/fragment_materials.xml" value="0.30972222222222223" />
         <entry key="..\:/Users/User/AndroidStudioProjects/hamro-classroom-teacher-sql-version/app/src/main/res/layout/fragment_notice.xml" value="0.32222222222222224" />
         <entry key="..\:/Users/User/AndroidStudioProjects/hamro-classroom-teacher-sql-version/app/src/main/res/layout/fragment_notices.xml" value="0.32222222222222224" />
@@ -70,7 +74,11 @@
         <entry key="..\:/Users/User/AndroidStudioProjects/hamro-classroom-teacher-sql-version/app/src/main/res/layout/fragment_subject.xml" value="0.32222222222222224" />
         <entry key="..\:/Users/User/AndroidStudioProjects/hamro-classroom-teacher-sql-version/app/src/main/res/layout/fragment_submission.xml" value="0.3625" />
         <entry key="..\:/Users/User/AndroidStudioProjects/hamro-classroom-teacher-sql-version/app/src/main/res/layout/fragment_submissions.xml" value="0.3625" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/hamro-classroom-teacher-sql-version/app/src/main/res/layout/material_view.xml" value="0.3625" />
         <entry key="..\:/Users/User/AndroidStudioProjects/hamro-classroom-teacher-sql-version/app/src/main/res/layout/notice_view.xml" value="0.223731884057971" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/hamro-classroom-teacher-sql-version/app/src/main/res/layout/submission_view.xml" value="0.3625" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/hamro-classroom-teacher-sql-version/app/src/main/res/menu/assignment_menu.xml" value="0.3625" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/hamro-classroom-teacher-sql-version/app/src/main/res/menu/material_menu.xml" value="0.3625" />
       </map>
     </option>
   </component>

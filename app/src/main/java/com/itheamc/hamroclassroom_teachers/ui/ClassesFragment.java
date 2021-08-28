@@ -30,6 +30,7 @@ import com.itheamc.hamroclassroom_teachers.databinding.FragmentClassesBinding;
 import com.itheamc.hamroclassroom_teachers.databinding.FragmentHomeBinding;
 import com.itheamc.hamroclassroom_teachers.handlers.QueryHandler;
 import com.itheamc.hamroclassroom_teachers.models.Assignment;
+import com.itheamc.hamroclassroom_teachers.models.Material;
 import com.itheamc.hamroclassroom_teachers.models.Notice;
 import com.itheamc.hamroclassroom_teachers.models.School;
 import com.itheamc.hamroclassroom_teachers.models.Student;
@@ -272,7 +273,7 @@ public class ClassesFragment extends Fragment implements SubjectCallbacks, Query
      * These are the methods implemented from the QueryCallbacks
      */
     @Override
-    public void onQuerySuccess(List<User> user, List<School> schools, List<Student> students, List<Subject> subjects, List<Assignment> assignments, List<Submission> submissions, List<Notice> notices) {
+    public void onQuerySuccess(List<User> user, List<School> schools, List<Student> students, List<Subject> subjects, List<Assignment> assignments, List<Material> materials, List<Submission> submissions, List<Notice> notices) {
         if (classesBinding == null) return;
 
         hideProgress();
@@ -289,7 +290,7 @@ public class ClassesFragment extends Fragment implements SubjectCallbacks, Query
     }
 
     @Override
-    public void onQuerySuccess(User user, School school, Student student, Subject subject, Assignment assignment, Submission submission, Notice notice) {
+    public void onQuerySuccess(User user, School school, Student student, Subject subject, Assignment assignment, Material material, Submission submission, Notice notice) {
 
     }
 

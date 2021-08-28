@@ -10,10 +10,10 @@ import android.view.ViewGroup;
 
 import com.itheamc.hamroclassroom_teachers.R;
 
-public class MaterialFragment extends Fragment {
+public class AddNoticeFragment extends Fragment {
 
 
-    public MaterialFragment() {
+    public AddNoticeFragment() {
         // Required empty public constructor
     }
 
@@ -28,6 +28,6 @@ public class MaterialFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_material, container, false);
+        return inflater.inflate(R.layout.fragment_add_notice, container, false);
     }
 }

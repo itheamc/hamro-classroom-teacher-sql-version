@@ -8,6 +8,7 @@ import androidx.core.os.HandlerCompat;
 
 import com.itheamc.hamroclassroom_teachers.callbacks.QueryCallbacks;
 import com.itheamc.hamroclassroom_teachers.models.Assignment;
+import com.itheamc.hamroclassroom_teachers.models.Material;
 import com.itheamc.hamroclassroom_teachers.models.Notice;
 import com.itheamc.hamroclassroom_teachers.models.School;
 import com.itheamc.hamroclassroom_teachers.models.Student;
@@ -74,6 +75,7 @@ public class QueryHandler {
 
                             User user = JsonHandler.getUser(jsonObject);
                             notifySuccess(user,
+                                    null,
                                     null,
                                     null,
                                     null,
@@ -164,6 +166,7 @@ public class QueryHandler {
                                     null,
                                     null,
                                     subjects,
+                                    null,
                                     null,
                                     null,
                                     null);
@@ -343,6 +346,7 @@ public class QueryHandler {
                                     null,
                                     assignments,
                                     null,
+                                    null,
                                     null);
                             return;
                         }
@@ -400,6 +404,85 @@ public class QueryHandler {
     }
 
 
+    /**
+     * Function to get assignments list from the cloud database
+     * --------------------------------------------------------------------------------------
+     */
+    public void getMaterials(String ref, boolean isBySubjectId) {
+        executorService.execute(() -> {
+            client.newCall(RequestHandler.assignmentGetRequestBySubjectId(ref, isBySubjectId)).enqueue(new Callback() {
+                @Override
+                public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                    notifyFailure(e);
+                }
+
+                @Override
+                public void onResponse(@NonNull Call call, @NonNull Response response) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(response.body().string());
+                        if (response.isSuccessful()) {
+                            if (jsonObject.has("message")) {
+                                notifySuccess(jsonObject.getString("message"));
+                                return;
+                            }
+
+                            List<Material> materials = JsonHandler.getMaterials(jsonObject);
+                            notifySuccess(null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    materials,
+                                    null,
+                                    null);
+                            return;
+                        }
+
+                        notifyFailure(new Exception(jsonObject.getString("message")));
+
+                    } catch (Exception e) {
+                        notifyFailure(e);
+                    }
+                }
+            });
+        });
+    }
+
+
+    /**
+     * Function to delete material
+     * --------------------------------------------------------------------------------------
+     */
+    public void deleteMaterial(String _id) {
+        executorService.execute(() -> {
+            client.newCall(RequestHandler.materialDeleteRequest(_id)).enqueue(new Callback() {
+                @Override
+                public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                    notifyFailure(e);
+                }
+
+                @Override
+                public void onResponse(@NonNull Call call, @NonNull Response response) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(response.body().string());
+                        if (response.isSuccessful()) {
+                            if (jsonObject.getString("message").equals("success")) {
+                                notifySuccess(jsonObject.getString("message"));
+                            } else {
+                                notifyFailure(new Exception(jsonObject.getString("message")));
+                            }
+                            return;
+                        }
+                        notifyFailure(new Exception("Unable to update"));
+                    } catch (Exception e) {
+                        notifyFailure(e);
+                    }
+                }
+            });
+        });
+    }
+
+
 
     /**
      * Function to get submissions list from the cloud database
@@ -425,6 +508,7 @@ public class QueryHandler {
 
                             List<Submission> submissions = JsonHandler.getSubmissions(jsonObject);
                             notifySuccess(null,
+                                    null,
                                     null,
                                     null,
                                     null,
@@ -549,6 +633,7 @@ public class QueryHandler {
                                     null,
                                     null,
                                     null,
+                                    null,
                                     notices);
                             return;
                         }
@@ -629,6 +714,7 @@ public class QueryHandler {
                                     null,
                                     null,
                                     null,
+                                    null,
                                     null);
                             return;
                         }
@@ -674,6 +760,7 @@ public class QueryHandler {
                                     null,
                                     null,
                                     null,
+                                    null,
                                     null);
                             return;
                         }
@@ -698,10 +785,11 @@ public class QueryHandler {
                                  List<Student> students,
                                  List<Subject> subjects,
                                  List<Assignment> assignments,
+                                 List<Material> materials,
                                  List<Submission> submissions,
                                  List<Notice> notices) {
         handler.post(() -> {
-            callbacks.onQuerySuccess(users, schools, students, subjects, assignments, submissions, notices);
+            callbacks.onQuerySuccess(users, schools, students, subjects, assignments, materials, submissions, notices);
         });
     }
 
@@ -710,10 +798,11 @@ public class QueryHandler {
                                Student student,
                                Subject subject,
                                Assignment assignment,
+                               Material material,
                                Submission submission,
                                Notice notice) {
         handler.post(() -> {
-            callbacks.onQuerySuccess(user, school, student, subject, assignment, submission, notice);
+            callbacks.onQuerySuccess(user, school, student, subject, assignment, material, submission, notice);
         });
     }
 
