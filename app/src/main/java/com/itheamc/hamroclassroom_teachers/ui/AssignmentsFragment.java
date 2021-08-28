@@ -109,7 +109,10 @@ public class AssignmentsFragment extends Fragment implements AssignmentCallbacks
         updateTitleButton = bottomSheetBinding.updateTitleButton;
         updateTitleEditText = updatedTitleInputLayout.getEditText();
 
-        updateTitleButton.setOnClickListener(v -> updateAssignment());
+        updateTitleButton.setOnClickListener(v -> {
+//            updateAssignment();
+            if (getContext() != null) NotifyUtils.showToast(getContext(), "Will be added in coming update!!");
+        });
 
 
         assignmentAdapter = new AssignmentAdapter(this);
@@ -166,7 +169,7 @@ public class AssignmentsFragment extends Fragment implements AssignmentCallbacks
             viewModel.setFromSubject(false);
             navController.popBackStack();
         } else if (_id == assignmentsBinding.addAssignmentButton.getId()) {
-            navController.navigate(R.id.action_assignmentsFragment_to_assignmentFragment);
+            navController.navigate(R.id.action_assignmentsFragment_to_addAssignmentFragment);
         } else {
             NotifyUtils.logDebug(TAG, "Unspecified view is clicked");
         }
@@ -284,15 +287,22 @@ public class AssignmentsFragment extends Fragment implements AssignmentCallbacks
     @Override
     public void onClick(int _position) {
         setAssignment(_position);
+        navController.navigate(R.id.action_assignmentsFragment_to_assignmentFragment);
+    }
+
+    @Override
+    public void onSubmissionsClick(int _position) {
+        setAssignment(_position);
         navController.navigate(R.id.action_assignmentsFragment_to_submissionsFragment);
     }
 
     @Override
     public void onEditClick(int _position) {
         setAssignment(_position);
-        ViewUtils.handleBottomSheet(bottomSheetBehavior);
-        if (updateTitleEditText != null && viewModel.getAssignment() != null)
-            updateTitleEditText.setText(viewModel.getAssignment().get_title());
+        if (getContext() != null) NotifyUtils.showToast(getContext(), "Will be added in coming update!!");
+//        ViewUtils.handleBottomSheet(bottomSheetBehavior);
+//        if (updateTitleEditText != null && viewModel.getAssignment() != null)
+//            updateTitleEditText.setText(viewModel.getAssignment().get_title());
     }
 
     @Override

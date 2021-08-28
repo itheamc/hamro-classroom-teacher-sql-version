@@ -1,148 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/assignmentFragmentLayout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.AssignmentFragment">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+    <data>
+        <variable
+            name="assignment"
+            type="com.itheamc.hamroclassroom_teachers.models.Assignment" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/titleInputLayout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="64dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="24dp"
-            android:gravity="bottom"
-            app:errorEnabled="true">
+    </data>
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/dekko"
-                android:hint="@string/question"
-                android:inputType="textPersonName"
-                android:textSize="14sp" />
-        </com.google.android.material.textfield.TextInputLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/assignmentFragmentLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.AssignmentFragment">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/descInputLayout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="24dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginRight="24dp"
-            android:gravity="bottom"
-            app:errorEnabled="true">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/dekko"
-                android:hint="@string/additional_info_optional"
-                android:inputType="textMultiLine"
-                android:maxHeight="120dp"
-                android:textSize="14sp" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <TextView
-            android:id="@+id/imageLabelTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:fontFamily="@font/dekko"
-            android:text="@string/images_if_any" />
-
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginLeft="24dp"
-            android:layout_marginRight="24dp"
-            android:layout_marginBottom="8dp"
-            android:layout_weight="1">
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/assignmentRecyclerView"
-                android:layout_width="0dp"
+            <TextView
+                android:id="@+id/assignmentTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:fontFamily="@font/denk_one"
+                android:text="@{assignment._title}"
+                android:textSize="20sp"
+                tools:text="What is Heat?" />
+
+            <TextView
+                android:id="@+id/assignmentDesc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:fontFamily="@font/dekko"
+                android:text="@{assignment._desc}"
+                android:textSize="16sp"
+                app:lineHeight="20dp"
+                tools:text="Accounting is the process of recording, classifying, summarizing and presenting the financial data." />
+
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/assignmentViewPager"
+                android:layout_width="match_parent"
                 android:layout_height="0dp"
-                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:spanCount="3"
-                tools:listitem="@layout/image_view" />
+                android:layout_weight="1" />
 
-            <ImageButton
-                android:id="@+id/imagePickerButton"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:contentDescription="@string/image_picker"
-                android:src="@drawable/ic_add_photo"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <Button
-            android:id="@+id/addAssignmentButton"
-            android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:layout_marginLeft="24dp"
-            android:layout_marginRight="24dp"
-            android:layout_marginBottom="8dp"
-            android:fontFamily="@font/dekko"
-            android:text="@string/assign_now"
-            android:textSize="16sp"
-            app:rippleColor="#00ACC1"
-            app:strokeColor="@color/secondary_text_color_lite" />
-
-    </LinearLayout>
+        </LinearLayout>
 
 
-    <!--  This is progress bar layout  -->
-    <LinearLayout
-        android:id="@+id/progressBarContainer"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@drawable/overlay_layout_background"
-        android:elevation="20dp"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ProgressBar
-            style="?android:attr/progressBarStyle"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:indeterminateTint="#FDD835" />
-
-        <TextView
-            android:id="@+id/uploadedProgress"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/dekko"
-            android:textAlignment="center"
-            android:textColor="?colorOnSecondary" />
-    </LinearLayout>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

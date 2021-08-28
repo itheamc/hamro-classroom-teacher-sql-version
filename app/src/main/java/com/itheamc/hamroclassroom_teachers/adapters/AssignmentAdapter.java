@@ -61,6 +61,7 @@ public class AssignmentAdapter extends ListAdapter<Assignment, AssignmentAdapter
             this.callbacks = callbacks;
             this.viewBinding = assignmentViewBinding;
             this.viewBinding.assignmentCardView.setOnClickListener(this);
+            this.viewBinding.submissionsButton.setOnClickListener(this);
             this.viewBinding.menuBtn.setOnClickListener(this);
         }
 
@@ -69,6 +70,8 @@ public class AssignmentAdapter extends ListAdapter<Assignment, AssignmentAdapter
             int _id = v.getId();
             if (_id == viewBinding.assignmentCardView.getId())
                 callbacks.onClick(getAdapterPosition());
+            else if (_id == viewBinding.submissionsButton.getId())
+                callbacks.onSubmissionsClick(getAdapterPosition());
             else if (_id == viewBinding.menuBtn.getId()) {
                 PopupMenu popupMenu = new PopupMenu(v.getContext(), v);
                 popupMenu.setOnMenuItemClickListener(this);
