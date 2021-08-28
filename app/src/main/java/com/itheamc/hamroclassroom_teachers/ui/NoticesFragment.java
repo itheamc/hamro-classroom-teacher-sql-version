@@ -192,6 +192,7 @@ public class NoticesFragment extends Fragment implements QueryCallbacks, NoticeC
     public void onQuerySuccess(String message) {
         if (noticesBinding == null) return;
         if (message.equals("Not found")) ViewUtils.visibleViews(noticesBinding.noNoticeLayout);
+        if (getContext() != null && !message.equals("Not found")) NotifyUtils.showToast(getContext(), message);
         hideProgress();
     }
 

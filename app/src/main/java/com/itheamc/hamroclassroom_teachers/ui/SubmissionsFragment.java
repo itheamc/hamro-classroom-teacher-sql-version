@@ -72,6 +72,13 @@ public class SubmissionsFragment extends Fragment implements QueryCallbacks, Sub
         submissionAdapter = new SubmissionAdapter(this);
         submissionsBinding.submissionsRecyclerView.setAdapter(submissionAdapter);
 
+        /*
+        OnClickListener on back button
+         */
+        submissionsBinding.backButton.setOnClickListener(v -> {
+            navController.popBackStack();
+        });
+
          /*
         Setting OnRefreshListener on the swipe-refresh layout
          */
@@ -168,7 +175,8 @@ public class SubmissionsFragment extends Fragment implements QueryCallbacks, Sub
     public void onQuerySuccess(String message) {
         if (submissionsBinding == null) return;
         NotifyUtils.logDebug(TAG, message);
-        if (getContext() != null) NotifyUtils.showToast(getContext(), message);
+        if (getContext() != null && !message.equals("Not found")) NotifyUtils.showToast(getContext(), message);
+        if (message.equals("Not found")) ViewUtils.visibleViews(submissionsBinding.noItemFoundLayout);
         hideProgress();
     }
 

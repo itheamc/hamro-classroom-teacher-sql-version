@@ -378,7 +378,8 @@ public class AssignmentsFragment extends Fragment implements AssignmentCallbacks
         }
 
         hideProgress();
-        if (getContext() != null) NotifyUtils.showToast(getContext(), message);
+        if (message.equals("Not found")) ViewUtils.visibleViews(assignmentsBinding.noItemFoundLayout);
+        if (getContext() != null && !message.equals("Not found")) NotifyUtils.showToast(getContext(), message);
 
     }
 

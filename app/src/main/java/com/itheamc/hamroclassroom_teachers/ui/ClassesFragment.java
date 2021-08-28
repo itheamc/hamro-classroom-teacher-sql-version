@@ -296,17 +296,19 @@ public class ClassesFragment extends Fragment implements SubjectCallbacks, Query
     @Override
     public void onQuerySuccess(String message) {
         if (classesBinding == null) return;
-        ViewUtils.hideProgressBar(bottomSheetBinding.progressBarContainer);   // Disabling link update progress bar
         hideProgress();
-        if (getContext() != null) NotifyUtils.showToast(getContext(), message);
+        if (message.equals("Not found")) ViewUtils.visibleViews(classesBinding.noItemFoundLayout);
+        if (getContext() != null && !message.equals("Not found")) NotifyUtils.showToast(getContext(), message);
 
         if (isDeleting) {
             isDeleting = false;
             viewModel.removeSubject(position);
             subjectAdapter.notifyItemRemoved(position);
         }
-        if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED)
+        if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
             linkInputLayout.getEditText().setText("");
+            ViewUtils.hideProgressBar(bottomSheetBinding.progressBarContainer);   // Disabling link update progress bar
+        }
     }
 
     @Override
