@@ -207,6 +207,10 @@ public class MainViewModel extends ViewModel {
         this.materials = materials;
     }
 
+    public void removeMaterial(int position) {
+        this.materials.remove(position);
+    }
+
     public boolean isSubjectUpdating() {
         return isSubjectUpdating;
     }

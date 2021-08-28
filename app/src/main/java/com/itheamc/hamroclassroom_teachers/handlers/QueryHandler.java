@@ -410,7 +410,7 @@ public class QueryHandler {
      */
     public void getMaterials(String ref, boolean isBySubjectId) {
         executorService.execute(() -> {
-            client.newCall(RequestHandler.assignmentGetRequestBySubjectId(ref, isBySubjectId)).enqueue(new Callback() {
+            client.newCall(RequestHandler.materialsGetRequestByRef(ref, isBySubjectId)).enqueue(new Callback() {
                 @Override
                 public void onFailure(@NonNull Call call, @NonNull IOException e) {
                     notifyFailure(e);

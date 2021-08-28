@@ -115,7 +115,6 @@ public class MaterialsFragment extends Fragment implements MaterialCallbacks, Qu
     public void onClick(View view) {
         int _id = view.getId();
         if (_id == materialsBinding.backButton.getId()) {
-            viewModel.setFromSubject(false);
             navController.popBackStack();
         } else if (_id == materialsBinding.addMaterialButton.getId()) {
             navController.navigate(R.id.action_materialsFragment_to_addMaterialFragment);
@@ -197,13 +196,13 @@ public class MaterialsFragment extends Fragment implements MaterialCallbacks, Qu
     @Override
     public void onDeleteClick(int _position) {
         Material material = null;
-        if (viewModel.getAssignments() != null)
+        if (viewModel.getMaterials() != null)
             material = viewModel.getMaterials().get(_position);
 
         if (material != null) {
             isDeleting = true;
             position = _position;
-            QueryHandler.getInstance(this).deleteAssignment(material.get_id());
+            QueryHandler.getInstance(this).deleteMaterial(material.get_id());
             showProgress();
         }
     }
@@ -211,7 +210,7 @@ public class MaterialsFragment extends Fragment implements MaterialCallbacks, Qu
     // Custom function to set assignment in ViewModel
     private void setMaterial(int _position) {
         Material material = null;
-        if (viewModel.getAssignments() != null && !viewModel.getAssignments().isEmpty())
+        if (viewModel.getMaterials() != null && !viewModel.getMaterials().isEmpty())
             material = viewModel.getMaterials().get(_position);
 
         if (material != null) viewModel.setMaterial(material);
@@ -250,7 +249,7 @@ public class MaterialsFragment extends Fragment implements MaterialCallbacks, Qu
 
         if (isDeleting) {
             isDeleting = false;
-            viewModel.removeAssignment(position);
+            viewModel.removeMaterial(position);
             materialAdapter.notifyItemRemoved(position);
         }
 

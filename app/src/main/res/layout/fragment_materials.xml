@@ -87,7 +87,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-condensed-light"
-            android:text="@string/you_haven_t_assign_any_task_yet"
+            android:text="@string/no_materials"
             android:textAlignment="center"
             android:textSize="20sp" />
 
