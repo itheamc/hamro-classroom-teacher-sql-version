@@ -111,7 +111,7 @@
             android:layout_marginRight="24dp"
             android:layout_marginBottom="8dp"
             android:fontFamily="@font/dekko"
-            android:text="@string/assign_now"
+            android:text="@string/confirm"
             android:textSize="16sp"
             app:rippleColor="#00ACC1"
             app:strokeColor="@color/secondary_text_color_lite" />
