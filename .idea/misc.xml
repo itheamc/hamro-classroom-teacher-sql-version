@@ -22,7 +22,39 @@
         <entry key="..\:/Users/User/AndroidStudioProjects/HamroClassroomTeachers/app/src/main/res/menu/notice_menu.xml" value="0.35833333333333334" />
         <entry key="..\:/Users/User/AndroidStudioProjects/HamroClassroomTeachers/app/src/main/res/menu/subject_menu.xml" value="0.35833333333333334" />
         <entry key="..\:/Users/User/AndroidStudioProjects/hamro-classroom-teacher-sql-version/app/src/main/res/drawable/dashboard_drawable.xml" value="0.37447916666666664" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/hamro-classroom-teacher-sql-version/app/src/main/res/drawable/edittext_shape.xml" value="0.21927083333333333" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/hamro-classroom-teacher-sql-version/app/src/main/res/drawable/ic_account.xml" value="0.21927083333333333" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/hamro-classroom-teacher-sql-version/app/src/main/res/drawable/ic_add.xml" value="0.21927083333333333" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/hamro-classroom-teacher-sql-version/app/src/main/res/drawable/ic_add_link.xml" value="0.21927083333333333" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/hamro-classroom-teacher-sql-version/app/src/main/res/drawable/ic_add_photo.xml" value="0.21927083333333333" />
         <entry key="..\:/Users/User/AndroidStudioProjects/hamro-classroom-teacher-sql-version/app/src/main/res/drawable/ic_add_task.xml" value="0.3365740740740741" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/hamro-classroom-teacher-sql-version/app/src/main/res/drawable/ic_assignment.xml" value="0.21927083333333333" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/hamro-classroom-teacher-sql-version/app/src/main/res/drawable/ic_calendar.xml" value="0.21927083333333333" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/hamro-classroom-teacher-sql-version/app/src/main/res/drawable/ic_check.xml" value="0.21927083333333333" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/hamro-classroom-teacher-sql-version/app/src/main/res/drawable/ic_class.xml" value="0.21927083333333333" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/hamro-classroom-teacher-sql-version/app/src/main/res/drawable/ic_delete.xml" value="0.21927083333333333" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/hamro-classroom-teacher-sql-version/app/src/main/res/drawable/ic_done.xml" value="0.21927083333333333" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/hamro-classroom-teacher-sql-version/app/src/main/res/drawable/ic_edit.xml" value="0.21927083333333333" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/hamro-classroom-teacher-sql-version/app/src/main/res/drawable/ic_email.xml" value="0.21927083333333333" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/hamro-classroom-teacher-sql-version/app/src/main/res/drawable/ic_exit.xml" value="0.21927083333333333" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/hamro-classroom-teacher-sql-version/app/src/main/res/drawable/ic_fb.xml" value="0.21927083333333333" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/hamro-classroom-teacher-sql-version/app/src/main/res/drawable/ic_gender.xml" value="0.21927083333333333" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/hamro-classroom-teacher-sql-version/app/src/main/res/drawable/ic_google.xml" value="0.21927083333333333" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/hamro-classroom-teacher-sql-version/app/src/main/res/drawable/ic_hide.xml" value="0.21927083333333333" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/hamro-classroom-teacher-sql-version/app/src/main/res/drawable/ic_images.xml" value="0.21927083333333333" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/hamro-classroom-teacher-sql-version/app/src/main/res/drawable/ic_menu_icon.xml" value="0.21927083333333333" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/hamro-classroom-teacher-sql-version/app/src/main/res/drawable/ic_navigate_back.xml" value="0.21927083333333333" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/hamro-classroom-teacher-sql-version/app/src/main/res/drawable/ic_notifier.xml" value="0.21927083333333333" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/hamro-classroom-teacher-sql-version/app/src/main/res/drawable/ic_pending.xml" value="0.21927083333333333" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/hamro-classroom-teacher-sql-version/app/src/main/res/drawable/ic_phone.xml" value="0.21927083333333333" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/hamro-classroom-teacher-sql-version/app/src/main/res/drawable/ic_place.xml" value="0.21927083333333333" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/hamro-classroom-teacher-sql-version/app/src/main/res/drawable/ic_remove.xml" value="0.21927083333333333" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/hamro-classroom-teacher-sql-version/app/src/main/res/drawable/ic_school.xml" value="0.21927083333333333" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/hamro-classroom-teacher-sql-version/app/src/main/res/drawable/ic_subject.xml" value="0.21927083333333333" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/hamro-classroom-teacher-sql-version/app/src/main/res/drawable/id_card.xml" value="0.21927083333333333" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/hamro-classroom-teacher-sql-version/app/src/main/res/drawable/id_card_background.xml" value="0.21927083333333333" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/hamro-classroom-teacher-sql-version/app/src/main/res/drawable/id_card_bottom_shape.xml" value="0.21927083333333333" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/hamro-classroom-teacher-sql-version/app/src/main/res/drawable/image_foreground.xml" value="0.21927083333333333" />
         <entry key="..\:/Users/User/AndroidStudioProjects/hamro-classroom-teacher-sql-version/app/src/main/res/drawable/login_drawable.xml" value="0.37447916666666664" />
         <entry key="..\:/Users/User/AndroidStudioProjects/hamro-classroom-teacher-sql-version/app/src/main/res/layout/activity_splash.xml" value="0.2907608695652174" />
         <entry key="..\:/Users/User/AndroidStudioProjects/hamro-classroom-teacher-sql-version/app/src/main/res/layout/assignment_view.xml" value="0.3625" />
