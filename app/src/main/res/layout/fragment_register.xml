@@ -86,7 +86,8 @@
                 android:layout_height="match_parent"
                 android:fontFamily="@font/dekko"
                 android:spinnerMode="dropdown"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
         </LinearLayout>
 
 
@@ -147,6 +148,27 @@
             android:paddingBottom="5dp"
             android:textSize="18sp" />
 
+        <EditText
+            android:id="@+id/editTextSchool"
+            android:layout_width="325dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/edittext_shape"
+            android:drawableStart="@drawable/ic_school"
+            android:drawablePadding="16dp"
+            android:ems="10"
+            android:clickable="true"
+            android:focusable="false"
+            android:fontFamily="@font/dekko"
+            android:hint="@string/school"
+            android:inputType="textPostalAddress"
+            android:minHeight="48dp"
+            android:paddingStart="16dp"
+            android:paddingTop="5dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="5dp"
+            android:textSize="18sp"/>
+
 
         <Button
             android:id="@+id/continueButton"
@@ -158,6 +180,21 @@
             app:cornerRadius="8dp" />
 
     </LinearLayout>
+
+    <!--  Bottom Sheet Layout  -->
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/schoolBottomSheetCoordinatorLayout"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:elevation="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <include layout="@layout/school_bottom_sheet" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     <LinearLayout
         android:id="@+id/overlayLayout"

@@ -68,7 +68,7 @@ public class JsonHandler {
 
         // Getting school obj
 
-//        School school = getSchool(userObj);
+        School school = getSchool(userObj);
 
         // Creating new user and returning it
         return new User(
@@ -80,7 +80,7 @@ public class JsonHandler {
                 userObj.getString("_email"),
                 userObj.getString("_address"),
                 userObj.getString("_school"),
-                null,
+                school,
                 userObj.getString("_joined_on")
         );
     }
@@ -166,8 +166,8 @@ public class JsonHandler {
                 assignmentObj.getString("_id"),
                 assignmentObj.getString("_title"),
                 assignmentObj.getString("_desc"),
-                ArrayUtils.toArray(assignmentObj.getString("_images"), ","),
-                ArrayUtils.toArray(assignmentObj.getString("_docs"), ","),
+                ArrayUtils.toArray(assignmentObj.getString("_images"), ", "),
+                ArrayUtils.toArray(assignmentObj.getString("_docs"), ", "),
                 String.valueOf(assignmentObj.getInt("_class")),
                 subject.get_teacher_ref(),
                 subject.get_teacher(),
@@ -198,8 +198,8 @@ public class JsonHandler {
         return new Material(
                 materialOnj.getString("_id"),
                 materialOnj.getString("_title"),
-                ArrayUtils.toArray(materialOnj.getString("_images"), ","),
-                ArrayUtils.toArray(materialOnj.getString("_docs"), ","),
+                ArrayUtils.toArray(materialOnj.getString("_images"), ", "),
+                ArrayUtils.toArray(materialOnj.getString("_docs"), ", "),
                 String.valueOf(materialOnj.getInt("_class")),
                 subject.get_teacher_ref(),
                 subject.get_teacher(),

@@ -63,7 +63,7 @@ public class MaterialsFragment extends Fragment implements MaterialCallbacks, Qu
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         materialsBinding = FragmentMaterialsBinding.inflate(inflater, container, false);

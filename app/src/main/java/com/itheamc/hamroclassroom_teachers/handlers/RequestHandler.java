@@ -98,26 +98,6 @@ public class RequestHandler {
         return new Request.Builder().url(PathHandler.STUDENTS_PATH + _id).get().build();
     }
 
-    // POST REQUEST
-    public static Request studentPostRequest(@NonNull Student student) {
-        RequestBody requestBody = new FormBody.Builder()
-                .add("_id", student.get_id())
-                .add("_name", student.get_name())
-                .add("_gender", student.get_gender())
-                .add("_image", student.get_image())
-                .add("_phone", student.get_phone())
-                .add("_email", student.get_email())
-                .add("_address", student.get_address())
-                .add("_guardian", student.get_guardian())
-                .add("_class", student.get_class())
-                .add("_section", student.get_section())
-                .add("_roll_number", student.get_roll_number())
-                .add("_school", student.get_school_ref())
-                .add("_joined_on", student.get_joined_on())
-                .build();
-
-        return new Request.Builder().url(PathHandler.STUDENTS_PATH).post(requestBody).build();
-    }
 
 
     /*

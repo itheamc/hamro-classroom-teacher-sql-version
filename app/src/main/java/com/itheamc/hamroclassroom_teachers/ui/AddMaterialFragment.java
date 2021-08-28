@@ -150,6 +150,7 @@ public class AddMaterialFragment extends Fragment implements StorageCallbacks, I
         /*
         Setting OnClickListener
          */
+        addMaterialBinding.backButton.setOnClickListener(v -> navController.popBackStack());
         addMaterialBinding.imagePickerButton.setOnClickListener(v -> showImagePicker());
         addMaterialBinding.addMaterialButton.setOnClickListener(v -> {
             if (!isInputsValid()) {
@@ -189,23 +190,6 @@ public class AddMaterialFragment extends Fragment implements StorageCallbacks, I
     private void submitImagesToImageAdapter() {
         if (imagesUri != null && imagesUri.size() > 0) imageAdapter.submitList(imagesUri);
     }
-
-
-    /**
-     * --------------------------------------------------------------------------
-     * Function to handle image upload to cloud storage
-     * It will be triggered continuously until all the images will be uploaded
-     */
-//    private void handleImageUpload() {
-//        if (getActivity() == null || imagesUri == null || imagesUri.size() == 0) {
-//            ViewUtils.hideProgressBar(assignmentBinding.progressBarContainer);
-//            ViewUtils.enableViews(assignmentBinding.addAssignmentButton, titleInputLayout, descInputLayout);
-//            is_uploading = false;
-//            return;
-//        }
-//        StorageHandler.getInstance(getActivity(), this).uploadImage(imagesUri);
-//        HandlerCompat.createAsync(Looper.getMainLooper()).post(() -> assignmentBinding.uploadedProgress.setText(R.string.uploading_images));
-//    }
 
     /**
      * --------------------------------------------------------------------------

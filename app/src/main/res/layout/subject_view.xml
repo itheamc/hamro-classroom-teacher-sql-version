@@ -117,14 +117,14 @@
                     android:drawableLeft="@drawable/ic_add_link"
                     android:fontFamily="sans-serif-condensed"
                     android:text="@string/add_link"
-                    android:textColor="?colorOnSecondary"
+                    android:textColor="?attr/colorControlNormal"
                     android:textSize="12sp"
                     android:textStyle="bold"
                     app:cornerRadius="24dp"
                     app:layout_constraintBottom_toBottomOf="@+id/assignmentsButton"
                     app:layout_constraintEnd_toStartOf="@+id/assignmentsButton"
                     app:layout_constraintTop_toTopOf="@+id/assignmentsButton"
-                    app:strokeColor="?colorOnSecondary" />
+                    app:strokeColor="?attr/colorControlNormal" />
 
                 <Button
                     android:id="@+id/assignmentsButton"
@@ -137,14 +137,14 @@
                     android:drawableLeft="@drawable/ic_assignment"
                     android:fontFamily="sans-serif-condensed"
                     android:text="@string/assignments"
-                    android:textColor="?colorOnSecondary"
+                    android:textColor="?attr/colorControlNormal"
                     android:textSize="12sp"
                     android:textStyle="bold"
                     app:cornerRadius="24dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/startTime"
-                    app:strokeColor="?colorOnSecondary" />
+                    app:strokeColor="?attr/colorControlNormal" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>

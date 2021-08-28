@@ -11,16 +11,21 @@ import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.firebase.auth.FirebaseUser;
 import com.itheamc.hamroclassroom_teachers.R;
+import com.itheamc.hamroclassroom_teachers.adapters.SchoolAdapter;
 import com.itheamc.hamroclassroom_teachers.adapters.SpinnerAdapter;
 import com.itheamc.hamroclassroom_teachers.callbacks.QueryCallbacks;
+import com.itheamc.hamroclassroom_teachers.callbacks.SchoolCallbacks;
 import com.itheamc.hamroclassroom_teachers.databinding.FragmentRegisterBinding;
+import com.itheamc.hamroclassroom_teachers.databinding.SchoolBottomSheetBinding;
 import com.itheamc.hamroclassroom_teachers.handlers.QueryHandler;
 import com.itheamc.hamroclassroom_teachers.models.Assignment;
 import com.itheamc.hamroclassroom_teachers.models.Material;
@@ -38,14 +43,24 @@ import com.itheamc.hamroclassroom_teachers.viewmodels.LoginViewModel;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
-public class RegisterFragment extends Fragment implements QueryCallbacks, AdapterView.OnItemSelectedListener {
+public class RegisterFragment extends Fragment implements QueryCallbacks, SchoolCallbacks, AdapterView.OnItemSelectedListener {
     private static final String TAG = "RegisterFragment";
     private FragmentRegisterBinding registerBinding;
     private NavController navController;
     private LoginViewModel loginViewModel;
+    private List<School> schools;
+    private School school;
+
+    /*
+    For Bottom Sheet -- Schools list
+    */
+    private BottomSheetBehavior<ConstraintLayout> bottomSheetBehavior;
+    private SchoolBottomSheetBinding bottomSheetBinding;
+    private SchoolAdapter schoolAdapter;
 
 
     // EditText
@@ -53,6 +68,7 @@ public class RegisterFragment extends Fragment implements QueryCallbacks, Adapte
     private EditText emailEditText;
     private EditText phoneEditText;
     private EditText addressEditText;
+    private EditText schoolEditText;
 
     /*
     For Gender Spinner
@@ -89,6 +105,16 @@ public class RegisterFragment extends Fragment implements QueryCallbacks, Adapte
         navController = Navigation.findNavController(view);
         loginViewModel = new ViewModelProvider(requireActivity()).get(LoginViewModel.class);
 
+          /*
+        Initializing Bottom Sheet and its views
+         */
+        ConstraintLayout bottomSheetLayout = (ConstraintLayout) registerBinding.schoolBottomSheetCoordinatorLayout.findViewById(R.id.schoolBottomSheetLayout);
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetLayout);
+        bottomSheetBinding = SchoolBottomSheetBinding.bind(bottomSheetLayout);
+
+        schoolAdapter = new SchoolAdapter(this);
+        bottomSheetBinding.schoolRecyclerView.setAdapter(schoolAdapter);
+
         //Spinner Initialization
         // Spinner Adapter
         if (getContext() != null)
@@ -102,6 +128,7 @@ public class RegisterFragment extends Fragment implements QueryCallbacks, Adapte
         emailEditText = registerBinding.editTextEmail;
         phoneEditText = registerBinding.editTextPhone;
         addressEditText = registerBinding.editTextAddress;
+        schoolEditText = registerBinding.editTextSchool;
 
         // Calling function to set the known data got from firebase user to the edittext
         setKnownValue();
@@ -109,6 +136,11 @@ public class RegisterFragment extends Fragment implements QueryCallbacks, Adapte
         // Setting on click listener on the continue button
         registerBinding.continueButton.setOnClickListener(v -> {
             handleUserStore();
+        });
+
+        // Setting OnClickListener on SchoolEditText
+        schoolEditText.setOnClickListener(v -> {
+            handleBottomSheet();
         });
 
     }
@@ -146,7 +178,7 @@ public class RegisterFragment extends Fragment implements QueryCallbacks, Adapte
                     _phone,
                     _email,
                     _address,
-                    "",
+                    school.get_id(),
                     null,
                     TimeUtils.now()
             );
@@ -174,10 +206,13 @@ public class RegisterFragment extends Fragment implements QueryCallbacks, Adapte
         String _phone = phoneEditText.getText().toString().trim();
         String _email = emailEditText.getText().toString().trim();
         String _address = addressEditText.getText().toString().trim();
+        String _school = schoolEditText.getText().toString().trim();
+
         if (TextUtils.isEmpty(_name) ||
                 TextUtils.isEmpty(_email) ||
                 TextUtils.isEmpty(_phone) ||
                 TextUtils.isEmpty(_address) ||
+                TextUtils.isEmpty(_school) ||
                 gender_position == 0) {
             NotifyUtils.showToast(getContext(), "Please enter all the data");
             return false;
@@ -185,6 +220,24 @@ public class RegisterFragment extends Fragment implements QueryCallbacks, Adapte
 
         return true;
 
+    }
+
+    /**
+     * -----------------------------------------------------------------------
+     * Function to show or hide bottomsheet
+     */
+    private void handleBottomSheet() {
+        if (bottomSheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+            if (schools != null && !schools.isEmpty()) {
+                schoolAdapter.submitList(schools);
+                return;
+            }
+            ViewUtils.showProgressBar(bottomSheetBinding.progressBarContainer);
+            QueryHandler.getInstance(this).getSchools();
+        } else {
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        }
     }
 
 
@@ -208,7 +261,13 @@ public class RegisterFragment extends Fragment implements QueryCallbacks, Adapte
      */
     @Override
     public void onQuerySuccess(List<User> user, List<School> schools, List<Student> students, List<Subject> subjects, List<Assignment> assignments, List<Material> materials, List<Submission> submissions, List<Notice> notices) {
-
+        if (registerBinding == null) return;
+        if (schools != null) {
+            this.schools = new ArrayList<>();
+            this.schools = schools;
+            schoolAdapter.submitList(this.schools);
+            ViewUtils.hideProgressBar(bottomSheetBinding.progressBarContainer);
+        }
     }
 
     @Override
@@ -230,6 +289,7 @@ public class RegisterFragment extends Fragment implements QueryCallbacks, Adapte
         if (registerBinding == null) return;
         if (getContext() != null) NotifyUtils.showToast(getContext(), e.getMessage());
         ViewUtils.hideProgressBar(registerBinding.overlayLayout);
+        ViewUtils.hideProgressBar(bottomSheetBinding.progressBarContainer);
         ViewUtils.enableViews(
                 nameEditText,
                 phoneEditText,
@@ -239,14 +299,22 @@ public class RegisterFragment extends Fragment implements QueryCallbacks, Adapte
                 registerBinding.continueButton);
     }
 
+    /**
+     * --------------------------------------------------------------------------
+     * Method implemented from SchoolViewCallbacks
+     *
+     * @param _position - clicked item position in a list
+     */
+    @Override
+    public void onClick(int _position) {
+        school = schools.get(_position);
+        schoolEditText.setText(school.get_name());
+        ViewUtils.handleBottomSheet(bottomSheetBehavior);
+    }
+
 
     /**
      * Methods implemented from the AdapterView.OnItemSelectedListener
-     *
-     * @param parent   -
-     * @param view     -
-     * @param position -
-     * @param id       -
      */
 
     @Override
@@ -265,6 +333,5 @@ public class RegisterFragment extends Fragment implements QueryCallbacks, Adapte
         super.onDestroyView();
         registerBinding = null;
     }
-
 
 }

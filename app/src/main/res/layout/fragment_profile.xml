@@ -140,7 +140,7 @@
                         android:id="@+id/userPhone"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="24dp"
                         android:fontFamily="casual"
                         android:text="@{String.format(`Phone No.:  %s`, user._phone)}"
                         android:textSize="16sp"
@@ -151,12 +151,14 @@
 
                     <TextView
                         android:id="@+id/userEmail"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
+                        android:layout_marginEnd="16dp"
                         android:fontFamily="casual"
-                        android:text="@{String.format(`Section:  %s`, user._email)}"
+                        android:text="@{String.format(`Email:  %s`, user._email)}"
                         android:textSize="16sp"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="@+id/userPhone"
                         app:layout_constraintTop_toBottomOf="@+id/userPhone"
                         tools:text="Email:  example@gmail.com" />
