@@ -25,6 +25,7 @@ public class MainViewModel extends ViewModel {
     private Assignment assignment;
     private Submission submission;
     private School school;
+    private Notice notice;
 
     /*
     Lists
@@ -106,6 +107,14 @@ public class MainViewModel extends ViewModel {
 
     public void setSchool(School school) {
         this.school = school;
+    }
+
+    public Notice getNotice() {
+        return notice;
+    }
+
+    public void setNotice(Notice notice) {
+        this.notice = notice;
     }
 
     public List<School> getSchools() {

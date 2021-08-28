@@ -165,6 +165,7 @@ public class RequestHandler {
         FormBody.Builder builder = new FormBody.Builder();
         if (subject.get_id() != null) builder.add("_id", subject.get_id());
         if (subject.get_name() != null) builder.add("_name", subject.get_name());
+        if (subject.get_class() != null) builder.add("_class", subject.get_class());
         if (subject.get_school_ref() != null) builder.add("_school", subject.get_school_ref());
         if (subject.get_start_time() != null) builder.add("_start_time", subject.get_start_time());
 
@@ -305,8 +306,8 @@ public class RequestHandler {
     public static final Request GET_REQUEST_NOTICES = new Request.Builder().url(PathHandler.NOTICES_PATH).get().build();
 
     // GET REQUEST
-    public static Request noticeGetRequestById(@NonNull String _id) {
-        return new Request.Builder().url(PathHandler.NOTICES_PATH + _id).get().build();
+    public static Request noticeGetRequestById(@NonNull String _id, boolean isById) {
+        return new Request.Builder().url(PathHandler.NOTICES_PATH + _id).addHeader("by", isById ? "id" : "teacher").get().build();
     }
 
     // POST REQUEST

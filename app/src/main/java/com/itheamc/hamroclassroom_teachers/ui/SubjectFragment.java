@@ -418,7 +418,7 @@ public class SubjectFragment extends Fragment implements QueryCallbacks, SchoolC
         ViewUtils.hideProgressBar(subjectBinding.subjectProgressBarContainer);
         ViewUtils.hideProgressBar(bottomSheetBinding.progressBarContainer);
         ViewUtils.enableViews(subjectInputLayout, classInputLayout, schoolInputLayout, classTimeInputLayout, addEditBtn);
-        NotifyUtils.showToast(getContext(), e.getMessage());
+        NotifyUtils.showToast(getContext(), getString(R.string.went_wrong_message));
         NotifyUtils.logDebug(TAG, "onUserInfoRetrievedError: - " + e.getMessage());
     }
 

@@ -1,6 +1,10 @@
 package com.itheamc.hamroclassroom_teachers.models;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
+
 import java.util.Arrays;
+import java.util.Objects;
 
 public class Notice {
     private String _id;
@@ -120,4 +124,27 @@ public class Notice {
                 ", _notified_on='" + _notified_on + '\'' +
                 '}';
     }
+
+    // Equals
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Notice notice = (Notice) o;
+        return Objects.equals(_id, notice._id) && Objects.equals(_title, notice._title) && Objects.equals(_desc, notice._desc) && Objects.equals(_school_ref, notice._school_ref) && Objects.equals(_school, notice._school) && Arrays.equals(_classes, notice._classes) && Objects.equals(_teacher_ref, notice._teacher_ref) && Objects.equals(_teacher, notice._teacher) && Objects.equals(_notified_on, notice._notified_on);
+    }
+
+
+    // DiffUtils.ItemCallback
+    public static DiffUtil.ItemCallback<Notice> noticeItemCallback = new DiffUtil.ItemCallback<Notice>() {
+        @Override
+        public boolean areItemsTheSame(@NonNull Notice oldItem, @NonNull Notice newItem) {
+            return newItem.equals(oldItem);
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull Notice oldItem, @NonNull Notice newItem) {
+            return false;
+        }
+    };
 }

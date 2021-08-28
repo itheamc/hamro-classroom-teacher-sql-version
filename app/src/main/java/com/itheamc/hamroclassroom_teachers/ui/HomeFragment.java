@@ -173,7 +173,7 @@ public class HomeFragment extends Fragment implements QueryCallbacks, View.OnCli
     @Override
     public void onQueryFailure(Exception e) {
         if (homeBinding == null) return;
-        if (getContext() != null) NotifyUtils.showToast(getContext(), e.getMessage());
+        if (getContext() != null) NotifyUtils.showToast(getContext(), getString(R.string.went_wrong_message));
         ViewUtils.handleRefreshing(homeBinding.swipeRefreshLayout);
 
     }

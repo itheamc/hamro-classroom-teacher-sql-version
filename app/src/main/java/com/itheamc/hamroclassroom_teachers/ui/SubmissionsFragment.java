@@ -112,7 +112,7 @@ public class SubmissionsFragment extends Fragment implements QueryCallbacks, Sub
      */
     private void getSubmissions() {
         QueryHandler.getInstance(this).getSubmissions(viewModel.getAssignment().get_id());
-        ViewUtils.showProgressBar(submissionsBinding.progressBarContainer);
+        if (!submissionsBinding.swipeRefreshLayout.isRefreshing()) showProgress();
     }
 
     /*
@@ -128,10 +128,25 @@ public class SubmissionsFragment extends Fragment implements QueryCallbacks, Sub
         submissionAdapter.submitList(submissions);
     }
 
+    /*
+    Function to show progress
+     */
+    private void showProgress() {
+        ViewUtils.showProgressBar(submissionsBinding.progressBarContainer);
+    }
+
+    /*
+    Function to hide progress
+     */
+    private void hideProgress() {
+        ViewUtils.hideProgressBar(submissionsBinding.progressBarContainer);
+        ViewUtils.handleRefreshing(submissionsBinding.swipeRefreshLayout);
+    }
+
 
     /**
      * -------------------------------------------------------------------------
-     * These are the methods implemented from the FirestoreCallbacks
+     * These are the methods implemented from the QueryCallbacks
      * -------------------------------------------------------------------------
      */
     @Override
@@ -141,8 +156,7 @@ public class SubmissionsFragment extends Fragment implements QueryCallbacks, Sub
             submitListToAdapter(submissions);
         }
 
-        ViewUtils.hideProgressBar(submissionsBinding.progressBarContainer);
-        ViewUtils.handleRefreshing(submissionsBinding.swipeRefreshLayout);
+        hideProgress();
     }
 
     @Override
@@ -153,21 +167,17 @@ public class SubmissionsFragment extends Fragment implements QueryCallbacks, Sub
     @Override
     public void onQuerySuccess(String message) {
         if (submissionsBinding == null) return;
-        ViewUtils.hideProgressBar(submissionsBinding.progressBarContainer);
-        ViewUtils.handleRefreshing(submissionsBinding.swipeRefreshLayout);
         NotifyUtils.logDebug(TAG, message);
         if (getContext() != null) NotifyUtils.showToast(getContext(), message);
+        hideProgress();
     }
 
     @Override
     public void onQueryFailure(Exception e) {
         if (submissionsBinding == null) return;
-        NotifyUtils.logDebug(TAG, "Failure");
-
-        ViewUtils.hideProgressBar(submissionsBinding.progressBarContainer);
-        ViewUtils.handleRefreshing(submissionsBinding.swipeRefreshLayout);
-        if (getContext() != null) NotifyUtils.showToast(getContext(), e.getMessage());
+        if (getContext() != null) NotifyUtils.showToast(getContext(), getString(R.string.went_wrong_message));
         NotifyUtils.logError(TAG, "onFailure: ", e);
+        hideProgress();
     }
 
 
@@ -178,7 +188,7 @@ public class SubmissionsFragment extends Fragment implements QueryCallbacks, Sub
      */
     @Override
     public void onClick(int _position) {
-        if (viewModel.getSubmissions() != null && viewModel.getSubmissions().size() > 0) {
+        if (viewModel.getSubmissions() != null && !viewModel.getSubmissions().isEmpty()) {
             Submission submission = viewModel.getSubmissions().get(_position);
             viewModel.setSubmission(submission);
             navController.navigate(R.id.action_submissionsFragment_to_submissionFragment);

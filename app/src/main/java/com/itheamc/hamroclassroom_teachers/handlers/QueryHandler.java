@@ -237,7 +237,7 @@ public class QueryHandler {
                             }
                             return;
                         }
-                        notifyFailure(new Exception("Unable to update"));
+                        notifyFailure(new Exception(jsonObject.getString("message")));
                     } catch (Exception e) {
                         notifyFailure(e);
                     }
@@ -524,9 +524,9 @@ public class QueryHandler {
      * Function to get notice list from the cloud database
      * --------------------------------------------------------------------------------------
      */
-    public void getNotices(String teacher_ref) {
+    public void getNotices(String _ref, boolean isById) {
         executorService.execute(() -> {
-            client.newCall(RequestHandler.noticeGetRequestById(teacher_ref)).enqueue(new Callback() {
+            client.newCall(RequestHandler.noticeGetRequestById(_ref, isById)).enqueue(new Callback() {
                 @Override
                 public void onFailure(@NonNull Call call, @NonNull IOException e) {
                     notifyFailure(e);

@@ -1,66 +1,230 @@
 package com.itheamc.hamroclassroom_teachers.ui;
 
+
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+
 import com.itheamc.hamroclassroom_teachers.R;
+import com.itheamc.hamroclassroom_teachers.adapters.NoticeAdapter;
+import com.itheamc.hamroclassroom_teachers.callbacks.NoticeCallbacks;
+import com.itheamc.hamroclassroom_teachers.callbacks.QueryCallbacks;
+import com.itheamc.hamroclassroom_teachers.databinding.FragmentNoticesBinding;
+import com.itheamc.hamroclassroom_teachers.handlers.QueryHandler;
+import com.itheamc.hamroclassroom_teachers.models.Assignment;
+import com.itheamc.hamroclassroom_teachers.models.Notice;
+import com.itheamc.hamroclassroom_teachers.models.School;
+import com.itheamc.hamroclassroom_teachers.models.Student;
+import com.itheamc.hamroclassroom_teachers.models.Subject;
+import com.itheamc.hamroclassroom_teachers.models.Submission;
+import com.itheamc.hamroclassroom_teachers.models.User;
+import com.itheamc.hamroclassroom_teachers.utils.LocalStorage;
+import com.itheamc.hamroclassroom_teachers.utils.NotifyUtils;
+import com.itheamc.hamroclassroom_teachers.utils.ViewUtils;
+import com.itheamc.hamroclassroom_teachers.viewmodels.MainViewModel;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link NoticesFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class NoticesFragment extends Fragment {
+import java.util.List;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+public class NoticesFragment extends Fragment implements QueryCallbacks, NoticeCallbacks {
+    private static final String TAG = "NoticesFragment";
+    private FragmentNoticesBinding noticesBinding;
+    private NavController navController;
+    private MainViewModel viewModel;
+    private NoticeAdapter noticeAdapter;
+    private boolean isRefreshing = false;
+
 
     public NoticesFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment NoticesFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static NoticesFragment newInstance(String param1, String param2) {
-        NoticesFragment fragment = new NoticesFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+
+    }
+
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        noticesBinding = FragmentNoticesBinding.inflate(inflater, container, false);
+        return noticesBinding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        // Initializing NavController and ViewModel
+        navController = Navigation.findNavController(view);
+        viewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
+
+        // Initializing AssignmentAdapter and setting to recyclerview
+        noticeAdapter = new NoticeAdapter(this);
+        noticesBinding.noticesRecyclerView.setAdapter(noticeAdapter);
+
+
+        // Setting swipe and refresh layout
+        noticesBinding.noticesSwipeRefreshLayout.setOnRefreshListener(() -> {
+            viewModel.setNotices(null);
+            isRefreshing = true;
+            ViewUtils.hideViews(noticesBinding.noNoticeLayout);
+            checksUser();
+        });
+
+        // Handling back button
+        noticesBinding.backButton.setOnClickListener(v -> {
+            navController.popBackStack();
+        });
+
+
+        // Checks User for assignment extraction
+        List<Notice> notices = viewModel.getNotices();
+        if (notices == null) {
+            checksUser();
+        } else {
+            handleNotices(notices);
+        }
+
+
+    }
+
+
+    /**
+     * Function to checks whether the user is already stored in viewmodel or not
+     */
+    private void checksUser() {
+        User user = viewModel.getUser();
+        if (user == null) {
+            if (getActivity() != null) {
+                QueryHandler.getInstance(this).getUser(LocalStorage.getInstance(getActivity()).getUserId());
+                showProgress();
+            }
+            return;
+        }
+
+        retrieveNotices(user);
+    }
+
+    /**
+     * Function to retrieve notices
+     */
+    private void retrieveNotices(@NonNull User user) {
+        String userId = user.get_id();
+        if ((userId == null || userId.isEmpty())) {
+            hideProgress();
+            return;
+        }
+
+        QueryHandler.getInstance(this).getNotices(userId, false);
+        if (!isRefreshing) showProgress();
+    }
+
+    /**
+     * Function to handle notices
+     */
+    private void handleNotices(List<Notice> notices) {
+        if (notices.isEmpty()) {
+            ViewUtils.visibleViews(noticesBinding.noNoticeLayout);
+            return;
+        }
+
+        viewModel.setNotices(notices);
+        noticeAdapter.submitList(notices);
+    }
+
+
+    /*
+    Function to show progressbar
+     */
+    private void showProgress() {
+        ViewUtils.showProgressBar(noticesBinding.noticesOverlayLayLayout);
+    }
+
+    /*
+    Function to hide progressbar
+     */
+    private void hideProgress() {
+        ViewUtils.hideProgressBar(noticesBinding.noticesOverlayLayLayout);
+        ViewUtils.handleRefreshing(noticesBinding.noticesSwipeRefreshLayout);
+        isRefreshing = false;
+    }
+
+
+    /**
+     * Methods implemented from the QueryCallbacks
+     */
+    @Override
+    public void onQuerySuccess(List<User> user, List<School> schools, List<Student> students, List<Subject> subjects, List<Assignment> assignments, List<Submission> submissions, List<Notice> notices) {
+        if (noticesBinding == null) return;
+
+        if (notices != null) {
+            handleNotices(notices);
+            hideProgress();
+            return;
+        }
+
+        // If success but result is null
+        hideProgress();
+    }
+
+    @Override
+    public void onQuerySuccess(User user, School school, Student student, Subject subject, Assignment assignment, Submission submission, Notice notice) {
+        if (noticesBinding == null) return;
+        if (user != null) {
+            viewModel.setUser(user);
+            retrieveNotices(user);
         }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_notices, container, false);
+    public void onQuerySuccess(String message) {
+        if (noticesBinding == null) return;
+        if (message.equals("Not found")) ViewUtils.visibleViews(noticesBinding.noNoticeLayout);
+        hideProgress();
+    }
+
+    @Override
+    public void onQueryFailure(Exception e) {
+        if (noticesBinding == null) return;
+        hideProgress();
+        NotifyUtils.showToast(getContext(), getString(R.string.went_wrong_message));
+        NotifyUtils.logError(TAG, "onFailure()", e);
+    }
+
+    /**
+     * Method overrided from the NoticeCallbacks
+     *
+     * @param _position - a position of the clicked item in the recycler view
+     */
+    @Override
+    public void onClick(int _position) {
+        List<Notice> notices = viewModel.getNotices();
+        if (notices == null) return;
+
+        Notice notice = notices.get(_position);
+        viewModel.setNotice(notice);
+        navController.navigate(R.id.action_noticesFragment_to_noticeFragment);
+    }
+
+    @Override
+    public void onEditClick(int _position) {
+
+    }
+
+    @Override
+    public void onDeleteClick(int _position) {
+
     }
 }
