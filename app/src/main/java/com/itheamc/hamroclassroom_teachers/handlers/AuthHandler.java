@@ -1,5 +1,7 @@
 package com.itheamc.hamroclassroom_teachers.handlers;
 
+import android.util.Log;
+
 import com.itheamc.hamroclassroom_teachers.utils.Amcryption;
 
 import java.util.Calendar;
@@ -17,7 +19,8 @@ public class AuthHandler {
         int day = Calendar.getInstance(Locale.ENGLISH).get(Calendar.MINUTE);
         auth += day;
         Headers.Builder builder = new Headers.Builder();
-        builder.add("key1", auth).add("key2", Amcryption.getEncoder().encode(auth));
+        builder.add("key1", auth);
+        builder.add("key2", Amcryption.getEncoder().encode(auth));
         if (by != null) builder.add("by", by);
         return builder.build();
     }
@@ -27,15 +30,15 @@ public class AuthHandler {
         StringBuilder stringBuilder = new StringBuilder();
         Random random = new Random();
         // For n
-        int upperBound = 15;
-        int lowerBound = 10;
+        int upperBound = 13;
+        int lowerBound = 8;
         int n = random.nextInt(upperBound - lowerBound) + lowerBound;
 
         for (int i = 0; i < n; i++) {
             int r = random.nextInt(26);
             stringBuilder.append(getLowerChars()[r]);
         }
-        return stringBuilder.toString();
+        return stringBuilder.toString().trim();
     }
 
     /* a-z */

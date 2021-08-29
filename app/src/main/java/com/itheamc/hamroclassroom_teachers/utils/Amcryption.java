@@ -7,18 +7,16 @@ import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 
 public class Amcryption {
-    private static final Decoder DECODER = new Decoder();
-    private static final Encoder ENCODER = new Encoder();
 
     /*
     Getters for the encoder and decoder
      */
     public static Decoder getDecoder() {
-        return DECODER;
+        return new Decoder();
     }
 
     public static Encoder getEncoder() {
-        return ENCODER;
+        return new Encoder();
     }
 
     /*____________________________________________Encoder and Decoder Classes___________________________*/
@@ -39,7 +37,7 @@ public class Amcryption {
         public String decode(String string) {
 
             // At first decode with Base64 decoder
-            byte[] decodedBytes = Base64.decode(string, Base64.DEFAULT);
+            byte[] decodedBytes = Base64.decode(string, Base64.NO_WRAP);
             String s = new String(decodedBytes);
 
             // And again decode with custom decoder
@@ -163,7 +161,7 @@ public class Amcryption {
             }
 
             // Encoding encoded number with Base64 again and returning it
-            return Base64.encodeToString(encodedString.toString().getBytes(StandardCharsets.UTF_8), Base64.DEFAULT);
+            return Base64.encodeToString(encodedString.toString().getBytes(StandardCharsets.UTF_8), Base64.NO_WRAP);
         }
 
 
