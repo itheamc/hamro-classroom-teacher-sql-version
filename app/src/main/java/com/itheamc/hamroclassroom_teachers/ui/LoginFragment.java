@@ -5,6 +5,7 @@ import static com.itheamc.hamroclassroom_teachers.utils.Constants.GOOGLE_SIGN_IN
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +31,7 @@ import com.itheamc.hamroclassroom_teachers.callbacks.LoginCallbacks;
 import com.itheamc.hamroclassroom_teachers.callbacks.QueryCallbacks;
 import com.itheamc.hamroclassroom_teachers.databinding.FragmentLoginBinding;
 import com.itheamc.hamroclassroom_teachers.handlers.LoginHandler;
+import com.itheamc.hamroclassroom_teachers.handlers.PathHandler;
 import com.itheamc.hamroclassroom_teachers.handlers.QueryHandler;
 import com.itheamc.hamroclassroom_teachers.models.Assignment;
 import com.itheamc.hamroclassroom_teachers.models.Material;
@@ -94,6 +96,7 @@ public class LoginFragment extends Fragment implements LoginCallbacks, QueryCall
         // Setting onClickListener on these views
         loginBinding.facebookLoginButton.setOnClickListener(this);
         loginBinding.googleLoginButton.setOnClickListener(this);
+        loginBinding.privacyPolicy.setOnClickListener(this);
 
 
         // Activity Result launcher to listen the result of the googleSignIn intent
@@ -134,6 +137,10 @@ public class LoginFragment extends Fragment implements LoginCallbacks, QueryCall
             ViewUtils.disableViews(loginBinding.facebookLoginButton, loginBinding.googleLoginButton);
             loginHandler.googleLoginHandler();
 
+        } else if (_id == loginBinding.privacyPolicy.getId()) {
+            Uri uri = Uri.parse(PathHandler.PRIVACY_POLICY_URL);
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(intent);
         } else {
             NotifyUtils.logDebug(TAG, "Unspecified view is clicked");
         }
