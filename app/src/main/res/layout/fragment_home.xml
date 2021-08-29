@@ -120,6 +120,7 @@
                             android:layout_height="match_parent"
                             android:foreground="@drawable/image_foreground"
                             android:scaleType="centerCrop"
+                            android:src="@drawable/classes"
                             tools:targetApi="m" />
 
                         <TextView
@@ -151,6 +152,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:foreground="@drawable/image_foreground"
+                            android:src="@drawable/assignment"
                             android:scaleType="centerCrop" />
 
                         <TextView
@@ -188,6 +190,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:foreground="@drawable/image_foreground"
+                            android:src="@drawable/materials"
                             android:scaleType="centerCrop" />
 
                         <TextView
@@ -218,6 +221,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:foreground="@drawable/image_foreground"
+                            android:src="@drawable/notices"
                             android:scaleType="centerCrop" />
 
                         <TextView
