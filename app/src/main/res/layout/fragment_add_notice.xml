@@ -41,7 +41,6 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="24dp"
-        android:gravity="bottom"
         app:errorEnabled="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -61,7 +60,6 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:gravity="bottom"
         app:errorEnabled="true"
         app:layout_constraintEnd_toEndOf="@id/titleInputLayout"
         app:layout_constraintStart_toStartOf="@id/titleInputLayout"
@@ -74,6 +72,7 @@
             android:fontFamily="@font/dekko"
             android:hint="@string/describe_in_detail"
             android:inputType="textMultiLine"
+            android:gravity="top"
             android:textSize="14sp" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -82,7 +81,6 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:gravity="bottom"
         app:errorEnabled="true"
         app:layout_constraintEnd_toEndOf="@id/descInputLayout"
         app:layout_constraintStart_toStartOf="@id/descInputLayout"
@@ -93,7 +91,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/dekko"
             android:hint="Classes (e.g. 1, 3, 4, 5, 7)"
-            android:inputType="phone"
+            android:inputType="numberDecimal|phone"
             android:textSize="14sp" />
     </com.google.android.material.textfield.TextInputLayout>
 

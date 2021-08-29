@@ -89,6 +89,10 @@ public class NoticesFragment extends Fragment implements QueryCallbacks, NoticeC
             navController.popBackStack();
         });
 
+        noticesBinding.addNoticeBtn.setOnClickListener(v -> {
+            navController.navigate(R.id.action_noticesFragment_to_addNoticeFragment);
+        });
+
 
         // Checks User for assignment extraction
         List<Notice> notices = viewModel.getNotices();

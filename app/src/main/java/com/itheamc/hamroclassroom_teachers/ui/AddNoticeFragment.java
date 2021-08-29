@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,7 +38,7 @@ import com.itheamc.hamroclassroom_teachers.viewmodels.MainViewModel;
 
 import java.util.List;
 
-public class AddNoticeFragment extends Fragment implements QueryCallbacks {
+public class AddNoticeFragment extends Fragment implements QueryCallbacks, View.OnClickListener {
     private static final String TAG = "AddNoticeFragment";
     private FragmentAddNoticeBinding addNoticeBinding;
     private NavController navController;
@@ -100,12 +101,29 @@ public class AddNoticeFragment extends Fragment implements QueryCallbacks {
         descEditText = descTextInputLayout.getEditText();
         classesEditText = classesTextInputLayout.getEditText();
 
+        addNoticeBinding.addNoticeButton.setOnClickListener(this);
+        addNoticeBinding.backButton.setOnClickListener(this);
 
+
+    }
+    /*
+    Handling click event on views
+     */
+    @Override
+    public void onClick(View view) {
+        int id = view.getId();
+        if (id == addNoticeBinding.backButton.getId()) {
+            navController.popBackStack();
+        } else if (id == addNoticeBinding.addNoticeButton.getId()) {
+            addNotice();
+        } else {
+            NotifyUtils.logDebug(TAG, "Unspecified view is clicked!!");
+        }
     }
 
     /*
-    Function to add notice
-     */
+      Function to add notice
+       */
     private void addNotice() {
         if (!isInputsValid()) return;
 
@@ -118,6 +136,7 @@ public class AddNoticeFragment extends Fragment implements QueryCallbacks {
             return;
         }
 
+        Log.d(TAG, "addNotice: " + user.toString());
         Notice notice = new Notice(
                 IdGenerator.generateRandomId(),
                 title,
@@ -145,25 +164,8 @@ public class AddNoticeFragment extends Fragment implements QueryCallbacks {
             if (!classesEditText.getText().toString().trim().isEmpty()) classes = ArrayUtils.toArray(classesEditText.getText().toString().trim(), ", ");
         }
 
-        if ((title == null || title.isEmpty()) && (desc == null || desc.isEmpty()) && (classes == null || classes.length == 0)) {
-            titleTextInputLayout.setError("Please input title");
-            descTextInputLayout.setError("Please input description");
-            classesTextInputLayout.setError("Please input classes");
-            return false;
-        }
-
-        if (title == null || title.isEmpty()) {
-            titleTextInputLayout.setError("Please input title");
-            return false;
-        }
-
-        if (desc == null || desc.isEmpty()) {
-            descTextInputLayout.setError("Please input description");
-            return false;
-        }
-
-        if (classes == null || classes.length == 0) {
-            classesTextInputLayout.setError("Please input classes");
+        if ((title == null || title.isEmpty()) || (desc == null || desc.isEmpty()) || (classes == null || classes.length == 0)) {
+           if (getContext() != null) NotifyUtils.showToast(getContext(), "Please check if anything left!!");
             return false;
         }
 
@@ -184,6 +186,13 @@ public class AddNoticeFragment extends Fragment implements QueryCallbacks {
     private void hideProgress() {
         ViewUtils.hideProgressBar(addNoticeBinding.progressBarContainer);
         ViewUtils.enableViews(addNoticeBinding.addNoticeButton, titleTextInputLayout, descTextInputLayout);
+    }
+
+    /*
+    Function to clear editTexts
+     */
+    private void clearEditTexts() {
+        ViewUtils.clearEditTexts(titleEditText, descEditText, classesEditText);
     }
 
     /**
@@ -208,7 +217,10 @@ public class AddNoticeFragment extends Fragment implements QueryCallbacks {
     public void onQuerySuccess(String message) {
         if (addNoticeBinding == null) return;
         hideProgress();
-        if (getContext() != null && message.equals("success")) NotifyUtils.showToast(getContext(), "Added Successfully");
+        if (getContext() != null && message.equals("success")) {
+            NotifyUtils.showToast(getContext(), "Added Successfully");
+            clearEditTexts();
+        }
         else NotifyUtils.showToast(getContext(), message);
     }
 

@@ -24,7 +24,6 @@ public class SplashActivity extends AppCompatActivity {
             if (LocalStorage.getInstance(this).isLoggedIn()) {
                 startActivity(new Intent(SplashActivity.this, MainActivity.class));
             } else {
-//                LocalStorage.getInstance(this).storeUserId("Sw7njq1zJwabULBL5q2FW1i2ddA3");
                 startActivity(new Intent(SplashActivity.this, LoginActivity.class));
             }
             this.finish();

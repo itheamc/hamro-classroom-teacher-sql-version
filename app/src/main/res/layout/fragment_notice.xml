@@ -38,6 +38,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/denk_one"
                     android:text="@{notice._title}"
+                    android:textAlignment="center"
                     android:textSize="20sp" />
 
                 <TextView

@@ -79,7 +79,7 @@ public class JsonHandler {
                 userObj.getString("_phone"),
                 userObj.getString("_email"),
                 userObj.getString("_address"),
-                userObj.getString("_school"),
+                school.get_id(),
                 school,
                 userObj.getString("_joined_on")
         );
@@ -256,13 +256,14 @@ public class JsonHandler {
 
         // Getting Assignment
         User user = getUser(noticeObj);
+        School school = getSchool(noticeObj);
 
         return new Notice(
                 noticeObj.getString("_id"),
                 noticeObj.getString("_title"),
                 noticeObj.getString("_desc"),
-                noticeObj.getString("_school"),
-                null,
+                school.get_id(),
+                school,
                 ArrayUtils.toArray(noticeObj.getString("_classes"), ", "),
                 user.get_id(),
                 user,

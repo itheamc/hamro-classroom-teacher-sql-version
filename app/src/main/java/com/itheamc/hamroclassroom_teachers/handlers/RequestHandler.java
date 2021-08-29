@@ -1,5 +1,7 @@
 package com.itheamc.hamroclassroom_teachers.handlers;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import com.itheamc.hamroclassroom_teachers.models.Assignment;
@@ -249,11 +251,12 @@ public class RequestHandler {
                 .add("_desc", notice.get_desc())
                 .add("_school", notice.get_school_ref())
                 .add("_classes", ArrayUtils.toString(notice.get_classes()))
-                .add("_notifier", notice.get_teacher_ref())
+                .add("_teacher", notice.get_teacher_ref())
                 .add("_notified_on", notice.get_notified_on())
                 .build();
+        Log.d("TESTING", "noticePostRequest: " + notice.toString());
 
-        return new Request.Builder().url(PathHandler.STUDENTS_PATH).post(requestBody).build();
+        return new Request.Builder().url(PathHandler.NOTICES_PATH).post(requestBody).build();
     }
 
 
