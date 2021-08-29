@@ -13,6 +13,7 @@ import com.itheamc.hamroclassroom_teachers.models.Student;
 import com.itheamc.hamroclassroom_teachers.models.Subject;
 import com.itheamc.hamroclassroom_teachers.models.Submission;
 import com.itheamc.hamroclassroom_teachers.models.User;
+import com.itheamc.hamroclassroom_teachers.utils.Amcryption;
 import com.itheamc.hamroclassroom_teachers.utils.ArrayUtils;
 
 import org.json.JSONArray;
@@ -73,12 +74,12 @@ public class JsonHandler {
         // Creating new user and returning it
         return new User(
                 userObj.getString("_id"),
-                userObj.getString("_name"),
-                userObj.getString("_gender"),
+                Amcryption.getDecoder().decode(userObj.getString("_name")),
+                Amcryption.getDecoder().decode(userObj.getString("_gender")),
                 userObj.getString("_image"),
-                userObj.getString("_phone"),
-                userObj.getString("_email"),
-                userObj.getString("_address"),
+                Amcryption.getDecoder().decode(userObj.getString("_phone")),
+                Amcryption.getDecoder().decode(userObj.getString("_email")),
+                Amcryption.getDecoder().decode(userObj.getString("_address")),
                 school.get_id(),
                 school,
                 userObj.getString("_joined_on")

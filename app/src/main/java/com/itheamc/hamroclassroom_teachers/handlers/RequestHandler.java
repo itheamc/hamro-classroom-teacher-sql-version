@@ -12,6 +12,7 @@ import com.itheamc.hamroclassroom_teachers.models.Student;
 import com.itheamc.hamroclassroom_teachers.models.Subject;
 import com.itheamc.hamroclassroom_teachers.models.Submission;
 import com.itheamc.hamroclassroom_teachers.models.User;
+import com.itheamc.hamroclassroom_teachers.utils.Amcryption;
 import com.itheamc.hamroclassroom_teachers.utils.ArrayUtils;
 import com.itheamc.hamroclassroom_teachers.utils.TimeUtils;
 
@@ -28,11 +29,11 @@ public class RequestHandler {
      */
 
     // GET REQUEST
-    public static final Request GET_REQUEST_SCHOOLS = new Request.Builder().url(PathHandler.SCHOOLS_PATH).get().build();
+    public static final Request GET_REQUEST_SCHOOLS = new Request.Builder().url(PathHandler.SCHOOLS_PATH).headers(AuthHandler.authHeaders()).get().build();
 
     // GET REQUEST
     public static Request schoolGetRequestById(@NonNull String _id) {
-        return new Request.Builder().url(PathHandler.SCHOOLS_PATH + _id).get().build();
+        return new Request.Builder().url(PathHandler.SCHOOLS_PATH + _id).headers(AuthHandler.authHeaders()).get().build();
     }
 
     // POST REQUEST
@@ -50,7 +51,7 @@ public class RequestHandler {
                 .add("_joined_on", school.get_joined_on())
                 .build();
 
-        return new Request.Builder().url(PathHandler.SCHOOLS_PATH).post(requestBody).build();
+        return new Request.Builder().url(PathHandler.SCHOOLS_PATH).headers(AuthHandler.authHeaders()).post(requestBody).build();
     }
 
 
@@ -61,28 +62,28 @@ public class RequestHandler {
      */
 
     // GET REQUEST
-    public static final Request GET_REQUEST_TEACHERS = new Request.Builder().url(PathHandler.TEACHERS_PATH).get().build();
+    public static final Request GET_REQUEST_TEACHERS = new Request.Builder().url(PathHandler.TEACHERS_PATH).headers(AuthHandler.authHeaders()).get().build();
 
     // GET REQUEST
     public static Request teacherGetRequestById(@NonNull String _id) {
-        return new Request.Builder().url(PathHandler.TEACHERS_PATH + _id).addHeader("by", "id").get().build();
+        return new Request.Builder().url(PathHandler.TEACHERS_PATH + _id).addHeader("by", "id").headers(AuthHandler.authHeaders()).get().build();
     }
 
     // POST REQUEST
     public static Request teacherPostRequest(@NonNull User user) {
         RequestBody requestBody = new FormBody.Builder()
                 .add("_id", user.get_id())
-                .add("_name", user.get_name())
-                .add("_gender", user.get_gender())
+                .add("_name", Amcryption.getEncoder().encode(user.get_name()))
+                .add("_gender", Amcryption.getEncoder().encode(user.get_gender()))
                 .add("_image", user.get_image())
-                .add("_phone", user.get_phone())
-                .add("_email", user.get_email())
-                .add("_address", user.get_address())
+                .add("_phone", Amcryption.getEncoder().encode(user.get_phone()))
+                .add("_email", Amcryption.getEncoder().encode(user.get_email()))
+                .add("_address", Amcryption.getEncoder().encode(user.get_address()))
                 .add("_school", user.get_schools_ref())
                 .add("_joined_on", user.get_joined_on())
                 .build();
 
-        return new Request.Builder().url(PathHandler.TEACHERS_PATH).post(requestBody).build();
+        return new Request.Builder().url(PathHandler.TEACHERS_PATH).headers(AuthHandler.authHeaders()).post(requestBody).build();
     }
 
 
@@ -93,11 +94,11 @@ public class RequestHandler {
      */
 
     // GET REQUEST
-    public static final Request GET_REQUEST_STUDENTS = new Request.Builder().url(PathHandler.TEACHERS_PATH).get().build();
+    public static final Request GET_REQUEST_STUDENTS = new Request.Builder().url(PathHandler.TEACHERS_PATH).headers(AuthHandler.authHeaders()).get().build();
 
     // GET REQUEST
     public static Request studentGetRequestById(@NonNull String _id) {
-        return new Request.Builder().url(PathHandler.STUDENTS_PATH + _id).get().build();
+        return new Request.Builder().url(PathHandler.STUDENTS_PATH + _id).headers(AuthHandler.authHeaders()).get().build();
     }
 
 
@@ -109,21 +110,21 @@ public class RequestHandler {
      */
 
     // GET REQUEST
-    public static final Request GET_REQUEST_SUBJECTS = new Request.Builder().url(PathHandler.SUBJECTS_PATH).get().build();
+    public static final Request GET_REQUEST_SUBJECTS = new Request.Builder().url(PathHandler.SUBJECTS_PATH).headers(AuthHandler.authHeaders()).get().build();
 
     // GET REQUEST
     public static Request subjectGetRequestById(@NonNull String _id) {
-        return new Request.Builder().url(PathHandler.SUBJECTS_PATH + _id).addHeader("by", "id").get().build();
+        return new Request.Builder().url(PathHandler.SUBJECTS_PATH + _id).addHeader("by", "id").headers(AuthHandler.authHeaders()).get().build();
     }
 
     // GET REQUEST
     public static Request subjectGetRequestByTeacherId(@NonNull String _teacherId) {
-        return new Request.Builder().url(PathHandler.SUBJECTS_PATH + _teacherId).addHeader("by", "teacher").get().build();
+        return new Request.Builder().url(PathHandler.SUBJECTS_PATH + _teacherId).addHeader("by", "teacher").headers(AuthHandler.authHeaders()).get().build();
     }
 
     // GET REQUEST
     public static Request subjectGetRequestBySchoolIdAndClass(@NonNull String _schoolId, String _class) {
-        return new Request.Builder().url(PathHandler.SUBJECTS_PATH + _schoolId + "___" + _class).addHeader("by", "school").get().build();
+        return new Request.Builder().url(PathHandler.SUBJECTS_PATH + _schoolId + "___" + _class).addHeader("by", "school").headers(AuthHandler.authHeaders()).get().build();
     }
 
     // POST REQUEST
@@ -140,7 +141,7 @@ public class RequestHandler {
                 .add("_hidden", "0")
                 .build();
 
-        return new Request.Builder().url(PathHandler.SUBJECTS_PATH).post(requestBody).build();
+        return new Request.Builder().url(PathHandler.SUBJECTS_PATH).headers(AuthHandler.authHeaders()).post(requestBody).build();
     }
 
     // PATCH REQUEST
@@ -154,7 +155,7 @@ public class RequestHandler {
 
         RequestBody requestBody = builder.build();
 
-        return new Request.Builder().url(PathHandler.SUBJECTS_PATH).patch(requestBody).build();
+        return new Request.Builder().url(PathHandler.SUBJECTS_PATH).headers(AuthHandler.authHeaders()).patch(requestBody).build();
     }
 
     // PATCH REQUEST LINK
@@ -164,13 +165,13 @@ public class RequestHandler {
                 .add("_join_url", _link)
                 .build();
 
-        return new Request.Builder().url(PathHandler.SUBJECTS_PATH).patch(requestBody).build();
+        return new Request.Builder().url(PathHandler.SUBJECTS_PATH).headers(AuthHandler.authHeaders()).patch(requestBody).build();
     }
 
 
     // DELETE REQUEST
     public static Request subjectDeleteRequest(String _id) {
-        return new Request.Builder().url(PathHandler.SUBJECTS_PATH + _id).delete().build();
+        return new Request.Builder().url(PathHandler.SUBJECTS_PATH + _id).headers(AuthHandler.authHeaders()).delete().build();
     }
 
     /*
@@ -180,21 +181,21 @@ public class RequestHandler {
      */
 
     // GET REQUEST
-    public static final Request GET_REQUEST_ASSIGNMENTS = new Request.Builder().url(PathHandler.ASSIGNMENTS_PATH).get().build();
+    public static final Request GET_REQUEST_ASSIGNMENTS = new Request.Builder().url(PathHandler.ASSIGNMENTS_PATH).headers(AuthHandler.authHeaders()).get().build();
 
     // GET REQUEST
     public static Request assignmentGetRequestById(@NonNull String _id) {
-        return new Request.Builder().url(PathHandler.ASSIGNMENTS_PATH + _id).addHeader("by", "id").get().build();
+        return new Request.Builder().url(PathHandler.ASSIGNMENTS_PATH + _id).addHeader("by", "id").headers(AuthHandler.authHeaders()).get().build();
     }
 
     // GET REQUEST
     public static Request assignmentGetRequestBySubjectId(@NonNull String _ref, @NonNull boolean isBySubjectId) {
-        return new Request.Builder().url(PathHandler.ASSIGNMENTS_PATH + _ref).addHeader("by", isBySubjectId ? "subject" : "teacher").get().build();
+        return new Request.Builder().url(PathHandler.ASSIGNMENTS_PATH + _ref).addHeader("by", isBySubjectId ? "subject" : "teacher").headers(AuthHandler.authHeaders()).get().build();
     }
 
     // DELETE REQUEST
     public static Request assignmentDeleteRequest(String _id) {
-        return new Request.Builder().url(PathHandler.ASSIGNMENTS_PATH + _id).delete().build();
+        return new Request.Builder().url(PathHandler.ASSIGNMENTS_PATH + _id).headers(AuthHandler.authHeaders()).delete().build();
     }
 
 
@@ -205,16 +206,16 @@ public class RequestHandler {
      */
 
     // GET REQUEST
-    public static final Request GET_REQUEST_SUBMISSIONS = new Request.Builder().url(PathHandler.SUBMISSIONS_PATH).get().build();
+    public static final Request GET_REQUEST_SUBMISSIONS = new Request.Builder().url(PathHandler.SUBMISSIONS_PATH).headers(AuthHandler.authHeaders()).get().build();
 
     // GET REQUEST
     public static Request submissionGetRequestById(@NonNull String _id) {
-        return new Request.Builder().url(PathHandler.SUBMISSIONS_PATH + _id).addHeader("by", "id").get().build();
+        return new Request.Builder().url(PathHandler.SUBMISSIONS_PATH + _id).addHeader("by", "id").headers(AuthHandler.authHeaders()).get().build();
     }
 
     // GET REQUEST
     public static Request submissionGetRequestByAssignmentId(@NonNull String _assignmentId) {
-        return new Request.Builder().url(PathHandler.SUBMISSIONS_PATH + _assignmentId).addHeader("by", "assignment").get().build();
+        return new Request.Builder().url(PathHandler.SUBMISSIONS_PATH + _assignmentId).addHeader("by", "assignment").headers(AuthHandler.authHeaders()).get().build();
     }
 
 
@@ -226,7 +227,7 @@ public class RequestHandler {
                 .add("_comment", _comment)
                 .build();
 
-        return new Request.Builder().url(PathHandler.SUBMISSIONS_PATH).patch(requestBody).build();
+        return new Request.Builder().url(PathHandler.SUBMISSIONS_PATH).headers(AuthHandler.authHeaders()).patch(requestBody).build();
     }
 
     /*
@@ -236,11 +237,11 @@ public class RequestHandler {
     */
 
     // GET REQUEST
-    public static final Request GET_REQUEST_NOTICES = new Request.Builder().url(PathHandler.NOTICES_PATH).get().build();
+    public static final Request GET_REQUEST_NOTICES = new Request.Builder().url(PathHandler.NOTICES_PATH).headers(AuthHandler.authHeaders()).get().build();
 
     // GET REQUEST
     public static Request noticeGetRequestById(@NonNull String _id, boolean isById) {
-        return new Request.Builder().url(PathHandler.NOTICES_PATH + _id).addHeader("by", isById ? "id" : "teacher").get().build();
+        return new Request.Builder().url(PathHandler.NOTICES_PATH + _id).addHeader("by", isById ? "id" : "teacher").headers(AuthHandler.authHeaders()).get().build();
     }
 
     // POST REQUEST
@@ -256,13 +257,13 @@ public class RequestHandler {
                 .build();
         Log.d("TESTING", "noticePostRequest: " + notice.toString());
 
-        return new Request.Builder().url(PathHandler.NOTICES_PATH).post(requestBody).build();
+        return new Request.Builder().url(PathHandler.NOTICES_PATH).headers(AuthHandler.authHeaders()).post(requestBody).build();
     }
 
 
     // DELETE REQUEST
     public static Request noticeDeleteRequest(String _id) {
-        return new Request.Builder().url(PathHandler.NOTICES_PATH + _id).delete().build();
+        return new Request.Builder().url(PathHandler.NOTICES_PATH + _id).headers(AuthHandler.authHeaders()).delete().build();
     }
 
 
@@ -274,21 +275,21 @@ public class RequestHandler {
      */
 
     // GET REQUEST
-    public static final Request  GET_REQUEST_MATERIALS= new Request.Builder().url(PathHandler.MATERIALS_PATH).get().build();
+    public static final Request  GET_REQUEST_MATERIALS= new Request.Builder().url(PathHandler.MATERIALS_PATH).headers(AuthHandler.authHeaders()).get().build();
 
     // GET REQUEST
     public static Request materialsGetRequestById(@NonNull String _id) {
-        return new Request.Builder().url(PathHandler.MATERIALS_PATH + _id).addHeader("by", "id").get().build();
+        return new Request.Builder().url(PathHandler.MATERIALS_PATH + _id).addHeader("by", "id").headers(AuthHandler.authHeaders()).get().build();
     }
 
     // GET REQUEST
     public static Request materialsGetRequestByRef(@NonNull String _ref, @NonNull boolean isBySubjectId) {
-        return new Request.Builder().url(PathHandler.MATERIALS_PATH + _ref).addHeader("by", isBySubjectId ? "subject" : "teacher").get().build();
+        return new Request.Builder().url(PathHandler.MATERIALS_PATH + _ref).addHeader("by", isBySubjectId ? "subject" : "teacher").headers(AuthHandler.authHeaders()).get().build();
     }
 
     // DELETE REQUEST
     public static Request materialDeleteRequest(String _id) {
-        return new Request.Builder().url(PathHandler.MATERIALS_PATH + _id).delete().build();
+        return new Request.Builder().url(PathHandler.MATERIALS_PATH + _id).headers(AuthHandler.authHeaders()).delete().build();
     }
 
 
