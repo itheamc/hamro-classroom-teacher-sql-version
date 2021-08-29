@@ -43,6 +43,12 @@ public class NoticesFragment extends Fragment implements QueryCallbacks, NoticeC
     private NoticeAdapter noticeAdapter;
     private boolean isRefreshing = false;
 
+    /*
+    For Deleting
+     */
+    private boolean isDeleting = false;
+    private int position = 0;
+
 
     public NoticesFragment() {
         // Required empty public constructor
@@ -198,6 +204,13 @@ public class NoticesFragment extends Fragment implements QueryCallbacks, NoticeC
         if (noticesBinding == null) return;
         if (message.equals("Not found")) ViewUtils.visibleViews(noticesBinding.noNoticeLayout);
         if (getContext() != null && !message.equals("Not found")) NotifyUtils.showToast(getContext(), message);
+
+        if (isDeleting) {
+            isDeleting = false;
+            viewModel.removeNotice(position);
+            noticeAdapter.notifyItemRemoved(position);
+        }
+
         hideProgress();
     }
 
@@ -211,7 +224,6 @@ public class NoticesFragment extends Fragment implements QueryCallbacks, NoticeC
 
     /**
      * Method overrided from the NoticeCallbacks
-     *
      * @param _position - a position of the clicked item in the recycler view
      */
     @Override
@@ -226,11 +238,20 @@ public class NoticesFragment extends Fragment implements QueryCallbacks, NoticeC
 
     @Override
     public void onEditClick(int _position) {
-
+        if (getContext() != null) NotifyUtils.showToast(getContext(), "Will be added in coming update!!");
     }
 
     @Override
     public void onDeleteClick(int _position) {
+        Notice notice = null;
+        if (viewModel.getNotices() != null)
+            notice = viewModel.getNotices().get(_position);
 
+        if (notice != null) {
+            isDeleting = true;
+            position = _position;
+            QueryHandler.getInstance(this).deleteNotice(notice.get_id());
+            showProgress();
+        }
     }
 }
