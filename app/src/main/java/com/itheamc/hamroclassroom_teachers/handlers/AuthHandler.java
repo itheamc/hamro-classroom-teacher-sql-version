@@ -12,14 +12,14 @@ public class AuthHandler {
     /*
     Function to generate auth code
      */
-    public static Headers authHeaders() {
+    public static Headers authHeaders(String by) {
         String auth = getAuth();
         int day = Calendar.getInstance(Locale.ENGLISH).get(Calendar.MINUTE);
         auth += day;
-        return new Headers.Builder()
-                .add("key1", auth)
-                .add("key2", Amcryption.getEncoder().encode(auth))
-                .build();
+        Headers.Builder builder = new Headers.Builder();
+        builder.add("key1", auth).add("key2", Amcryption.getEncoder().encode(auth));
+        if (by != null) builder.add("by", by);
+        return builder.build();
     }
 
 

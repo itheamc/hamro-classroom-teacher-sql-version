@@ -15,7 +15,6 @@ import com.itheamc.hamroclassroom_teachers.models.Student;
 import com.itheamc.hamroclassroom_teachers.models.Subject;
 import com.itheamc.hamroclassroom_teachers.models.Submission;
 import com.itheamc.hamroclassroom_teachers.models.User;
-import com.itheamc.hamroclassroom_teachers.utils.NotifyUtils;
 
 import org.json.JSONObject;
 
