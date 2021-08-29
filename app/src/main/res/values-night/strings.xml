@@ -68,5 +68,6 @@
     <string name="no_notices">No Notices!!</string>
     <string name="no_materials">No Materials!!</string>
     <string name="confirm">Confirm</string>
-    <string name="describe_in_detail">Describe in details...</string>
+    <string name="describe_in_detail">Describe in details…</string>
+    <string name="images">Images</string>
 </resources>

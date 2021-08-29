@@ -46,19 +46,42 @@
             android:id="@+id/titleInputLayout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
-            android:layout_height="64dp"
+            android:layout_height="56dp"
             android:layout_marginStart="28dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="28dp"
-            android:gravity="bottom"
+            android:gravity="center"
             app:errorEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:fontFamily="@font/dekko"
                 android:hint="@string/title"
                 android:inputType="textPersonName"
+                android:textSize="14sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/subjectInputLayout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginStart="28dp"
+            android:layout_marginEnd="28dp"
+            android:gravity="center"
+            android:focusable="false"
+            android:clickable="true"
+            app:errorEnabled="true">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/subjectEditText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fontFamily="@font/dekko"
+                android:hint="Subject"
+                android:inputType="textPersonName"
+                android:focusable="false"
                 android:textSize="14sp" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -68,7 +91,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="28dp"
             android:fontFamily="@font/dekko"
-            android:text="@string/images_if_any" />
+            android:text="@string/images" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -118,14 +141,29 @@
 
     </LinearLayout>
 
+    <!-- Bottom Sheet Layout -->
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/bottomSheetCoordinatorLayout"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:elevation="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <include layout="@layout/subject_bottom_sheet" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
 
     <!--  This is progress bar layout  -->
     <LinearLayout
-        android:id="@+id/progressBarContainer"
+        android:id="@+id/addMaterialProgressBarContainer"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@drawable/overlay_layout_background"
-        android:elevation="20dp"
+        android:elevation="25dp"
         android:gravity="center"
         android:orientation="vertical"
         android:visibility="gone"

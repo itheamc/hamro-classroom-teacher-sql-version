@@ -170,6 +170,7 @@ public class SubjectFragment extends Fragment implements QueryCallbacks, SchoolC
         classTimeInputLayout.setOnClickListener(this);
         schoolEditText.setOnClickListener(this);
         timeEditText.setOnClickListener(this);
+        bottomSheetBinding.bottomSheetBackButton.setOnClickListener(this);
 
 
     }
@@ -192,11 +193,10 @@ public class SubjectFragment extends Fragment implements QueryCallbacks, SchoolC
             DialogFragment newFragment = new TimePickers(subjectBinding);
             if (getActivity() != null)
                 newFragment.show(getActivity().getSupportFragmentManager(), "timePicker");
-        } else if (_id == subjectBinding.backButton.getId()) {
-            navController.popBackStack();
-        } else {
-            NotifyUtils.logDebug(TAG, "Unspecified view is clicked!!");
         }
+        else if (_id == subjectBinding.backButton.getId()) navController.popBackStack();
+        else if (_id == bottomSheetBinding.bottomSheetBackButton.getId()) handleBottomSheet();
+        else NotifyUtils.logDebug(TAG, "Unspecified view is clicked!!");
     }
 
 
@@ -363,8 +363,7 @@ public class SubjectFragment extends Fragment implements QueryCallbacks, SchoolC
     @Override
     public void onClick(int _position) {
         this.school = viewModel.getSchools().get(_position);
-        EditText timeEdittext = subjectBinding.schoolInputLayout.getEditText();
-        if (timeEdittext != null) timeEdittext.setText(this.school.get_name());
+        if (schoolEditText != null) schoolEditText.setText(this.school.get_name());
         handleBottomSheet();
     }
 

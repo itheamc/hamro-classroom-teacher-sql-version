@@ -1,5 +1,7 @@
 package com.itheamc.hamroclassroom_teachers.ui;
 
+import static com.itheamc.hamroclassroom_teachers.utils.Constants.CLASSES_VIEW;
+
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -115,7 +117,7 @@ public class ClassesFragment extends Fragment implements SubjectCallbacks, Query
         updateLinkButton = bottomSheetBinding.updateLinkButton;
 
 
-        subjectAdapter = new SubjectAdapter(this);
+        subjectAdapter = new SubjectAdapter(this, CLASSES_VIEW);
         classesBinding.homeRecyclerView.setAdapter(subjectAdapter);
 
         addSubject = classesBinding.addSubjectButton;

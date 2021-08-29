@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/schoolBottomSheetLayout"
+    android:id="@+id/subjectBottomSheetLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?android:colorBackground"
@@ -10,7 +10,6 @@
     app:behavior_hideable="true"
     app:behavior_peekHeight="0dp"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
-
 
     <ImageButton
         android:id="@+id/bottomSheetBackButton"
@@ -31,15 +30,16 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="48dp"
         android:fontFamily="sans-serif-smallcaps"
-        android:text="Select School"
+        android:text="Select Subject"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@id/bottomSheetBackButton"
         app:layout_constraintStart_toEndOf="@id/bottomSheetBackButton"
         app:layout_constraintTop_toTopOf="@id/bottomSheetBackButton" />
 
+
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/schoolRecyclerView"
+        android:id="@+id/subjectRecyclerView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
@@ -47,7 +47,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/bottomSheetBackButton"
-        tools:listitem="@layout/school_view" />
+        tools:listitem="@layout/subject_view" />
 
     <LinearLayout
         android:id="@+id/progressBarContainer"
