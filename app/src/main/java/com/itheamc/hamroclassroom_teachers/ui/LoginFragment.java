@@ -110,7 +110,7 @@ public class LoginFragment extends Fragment implements LoginCallbacks, QueryCall
                             Intent data = result.getData();
                             handleIntentResult(data);   // Calling function to handle google signin result
                         } else {
-                            ViewUtils.showProgressBar(loginBinding.overlayLayout);
+                            ViewUtils.hideProgressBar(loginBinding.overlayLayout);
                             ViewUtils.enableViews(loginBinding.facebookLoginButton, loginBinding.googleLoginButton);
                             NotifyUtils.showToast(getContext(), getString(R.string.unable_to_login_message));
                         }
