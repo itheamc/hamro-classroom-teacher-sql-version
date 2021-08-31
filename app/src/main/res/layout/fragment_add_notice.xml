@@ -90,8 +90,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/dekko"
-            android:hint="Classes (e.g. 1, 3, 4, 5, 7)"
-            android:inputType="numberDecimal|phone"
+            android:hint="Classes (e.g. 7, 9, 10 or all)"
+            android:inputType="textPersonName"
             android:textSize="14sp" />
     </com.google.android.material.textfield.TextInputLayout>
 
