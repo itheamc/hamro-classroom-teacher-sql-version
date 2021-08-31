@@ -14,11 +14,27 @@
       },
       "oauth_client": [
         {
-          "client_id": "813872939086-n2qf27kcsi290vifrq5vd365tm007n6k.apps.googleusercontent.com",
+          "client_id": "813872939086-8kh4d62qpk7c2i6qpefvssedea1ansh2.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.itheamc.hamroclassroom_student",
-            "certificate_hash": "0c54a9dfe41914715203ba70f450c0407e0ea821"
+            "certificate_hash": "d98c41494b89cab070750b8f56a137bc0c74e358"
+          }
+        },
+        {
+          "client_id": "813872939086-d4vmutdemo5ah45rfjgpjguvahj9bk1i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.itheamc.hamroclassroom_student",
+            "certificate_hash": "25696c6b531b07fcef848c5836732ed281c5b64b"
+          }
+        },
+        {
+          "client_id": "813872939086-vv2rj6jbamph9ch08plp9gne36vka3tl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.itheamc.hamroclassroom_student",
+            "certificate_hash": "f3897176dd090ee7b5db7fdcd785bd142c7c33ca"
           }
         },
         {
@@ -51,11 +67,27 @@
       },
       "oauth_client": [
         {
+          "client_id": "813872939086-csb5u9jte5i6kurhki4vmf2njk1mllf1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.itheamc.hamroclassroom_teachers",
+            "certificate_hash": "20e018316edb08fcbc05aa0d15c0315b375bcd47"
+          }
+        },
+        {
           "client_id": "813872939086-ikgdkke67hlsrcjpkjunf5q657c24n1s.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.itheamc.hamroclassroom_teachers",
             "certificate_hash": "d98c41494b89cab070750b8f56a137bc0c74e358"
+          }
+        },
+        {
+          "client_id": "813872939086-jqvdmo4v9aj7ataitvljv80nl6dm1n27.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.itheamc.hamroclassroom_teachers",
+            "certificate_hash": "1ce95364dcc7fbb60562d2f4278209939824663a"
           }
         },
         {

@@ -48,25 +48,17 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 
-public class SubjectFragment extends Fragment implements QueryCallbacks, SchoolCallbacks, View.OnClickListener {
+public class SubjectFragment extends Fragment implements QueryCallbacks, View.OnClickListener {
     private static final String TAG = "SubjectFragment";
     private FragmentSubjectBinding subjectBinding;
     private NavController navController;
     private MainViewModel viewModel;
 
     /*
-    For Bottom Sheet -- Schools list
-   */
-    private BottomSheetBehavior<ConstraintLayout> bottomSheetBehavior;
-    private SchoolBottomSheetBinding bottomSheetBinding;
-    private SchoolAdapter schoolAdapter;
-
-    /*
     TextInput Layouts
      */
     private TextInputLayout subjectInputLayout;
     private TextInputLayout classInputLayout;
-    private TextInputLayout schoolInputLayout;
     private TextInputLayout classTimeInputLayout;
 
     /*
@@ -74,7 +66,6 @@ public class SubjectFragment extends Fragment implements QueryCallbacks, SchoolC
      */
     EditText subEditText;
     EditText classEditText;
-    EditText schoolEditText;
     EditText timeEditText;
 
     /*
@@ -87,14 +78,12 @@ public class SubjectFragment extends Fragment implements QueryCallbacks, SchoolC
      */
     private String _subject = null;
     private String _class = null;
-    private String _school = null;
     private String _time = null;
 
     /*
-    User and School
+    User
      */
     private User user = null;
-    private School school;
 
 
     // Constructor
@@ -129,7 +118,6 @@ public class SubjectFragment extends Fragment implements QueryCallbacks, SchoolC
          */
         subjectInputLayout = subjectBinding.subjectInputLayout;
         classInputLayout = subjectBinding.classInputLayout;
-        schoolInputLayout = subjectBinding.schoolInputLayout;
         classTimeInputLayout = subjectBinding.timeInputLayout;
 
         /*
@@ -137,7 +125,6 @@ public class SubjectFragment extends Fragment implements QueryCallbacks, SchoolC
          */
         subEditText = subjectInputLayout.getEditText();
         classEditText = classInputLayout.getEditText();
-        schoolEditText = schoolInputLayout.getEditText();
         timeEditText = classTimeInputLayout.getEditText();
 
         /*
@@ -150,27 +137,14 @@ public class SubjectFragment extends Fragment implements QueryCallbacks, SchoolC
          */
         processingEditTexts();
 
-         /*
-        Initializing Bottom Sheet and its views
-         */
-        ConstraintLayout bottomSheetLayout = (ConstraintLayout) subjectBinding.bottomSheetCoordinatorLayout.findViewById(R.id.schoolBottomSheetLayout);
-        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetLayout);
-        bottomSheetBinding = SchoolBottomSheetBinding.bind(bottomSheetLayout);
-
-        schoolAdapter = new SchoolAdapter(this);
-        bottomSheetBinding.schoolRecyclerView.setAdapter(schoolAdapter);
-
 
         /*
         Setting onClickListener and OnFocusChangeListener on views
          */
         addEditBtn.setOnClickListener(this);
         subjectBinding.backButton.setOnClickListener(this);
-        schoolInputLayout.setOnClickListener(this);
         classTimeInputLayout.setOnClickListener(this);
-        schoolEditText.setOnClickListener(this);
         timeEditText.setOnClickListener(this);
-        bottomSheetBinding.bottomSheetBackButton.setOnClickListener(this);
 
 
     }
@@ -185,9 +159,7 @@ public class SubjectFragment extends Fragment implements QueryCallbacks, SchoolC
     @Override
     public void onClick(View v) {
         int _id = v.getId();
-        if (_id == schoolInputLayout.getId() || v == schoolInputLayout.getEditText())
-            handleBottomSheet();
-        else if (_id == addEditBtn.getId()) {
+        if (_id == addEditBtn.getId()) {
             handleAddNow();
         } else if (_id == classTimeInputLayout.getId() || v == classTimeInputLayout.getEditText()) {
             DialogFragment newFragment = new TimePickers(subjectBinding);
@@ -195,7 +167,6 @@ public class SubjectFragment extends Fragment implements QueryCallbacks, SchoolC
                 newFragment.show(getActivity().getSupportFragmentManager(), "timePicker");
         }
         else if (_id == subjectBinding.backButton.getId()) navController.popBackStack();
-        else if (_id == bottomSheetBinding.bottomSheetBackButton.getId()) handleBottomSheet();
         else NotifyUtils.logDebug(TAG, "Unspecified view is clicked!!");
     }
 
@@ -209,10 +180,9 @@ public class SubjectFragment extends Fragment implements QueryCallbacks, SchoolC
 
         Subject subject = viewModel.getSubject();
         if (subject == null) return;
-        if (subjectBinding.screenLabel != null) subjectBinding.screenLabel.setText("Update Subject");
+        subjectBinding.screenLabel.setText("Update Subject");
         if (subEditText != null) subEditText.setText(subject.get_name());
         if (classEditText != null) classEditText.setText(subject.get_class());
-        if (schoolEditText != null) schoolEditText.setText(subject.get_school().get_name());
         if (timeEditText != null) timeEditText.setText(subject.get_start_time());
         addEditBtn.setText(getString(R.string.update));
     }
@@ -239,7 +209,7 @@ public class SubjectFragment extends Fragment implements QueryCallbacks, SchoolC
                 if (getActivity() != null) {
                     QueryHandler.getInstance(this).getUser(LocalStorage.getInstance(getActivity()).getUserId());
                     ViewUtils.showProgressBar(subjectBinding.subjectProgressBarContainer);
-                    ViewUtils.disableViews(subjectInputLayout, classInputLayout, schoolInputLayout, classTimeInputLayout, addEditBtn);
+                    ViewUtils.disableViews(subjectInputLayout, classInputLayout, classTimeInputLayout, addEditBtn);
                 }
                 return;
             }
@@ -263,7 +233,7 @@ public class SubjectFragment extends Fragment implements QueryCallbacks, SchoolC
                 _class,
                 user.get_id(),
                 null,
-                school.get_id(),
+                user.get_schools_ref(),
                 null,
                 "",
                 _time,
@@ -274,7 +244,7 @@ public class SubjectFragment extends Fragment implements QueryCallbacks, SchoolC
 
         NotifyUtils.logDebug(TAG, subject.toString());
         ViewUtils.showProgressBar(subjectBinding.subjectProgressBarContainer);
-        ViewUtils.disableViews(subjectInputLayout, classInputLayout, schoolInputLayout, classTimeInputLayout, addEditBtn);
+        ViewUtils.disableViews(subjectInputLayout, classInputLayout, classTimeInputLayout, addEditBtn);
         QueryHandler.getInstance(this).addSubject(subject);
     }
 
@@ -297,7 +267,6 @@ public class SubjectFragment extends Fragment implements QueryCallbacks, SchoolC
             updatedSub.set_name(_name);
         if (!TextUtils.isEmpty(_class) && !_class.equals(subject.get_class()))
             updatedSub.set_class(_class);
-        if (school != null) updatedSub.set_school_ref(school.get_id());
         if (!TextUtils.isEmpty(_time) && !_time.equals(subject.get_start_time()))
             updatedSub.set_start_time(_time);
 
@@ -307,7 +276,7 @@ public class SubjectFragment extends Fragment implements QueryCallbacks, SchoolC
                 updatedSub.get_start_time() != null) {
 
             ViewUtils.showProgressBar(subjectBinding.subjectProgressBarContainer);
-            ViewUtils.disableViews(subjectInputLayout, classInputLayout, schoolInputLayout, classTimeInputLayout, addEditBtn);
+            ViewUtils.disableViews(subjectInputLayout, classInputLayout, classTimeInputLayout, addEditBtn);
             QueryHandler.getInstance(this).updateSubject(updatedSub);
             return;
         }
@@ -324,47 +293,12 @@ public class SubjectFragment extends Fragment implements QueryCallbacks, SchoolC
         // Setting the value to the string variables
         if (subEditText != null) _subject = subEditText.getText().toString().trim();
         if (classEditText != null) _class = classEditText.getText().toString().trim();
-        if (schoolEditText != null) _school = schoolEditText.getText().toString().trim();
         if (timeEditText != null) _time = timeEditText.getText().toString().trim();
 
         return !TextUtils.isEmpty(_subject) &&
                 !TextUtils.isEmpty(_class) &&
-                !TextUtils.isEmpty(_school) &&
                 !TextUtils.isEmpty(_time);
 
-    }
-
-    /**
-     * -----------------------------------------------------------------------
-     * Function to show or hide bottomsheet
-     */
-    private void handleBottomSheet() {
-        if (bottomSheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
-            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-            if (viewModel.getSchools() != null) {
-                schoolAdapter.submitList(viewModel.getSchools());
-                return;
-            }
-            if (bottomSheetBinding.progressBarContainer.getVisibility() == View.GONE)
-                bottomSheetBinding.progressBarContainer.setVisibility(View.VISIBLE);
-            QueryHandler.getInstance(this).getSchools();
-        } else {
-            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-        }
-    }
-
-
-    /**
-     * --------------------------------------------------------------------------
-     * Method implemented from SchoolViewCallbacks
-     *
-     * @param _position - clicked item position in a list
-     */
-    @Override
-    public void onClick(int _position) {
-        this.school = viewModel.getSchools().get(_position);
-        if (schoolEditText != null) schoolEditText.setText(this.school.get_name());
-        handleBottomSheet();
     }
 
 
@@ -375,13 +309,7 @@ public class SubjectFragment extends Fragment implements QueryCallbacks, SchoolC
      */
     @Override
     public void onQuerySuccess(List<User> user, List<School> schools, List<Student> students, List<Subject> subjects, List<Assignment> assignments, List<Material> materials, List<Submission> submissions, List<Notice> notices) {
-        if (subjectBinding == null) return;
 
-        if (schools != null) {
-            schoolAdapter.submitList(schools);
-            viewModel.setSchools(schools);
-            ViewUtils.hideProgressBar(bottomSheetBinding.progressBarContainer);
-        }
     }
 
     @Override
@@ -399,8 +327,8 @@ public class SubjectFragment extends Fragment implements QueryCallbacks, SchoolC
     public void onQuerySuccess(String message) {
         if (subjectBinding == null) return;
         ViewUtils.hideProgressBar(subjectBinding.subjectProgressBarContainer);
-        ViewUtils.clearEditTexts(subEditText, classEditText, schoolEditText, timeEditText);   // Calling function to clear the EditTexts after adding
-        ViewUtils.enableViews(subjectInputLayout, classInputLayout, schoolInputLayout, classTimeInputLayout, addEditBtn);
+        ViewUtils.clearEditTexts(subEditText, classEditText, timeEditText);   // Calling function to clear the EditTexts after adding
+        ViewUtils.enableViews(subjectInputLayout, classInputLayout, classTimeInputLayout, addEditBtn);
         Log.d(TAG, "onQuerySuccess: " + message);
         if (!viewModel.isSubjectUpdating()) {
             NotifyUtils.showToast(getContext(), "Added Successfully");
@@ -416,8 +344,7 @@ public class SubjectFragment extends Fragment implements QueryCallbacks, SchoolC
     public void onQueryFailure(Exception e) {
         if (subjectBinding == null) return;
         ViewUtils.hideProgressBar(subjectBinding.subjectProgressBarContainer);
-        ViewUtils.hideProgressBar(bottomSheetBinding.progressBarContainer);
-        ViewUtils.enableViews(subjectInputLayout, classInputLayout, schoolInputLayout, classTimeInputLayout, addEditBtn);
+        ViewUtils.enableViews(subjectInputLayout, classInputLayout, classTimeInputLayout, addEditBtn);
         NotifyUtils.showToast(getContext(), getString(R.string.went_wrong_message));
         NotifyUtils.logDebug(TAG, "onUserInfoRetrievedError: - " + e.getMessage());
     }

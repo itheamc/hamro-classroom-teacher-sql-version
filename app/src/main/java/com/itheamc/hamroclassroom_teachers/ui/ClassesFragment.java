@@ -319,7 +319,7 @@ public class ClassesFragment extends Fragment implements SubjectCallbacks, Query
         if (classesBinding == null) return;
 
         hideProgress();
-        if (getContext() != null) NotifyUtils.showToast(getContext(), e.getMessage());
+        if (getContext() != null) NotifyUtils.showToast(getContext(), getString(R.string.went_wrong_message));
         NotifyUtils.logError(TAG, "onFailure: ", e);
     }
 

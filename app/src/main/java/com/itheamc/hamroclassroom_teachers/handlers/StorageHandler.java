@@ -83,7 +83,7 @@ public class StorageHandler {
         executorService.execute(() -> {
 
             Request.Builder requestBuilder = new Request.Builder()
-                    .url(PathHandler.ASSIGNMENTS_PATH);
+                    .url(PathHandler.ASSIGNMENTS_PATH).headers(AuthHandler.authHeaders(null));
 
             // If images are selected for upload
             if (imagesUri != null && imagesUri.size() > 0) {
@@ -202,7 +202,7 @@ public class StorageHandler {
         executorService.execute(() -> {
 
             Request.Builder requestBuilder = new Request.Builder()
-                    .url(PathHandler.MATERIALS_PATH);
+                    .url(PathHandler.MATERIALS_PATH).headers(AuthHandler.authHeaders(null));
 
             // If images are selected for upload
             if (imagesUri != null && imagesUri.size() > 0) {
