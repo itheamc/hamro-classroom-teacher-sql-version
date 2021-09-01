@@ -22,5 +22,18 @@
         android:id="@+id/registerFragment"
         android:name="com.itheamc.hamroclassroom_teachers.ui.RegisterFragment"
         android:label="fragment_register"
-        tools:layout="@layout/fragment_register" />
+        tools:layout="@layout/fragment_register" >
+        <action
+            android:id="@+id/action_registerFragment_to_addSchoolFragment"
+            app:destination="@id/addSchoolFragment"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out"/>
+    </fragment>
+    <fragment
+        android:id="@+id/addSchoolFragment"
+        android:name="com.itheamc.hamroclassroom_teachers.ui.AddSchoolFragment"
+        android:label="fragment_add_school"
+        tools:layout="@layout/fragment_add_school" />
 </navigation>

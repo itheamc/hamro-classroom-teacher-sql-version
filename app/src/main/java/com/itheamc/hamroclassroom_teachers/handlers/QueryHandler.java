@@ -774,6 +774,39 @@ public class QueryHandler {
         });
     }
 
+    /**
+     * Function to add notice to the cloud database
+     * --------------------------------------------------------------------------------------
+     */
+    public void addSchool(School school) {
+        executorService.execute(() -> {
+            client.newCall(RequestHandler.schoolPostRequest(school)).enqueue(new Callback() {
+                @Override
+                public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                    notifyFailure(e);
+                }
+
+                @Override
+                public void onResponse(@NonNull Call call, @NonNull Response response) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(response.body().string());
+                        if (response.isSuccessful()) {
+                            if (jsonObject.getString("message").equals("success")) {
+                                notifySuccess(jsonObject.getString("message"));
+                            } else {
+                                notifyFailure(new Exception(jsonObject.getString("message")));
+                            }
+                            return;
+                        }
+                        notifyFailure(new Exception("Unable to add"));
+                    } catch (Exception e) {
+                        notifyFailure(e);
+                    }
+                }
+            });
+        });
+    }
+
 
     /**
      * Function to notify whether getUser() is success or failure
@@ -787,6 +820,7 @@ public class QueryHandler {
                                  List<Material> materials,
                                  List<Submission> submissions,
                                  List<Notice> notices) {
+        executorService.shutdown();
         handler.post(() -> {
             callbacks.onQuerySuccess(users, schools, students, subjects, assignments, materials, submissions, notices);
         });
@@ -800,18 +834,21 @@ public class QueryHandler {
                                Material material,
                                Submission submission,
                                Notice notice) {
+        executorService.shutdown();
         handler.post(() -> {
             callbacks.onQuerySuccess(user, school, student, subject, assignment, material, submission, notice);
         });
     }
 
     private void notifySuccess(String message) {
+        executorService.shutdown();
         handler.post(() -> {
             callbacks.onQuerySuccess(message);
         });
     }
 
     private void notifyFailure(Exception e) {
+        executorService.shutdown();
         handler.post(() -> {
             callbacks.onQueryFailure(e);
         });

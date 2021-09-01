@@ -48,7 +48,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class RegisterFragment extends Fragment implements QueryCallbacks, SchoolCallbacks, AdapterView.OnItemSelectedListener {
+public class RegisterFragment extends Fragment implements QueryCallbacks, SchoolCallbacks, AdapterView.OnItemSelectedListener, View.OnClickListener {
     private static final String TAG = "RegisterFragment";
     private FragmentRegisterBinding registerBinding;
     private NavController navController;
@@ -149,17 +149,32 @@ public class RegisterFragment extends Fragment implements QueryCallbacks, School
         // Calling function to set the known data got from firebase user to the edittext
         setKnownValue();
 
-        // Setting on click listener on the continue button
-        registerBinding.continueButton.setOnClickListener(v -> {
-            handleUserStore();
-        });
-
-        // Setting OnClickListener on SchoolEditText
-        schoolEditText.setOnClickListener(v -> {
-            handleBottomSheet();
-        });
+        // Setting on click listener on the views
+        registerBinding.continueButton.setOnClickListener(this);
+        schoolEditText.setOnClickListener(this);
+        bottomSheetBinding.addSchoolButton.setOnClickListener(this);
+        bottomSheetBinding.bottomSheetBackButton.setOnClickListener(this);
 
     }
+
+
+
+    /**
+     * -----------------------------------------------------------------
+     * Function to handle OnClick event on views
+     */
+    @Override
+    public void onClick(View view) {
+        int id = view.getId();
+        if (id == registerBinding.continueButton.getId()) handleUserStore();
+        else if (id == schoolEditText.getId()) handleBottomSheet();
+        else if (id == bottomSheetBinding.addSchoolButton.getId())
+            navController.navigate(R.id.action_registerFragment_to_addSchoolFragment);
+        else if (id == bottomSheetBinding.bottomSheetBackButton.getId()) handleBottomSheet();
+        else NotifyUtils.logDebug(TAG, "Unspecified view is clicked!!");
+
+    }
+
 
     // Setting some known value to the edit text
     private void setKnownValue() {
@@ -245,10 +260,6 @@ public class RegisterFragment extends Fragment implements QueryCallbacks, School
     private void handleBottomSheet() {
         if (bottomSheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-            if (schools != null && !schools.isEmpty()) {
-                schoolAdapter.submitList(schools);
-                return;
-            }
             ViewUtils.showProgressBar(bottomSheetBinding.progressBarContainer);
             QueryHandler.getInstance(this).getSchools();
         } else {
@@ -304,6 +315,7 @@ public class RegisterFragment extends Fragment implements QueryCallbacks, School
     public void onQueryFailure(Exception e) {
         if (registerBinding == null) return;
         if (getContext() != null) NotifyUtils.showToast(getContext(), e.getMessage());
+        NotifyUtils.logError(TAG, "onQueryFailure()", e);
         ViewUtils.hideProgressBar(registerBinding.overlayLayout);
         ViewUtils.hideProgressBar(bottomSheetBinding.progressBarContainer);
         ViewUtils.enableViews(
@@ -350,4 +362,13 @@ public class RegisterFragment extends Fragment implements QueryCallbacks, School
         registerBinding = null;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Handle school data
+        if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+            QueryHandler.getInstance(this).getSchools();
+            ViewUtils.showProgressBar(bottomSheetBinding.progressBarContainer);
+        }
+    }
 }

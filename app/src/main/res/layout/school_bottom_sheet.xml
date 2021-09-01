@@ -38,6 +38,19 @@
         app:layout_constraintStart_toEndOf="@id/bottomSheetBackButton"
         app:layout_constraintTop_toTopOf="@id/bottomSheetBackButton" />
 
+    <ImageButton
+        android:id="@+id/addSchoolButton"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginEnd="16dp"
+        android:background="?selectableItemBackgroundBorderless"
+        app:cornerRadius="16dp"
+        app:layout_constraintBottom_toBottomOf="@+id/actionBarTitle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/actionBarTitle"
+        app:srcCompat="@drawable/ic_add"
+        tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/schoolRecyclerView"
         android:layout_width="0dp"
