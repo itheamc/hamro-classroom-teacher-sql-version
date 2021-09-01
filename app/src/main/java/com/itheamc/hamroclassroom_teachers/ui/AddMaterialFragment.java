@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -155,6 +156,20 @@ public class AddMaterialFragment extends Fragment implements QueryCallbacks, Sto
 
         subjectAdapter = new SubjectAdapter(this, SUBJECT_VIEW);
         bottomSheetBinding.subjectRecyclerView.setAdapter(subjectAdapter);
+
+        // Custom Back Press handling
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                // Handle the back button event
+                if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+                    handleBottomSheet();
+                    return;
+                }
+                navController.popBackStack();
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
 
 
         // Activity Result launcher to listen the result of the multi image picker

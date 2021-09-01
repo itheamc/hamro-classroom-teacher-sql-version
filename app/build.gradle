@@ -10,8 +10,8 @@ android {
         applicationId "com.itheamc.hamroclassroom_teachers"
         minSdk 22
         targetSdk 31
-        versionCode 3
-        versionName "1.0.3-Beta"
+        versionCode 4
+        versionName "1.0.4-Beta"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

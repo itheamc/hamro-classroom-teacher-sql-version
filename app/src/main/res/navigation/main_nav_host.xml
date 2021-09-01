@@ -19,16 +19,32 @@
             app:popExitAnim="@anim/slide_out" />
         <action
             android:id="@+id/action_homeFragment_to_classesFragment"
-            app:destination="@id/classesFragment" />
+            app:destination="@id/classesFragment"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out"/>
         <action
             android:id="@+id/action_homeFragment_to_profileFragment"
-            app:destination="@id/profileFragment" />
+            app:destination="@id/profileFragment"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out" />
         <action
             android:id="@+id/action_homeFragment_to_materialsFragment"
-            app:destination="@id/materialsFragment" />
+            app:destination="@id/materialsFragment"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out" />
         <action
             android:id="@+id/action_homeFragment_to_noticesFragment"
-            app:destination="@id/noticesFragment" />
+            app:destination="@id/noticesFragment"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out"/>
     </fragment>
     <fragment
         android:id="@+id/subjectFragment"
@@ -56,7 +72,11 @@
             app:popExitAnim="@anim/slide_out" />
         <action
             android:id="@+id/action_assignmentsFragment_to_addAssignmentFragment"
-            app:destination="@id/addAssignmentFragment" />
+            app:destination="@id/addAssignmentFragment"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out"/>
     </fragment>
     <fragment
         android:id="@+id/assignmentFragment"
@@ -87,10 +107,18 @@
         android:label="ClassesFragment" >
         <action
             android:id="@+id/action_classesFragment_to_subjectFragment"
-            app:destination="@id/subjectFragment" />
+            app:destination="@id/subjectFragment"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out"/>
         <action
             android:id="@+id/action_classesFragment_to_assignmentsFragment"
-            app:destination="@id/assignmentsFragment" />
+            app:destination="@id/assignmentsFragment"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out"/>
     </fragment>
     <fragment
         android:id="@+id/profileFragment"
@@ -103,10 +131,18 @@
         tools:layout="@layout/fragment_materials" >
         <action
             android:id="@+id/action_materialsFragment_to_materialFragment"
-            app:destination="@id/materialFragment" />
+            app:destination="@id/materialFragment"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out"/>
         <action
             android:id="@+id/action_materialsFragment_to_addMaterialFragment"
-            app:destination="@id/addMaterialFragment" />
+            app:destination="@id/addMaterialFragment"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out"/>
     </fragment>
     <fragment
         android:id="@+id/materialFragment"
@@ -120,10 +156,18 @@
         tools:layout="@layout/fragment_notices" >
         <action
             android:id="@+id/action_noticesFragment_to_noticeFragment"
-            app:destination="@id/noticeFragment" />
+            app:destination="@id/noticeFragment"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out"/>
         <action
             android:id="@+id/action_noticesFragment_to_addNoticeFragment"
-            app:destination="@id/addNoticeFragment" />
+            app:destination="@id/addNoticeFragment"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out"/>
     </fragment>
     <fragment
         android:id="@+id/noticeFragment"

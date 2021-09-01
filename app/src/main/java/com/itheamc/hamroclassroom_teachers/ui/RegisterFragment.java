@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -129,6 +130,21 @@ public class RegisterFragment extends Fragment implements QueryCallbacks, School
         phoneEditText = registerBinding.editTextPhone;
         addressEditText = registerBinding.editTextAddress;
         schoolEditText = registerBinding.editTextSchool;
+
+
+        // Custom Back Press handling
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                // Handle the back button event
+                if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+                    handleBottomSheet();
+                    return;
+                }
+                navController.popBackStack();
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
 
         // Calling function to set the known data got from firebase user to the edittext
         setKnownValue();

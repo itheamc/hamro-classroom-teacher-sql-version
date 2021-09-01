@@ -4,6 +4,7 @@ import static com.itheamc.hamroclassroom_teachers.utils.Constants.CLASSES_VIEW;
 
 import android.os.Bundle;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -140,6 +141,20 @@ public class ClassesFragment extends Fragment implements SubjectCallbacks, Query
             handleSubjects();
 
         });
+
+        // Custom Back Press handling
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                // Handle the back button event
+                if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                    return;
+                }
+                navController.popBackStack();
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
 
         /*
         Subjects handling
